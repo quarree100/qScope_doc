@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Setup &#8212; qScope-doc 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Welcome to qScope’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h1>
+<p>Setting up the physical table, combining all the necessary components (cspy, infoscreen, frontend)</p>
+<section id="hardware-overview">
+<h2>Hardware Overview<a class="headerlink" href="#hardware-overview" title="Permalink to this heading">¶</a></h2>
+<img alt="_images/CAD_closeUp_annotated.png" class="align-center" src="_images/CAD_closeUp_annotated.png" />
+<section id="tangibles">
+<h3>Tangibles<a class="headerlink" href="#tangibles" title="Permalink to this heading">¶</a></h3>
+<p>TODO: different tags, usable vs. unusable</p>
+</section>
+</section>
+<section id="software-overview">
+<h2>Software Overview<a class="headerlink" href="#software-overview" title="Permalink to this heading">¶</a></h2>
+<img alt="Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm" class="align-center" src="_images/Q-Scope_software_components.png" />
+<p>The Q-Scope setup consists of a table with a grid of tangible tiles that will be scanned and decoded by cspy. The software then sends the grid information to the frontend, which will project interaction information onto the table accordingly and send information on the machine state to the infoscreen to display metadata. A GAMA Agent-Based-Model (ABM) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>go to github and download the following repositories:</p>
+<p>I would recommend putting them all into one project folder like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>project qScope
+└───cspy_L
+│   Token Tag Decoder (for left table)
+└───cspy_R
+|   Tag Decoder for the right table
+└───data
+└───q100_abm
+└───qScope_infoscreen
+│   infoscreen (NodeJS/ JavaScript)
+└───qScope_frontend
+    projection (Python)
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>cspy_L and cspy_R: <a class="reference external" href="https://github.com/quarree100/cspy">https://github.com/quarree100/cspy</a> (you’ll need this script twice)</p></li>
+<li><p>data: has to be linked from Seafile server as discussed <a class="reference internal" href="#data"><span class="std std-ref">below</span></a>.</p></li>
+<li><p>GAMA: <a class="reference external" href="https://github.com/quarree100/q100_abm">https://github.com/quarree100/q100_abm</a></p></li>
+<li><p>qScope_infoscreen: <a class="reference external" href="https://github.com/quarree100/qScope_infoscreen">https://github.com/quarree100/qScope_infoscreen</a></p></li>
+<li><p>qScope_frontend: <a class="reference external" href="https://github.com/quarree100/qScope_frontend">https://github.com/quarree100/qScope_frontend</a></p></li>
+</ul>
+</section>
+<section id="data">
+<span id="id1"></span><h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
+<p>TODO:</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">qScope-doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tangibles">Tangibles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#software-overview">Software Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programming.html">Programming</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to qScope’s documentation!</a></li>
+      <li>Next: <a href="usage.html" title="next chapter">Usage</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, dunland.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/setup.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
