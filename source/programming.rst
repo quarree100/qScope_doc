@@ -1,6 +1,10 @@
 Programming
 ===========
-How to program the Q-Scope
+
+How to program the Q-Scope according to your own needs.
+
+* TODO: Preprogrammed Q100-scripts
+* TODO: Advanced programming - making your own thing
 
 Understanding the Frontend
 **************************

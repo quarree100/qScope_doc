@@ -8,10 +8,8 @@ Hardware Overview
 .. image:: img/CAD_closeUp_annotated.png
     :align: center
 
-Tangibles
-^^^^^^^^^
-
-TODO: different tags, usable vs. unusable
+The whole setup is made of two physical tables, with interactive components on top; two cameras sitting inside the tables; a projector casting an image onto the tables; and a TV screen to show additional information.
+The table tops are of acrylic glass, on top of which there is a grid of tiles. Some of the tiles are tagged on the underside, so they can be decoded by the cameras from below. Each interaction with any of the tagged tiles will cause the projection and the infoscreen to respond in real time.
 
 Software Overview
 *****************
@@ -20,14 +18,13 @@ Software Overview
     :align: center
     :alt: Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm
 
-The Q-Scope setup consists of a table with a grid of tangible tiles that will be scanned and decoded by cspy. The software then sends the grid information to the frontend, which will project interaction information onto the table accordingly and send information on the machine state to the infoscreen to display metadata. A GAMA Agent-Based-Model (ABM) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
+Each physical component of the setup has a piece of software it is linked with.
+The image stream (camera) of the grid of tiles are scanned and decoded by **cspy**. The software sends the grid information to the **frontend** (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the **infoscreen** (TV) to display metadata. A GAMA Agent-Based-Model (**ABM**) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
 
 Installation
 ************
 
-go to github and download the following repositories:
-
-I would recommend putting them all into one project folder like so:
+go to the repositories listed below and download them; I would recommend putting them all into one project folder like so:
 
 .. code-block::
 
@@ -56,4 +53,40 @@ where:
 Data
 ****
 
-TODO:
+TODO: write about what kind of data is stored, needed, and how it is organized
+
+Starting the software
+*********************
+
+You'll need Python to start the **frontend**. The frontend will be started by navigating to the  project folder and do ``python3 run_q100viz.py``. A window will open and show the contents that will be projected onto the table. This is the frontend the users can see and interact with:
+
+.. image:: img/frontend_full.png
+    :align: center
+    :width: 600
+    :alt: You should see an image of the frontend here. It is basically a black canvas with a map on it and some buttons on the side.
+
+You see a lot of the black canvas around a slightly distorted map. This is due to the "keystoning", the adjustment of the image for the angles the projector produces with respect to the table. By casting an appropriately distorted image onto the table, the distortion will even out, geometrically. ✨
+
+Now we want to interact with the things we see on the canvas - the buttons, the sliders and the map. For this, we'll need cspy, which serves as the **backend**, decoding the configuration of tangibles on the table.
+Start the script for each table individually by navigating to the cspy folders and do ``python3 run_keystone.py``. A window will show up to define the Region of Interest and do the keystone calibration. After doing this once, the adjustment will be saved and this step can be skipped next time.
+The scanning will be started with ``python3 run_scanner.py``. The decoder will send interaction data now to the frontend script, which will react by altering the projection.
+
+In order for the **infoscreen** to receive and process information, it has to be started by executing ``npm start`` or ``node q100_info.js`` in the q100_info folder.
+
+You can start each program individually, but be aware that, for the handshake between the programs to succeed, it is recommended to follow certain order:
+
+.. code-block::
+
+    cd path/to/cspy_L
+    python3 run_scanner.py
+
+    cd path/to/cspy_R
+    python3 run_scanner.py
+
+    cd path/to/qScope_infoscreen
+    node q100_info.js
+
+    cd path/to/qScope_frontend
+    python3 run_q100viz.py
+
+We put these commands into a shell script calld run_qScope.sh to be executed automatically upon startup of the computer.
