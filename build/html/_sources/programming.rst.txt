@@ -1,9 +1,13 @@
 Programming
 ===========
-How to program the Q-Scope
 
-Programming the Frontend
-************************
+How to program the Q-Scope according to your own needs.
+
+* TODO: Preprogrammed Q100-scripts
+* TODO: Advanced programming - making your own thing
+
+Understanding the Frontend
+**************************
 
 File Structure
 ^^^^^^^^^^^^^^
@@ -17,9 +21,6 @@ File Structure
   |   "gameplay" modes and interaction with sliders
   └───settings
   └───run_q100viz.py
-
-Understanding the frontend
-**************************
 
 Modes
 ^^^^^

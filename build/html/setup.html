@@ -14,8 +14,8 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Usage" href="usage.html" />
-    <link rel="prev" title="Welcome to qScope’s documentation!" href="index.html" />
+    <link rel="next" title="Programming" href="programming.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -38,20 +38,18 @@
 <section id="hardware-overview">
 <h2>Hardware Overview<a class="headerlink" href="#hardware-overview" title="Permalink to this heading">¶</a></h2>
 <img alt="_images/CAD_closeUp_annotated.png" class="align-center" src="_images/CAD_closeUp_annotated.png" />
-<section id="tangibles">
-<h3>Tangibles<a class="headerlink" href="#tangibles" title="Permalink to this heading">¶</a></h3>
-<p>TODO: different tags, usable vs. unusable</p>
-</section>
+<p>The whole setup is made of two physical tables, with interactive components on top; two cameras sitting inside the tables; a projector casting an image onto the tables; and a TV screen to show additional information.
+The table tops are of acrylic glass, on top of which there is a grid of tiles. Some of the tiles are tagged on the underside, so they can be decoded by the cameras from below. Each interaction with any of the tagged tiles will cause the projection and the infoscreen to respond in real time.</p>
 </section>
 <section id="software-overview">
 <h2>Software Overview<a class="headerlink" href="#software-overview" title="Permalink to this heading">¶</a></h2>
 <img alt="Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm" class="align-center" src="_images/Q-Scope_software_components.png" />
-<p>The Q-Scope setup consists of a table with a grid of tangible tiles that will be scanned and decoded by cspy. The software then sends the grid information to the frontend, which will project interaction information onto the table accordingly and send information on the machine state to the infoscreen to display metadata. A GAMA Agent-Based-Model (ABM) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
+<p>Each physical component of the setup has a piece of software it is linked with.
+The image stream (camera) of the grid of tiles are scanned and decoded by <strong>cspy</strong>. The software sends the grid information to the <strong>frontend</strong> (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the <strong>infoscreen</strong> (TV) to display metadata. A GAMA Agent-Based-Model (<strong>ABM</strong>) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
-<p>go to github and download the following repositories:</p>
-<p>I would recommend putting them all into one project folder like so:</p>
+<p>go to the repositories listed below and download them; I would recommend putting them all into one project folder like so:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>project qScope
 └───cspy_L
 │   Token Tag Decoder (for left table)
@@ -67,7 +65,7 @@
 </div>
 <p>where:</p>
 <ul class="simple">
-<li><p>cspy_L and cspy_R: <a class="reference external" href="https://github.com/quarree100/cspy">https://github.com/quarree100/cspy</a> (you’ll need this script twice)</p></li>
+<li><p>cspy_L and cspy_R: <a class="reference external" href="https://github.com/quarree100/cspy">https://github.com/quarree100/cspy</a> (you’ll need this script twice - one for each table)</p></li>
 <li><p>data: has to be linked from Seafile server as discussed <a class="reference internal" href="#data"><span class="std std-ref">below</span></a>.</p></li>
 <li><p>GAMA: <a class="reference external" href="https://github.com/quarree100/q100_abm">https://github.com/quarree100/q100_abm</a></p></li>
 <li><p>qScope_infoscreen: <a class="reference external" href="https://github.com/quarree100/qScope_infoscreen">https://github.com/quarree100/qScope_infoscreen</a></p></li>
@@ -76,7 +74,32 @@
 </section>
 <section id="data">
 <span id="id1"></span><h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
-<p>TODO:</p>
+<p>TODO: write about what kind of data is stored, needed, and how it is organized</p>
+</section>
+<section id="starting-the-software">
+<h2>Starting the software<a class="headerlink" href="#starting-the-software" title="Permalink to this heading">¶</a></h2>
+<p>You’ll need Python to start the <strong>frontend</strong>. The frontend will be started by navigating to the  project folder and do <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code>. A window will open and show the contents that will be projected onto the table. This is the frontend the users can see and interact with:</p>
+<a class="reference internal image-reference" href="_images/frontend_full.png"><img alt="You should see an image of the frontend here. It is basically a black canvas with a map on it and some buttons on the side." class="align-center" src="_images/frontend_full.png" style="width: 600px;" /></a>
+<p>You see a lot of the black canvas around a slightly distorted map. This is due to the “keystoning”, the adjustment of the image for the angles the projector produces with respect to the table. By casting an appropriately distorted image onto the table, the distortion will even out, geometrically. ✨</p>
+<p>Now we want to interact with the things we see on the canvas - the buttons, the sliders and the map. For this, we’ll need cspy, which serves as the <strong>backend</strong>, decoding the configuration of tangibles on the table.
+Start the script for each table individually by navigating to the cspy folders and do <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_keystone.py</span></code>. A window will show up to define the Region of Interest and do the keystone calibration. After doing this once, the adjustment will be saved and this step can be skipped next time.
+The scanning will be started with <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_scanner.py</span></code>. The decoder will send interaction data now to the frontend script, which will react by altering the projection.</p>
+<p>In order for the <strong>infoscreen</strong> to receive and process information, it has to be started by executing <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">node</span> <span class="pre">q100_info.js</span></code> in the q100_info folder.</p>
+<p>You can start each program individually, but be aware that, for the handshake between the programs to succeed, it is recommended to follow certain order:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">cspy_L</span>
+<span class="n">python3</span> <span class="n">run_scanner</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">cspy_R</span>
+<span class="n">python3</span> <span class="n">run_scanner</span><span class="o">.</span><span class="n">py</span>
+
+<span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">qScope_infoscreen</span>
+<span class="n">node</span> <span class="n">q100_info</span><span class="o">.</span><span class="n">js</span>
+
+<span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">qScope_frontend</span>
+<span class="n">python3</span> <span class="n">run_q100viz</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>We put these commands into a shell script calld run_qScope.sh to be executed automatically upon startup of the computer.</p>
 </section>
 </section>
 
@@ -98,17 +121,15 @@
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tangibles">Tangibles</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#software-overview">Software Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#starting-the-software">Starting the software</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="programming.html">Programming</a></li>
 </ul>
 
@@ -116,8 +137,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to qScope’s documentation!</a></li>
-      <li>Next: <a href="usage.html" title="next chapter">Usage</a></li>
+      <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="programming.html" title="next chapter">Programming</a></li>
   </ul></li>
 </ul>
 </div>
