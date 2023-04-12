@@ -38,6 +38,11 @@
 <li><p>TODO: Preprogrammed Q100-scripts</p></li>
 <li><p>TODO: Advanced programming - making your own thing</p></li>
 </ul>
+<section id="installing-the-frontend">
+<span id="installing-frontend"></span><h2>Installing the Frontend<a class="headerlink" href="#installing-the-frontend" title="Permalink to this heading">¶</a></h2>
+<p>After <a class="reference external" href="https://github.com/git-guides/git-clone">cloning</a> the frontend’s repository, you can simply install all required python modules by executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">[MODULE]</span></code>.)
+Simply run the script via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code></p>
+</section>
 <section id="understanding-the-frontend">
 <h2>Understanding the Frontend<a class="headerlink" href="#understanding-the-frontend" title="Permalink to this heading">¶</a></h2>
 <section id="file-structure">
@@ -54,24 +59,38 @@
 </section>
 <section id="modes">
 <h3>Modes<a class="headerlink" href="#modes" title="Permalink to this heading">¶</a></h3>
-<p>Q-Scope runs at different machine states:</p>
-<section id="input-mode">
-<span id="id1"></span><h4>Input_Mode<a class="headerlink" href="#input-mode" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
+<li><dl class="simple">
+<dt>implemented modes are:</dt><dd><ul>
+<li><p><a class="reference internal" href="#buildings-interaction"><span class="std std-ref">Interaction</span></a></p></li>
+<li><p><a class="reference internal" href="#simulation-mode"><span class="std std-ref">Simulation</span></a></p></li>
+<li><p><a class="reference internal" href="#data-view"><span class="std std-ref">Data View</span></a></p></li>
+<li><p><a class="reference internal" href="#calibration-mode"><span class="std std-ref">Calibration</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>each mode has a function called <code class="docutils literal notranslate"><span class="pre">activate()</span></code> which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
+The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function is seldomly used, since it will be run in the beginning of the script (in <code class="docutils literal notranslate"><span class="pre">session.py</span></code>), before the variables (e.g. <code class="docutils literal notranslate"><span class="pre">grid</span></code>) are initialized.</p>
+<section id="interaction">
+<span id="buildings-interaction"></span><h4>Interaction<a class="headerlink" href="#interaction" title="Permalink to this heading">¶</a></h4>
 <p>In the Input Mode, users can set household-, buildings- global parameters. They can leave the mode placing a token on the “simulation mode” selector.</p>
 </section>
-<section id="data-view">
-<span id="id2"></span><h4>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h4>
-<p>The Data View starts after finishing of a simulation. Here, aggregated values are shown in graphs as a f(t) and can be accessed interactively.</p>
-</section>
 <section id="simulation">
-<span id="id3"></span><h4>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading">¶</a></h4>
+<span id="simulation-mode"></span><h4>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading">¶</a></h4>
 <p>The Simulation can be started using <code class="docutils literal notranslate"><span class="pre">S</span></code> key. It will generate an experiment API file for GAMA according to this scheme: <a class="reference external" href="https://gama-platform.org/wiki/Headless#simulation-output">https://gama-platform.org/wiki/Headless#simulation-output</a> and run the provided model file using the gama-headless.sh . These two files are to be set up in <code class="docutils literal notranslate"><span class="pre">config.py</span></code>.</p>
+</section>
+<section id="data-view">
+<span id="id1"></span><h4>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h4>
+</section>
 </section>
 </section>
 <section id="setup-your-frontend">
-<h3>Setup your frontend<a class="headerlink" href="#setup-your-frontend" title="Permalink to this heading">¶</a></h3>
+<h2>Setup your frontend<a class="headerlink" href="#setup-your-frontend" title="Permalink to this heading">¶</a></h2>
 <section id="coordinates">
-<h4>coordinates:<a class="headerlink" href="#coordinates" title="Permalink to this heading">¶</a></h4>
+<h3>coordinates:<a class="headerlink" href="#coordinates" title="Permalink to this heading">¶</a></h3>
 <p><strong>ROI for distorted polygons:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize geographic viewport and basemap</span>
 
@@ -111,7 +130,6 @@
     <span class="n">viewport</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
 <section id="grid">
 <h4>grid<a class="headerlink" href="#grid" title="Permalink to this heading">¶</a></h4>
 <p><strong>single grid, upper left:</strong></p>
@@ -218,35 +236,8 @@ and <a class="reference external" href="https://docs.opencv.org/3.4/da/d54/group
 </div>
 <p>with <code class="docutils literal notranslate"><span class="pre">[[bottom-left[x],</span> <span class="pre">bottom-left[y]],</span> <span class="pre">[upper-left[x],</span> <span class="pre">upper-left[y]],</span> <span class="pre">[upper-right[x],</span> <span class="pre">upper-right[y]],</span> <span class="pre">[bottom-right[x],</span> <span class="pre">bottom-right[y]]]</span></code></p>
 </section>
-</section>
-<section id="id4">
-<h3>Modes<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
-<li><dl class="simple">
-<dt>implemented modes are:</dt><dd><ul>
-<li><p><a class="reference internal" href="#calibrationmode">CalibrationMode</a></p></li>
-<li><p><a class="reference internal" href="#editmode">EditMode</a>: deprecated!</p></li>
-<li><p><a class="reference internal" href="#inputmode">InputMode</a></p></li>
-<li><p><a class="reference internal" href="#simulationmode">SimulationMode</a></p></li>
-<li><p><a class="reference internal" href="#questionnairemode">QuestionnaireMode</a></p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-<p>each mode has a function called <code class="docutils literal notranslate"><span class="pre">activate()</span></code> which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
-The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function is seldomly used, since it will be run in the beginning of the script (in <code class="docutils literal notranslate"><span class="pre">session.py</span></code>), before the variables (e.g. <code class="docutils literal notranslate"><span class="pre">grid</span></code>) are initialized.</p>
-<section id="calibrationmode">
-<h4>CalibrationMode<a class="headerlink" href="#calibrationmode" title="Permalink to this heading">¶</a></h4>
-</section>
-<section id="editmode">
-<h4>EditMode<a class="headerlink" href="#editmode" title="Permalink to this heading">¶</a></h4>
-<p>…deprecated!</p>
-</section>
-<section id="inputmode">
-<h4>InputMode<a class="headerlink" href="#inputmode" title="Permalink to this heading">¶</a></h4>
-<p>general mode for interaction with Tangible User Interface.</p>
+<section id="calibration">
+<span id="calibration-mode"></span><h4>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">¶</a></h4>
 <section id="examples">
 <h5>examples:<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h5>
 <p><strong>increase/decrease value by relative rotation:</strong></p>
@@ -287,8 +278,8 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 <p><code class="docutils literal notranslate"><span class="pre">grid_1_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_2_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> are used to assign functionality to grid cells.</p>
 <p>valid handles are:</p>
 <p><strong>environment handles:</strong></p>
-<table class="docutils align-default" id="id5">
-<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>parameter</p></th>
 <th class="head"><p>possible values</p></th>
@@ -316,8 +307,8 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 </tbody>
 </table>
 <p><strong>household-individual handles:</strong></p>
-<table class="docutils align-default" id="id6">
-<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>adjustable</p></th>
 <th class="head"><p>parameter</p></th>
@@ -383,10 +374,12 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 <li><p>‘start_simulation’ (creates xml to start GAMA simulation)</p></li>
 </ul>
 <p><strong>colors</strong> can be set using strings from this list: <a class="reference external" href="https://www.pygame.org/docs/ref/color_list.html">https://www.pygame.org/docs/ref/color_list.html</a></p>
-<p>The Modes can be switched using either the input keys:
-* T: <a class="reference internal" href="#inputmode">InputMode</a> (TUI Mode)
-* C: <a class="reference internal" href="#calibrationmode">CalibrationMode</a>
-* S: Simulation</p>
+<p>The Modes can be switched using either the input keys:</p>
+<ul class="simple">
+<li><p>T: InputMode (TUI Mode)</p></li>
+<li><p>C: CalibrationMode</p></li>
+<li><p>S: Simulation</p></li>
+</ul>
 </section>
 <section id="api">
 <h3>API<a class="headerlink" href="#api" title="Permalink to this heading">¶</a></h3>
@@ -434,6 +427,30 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 </section>
 </section>
 </section>
+<section id="understanding-the-tag-decoder">
+<span id="installing-cspy"></span><h2>Understanding the Tag Decoder<a class="headerlink" href="#understanding-the-tag-decoder" title="Permalink to this heading">¶</a></h2>
+<section id="installing-the-tag-decoder">
+<h3>Installing the tag decoder<a class="headerlink" href="#installing-the-tag-decoder" title="Permalink to this heading">¶</a></h3>
+<p>TODO: install librealsense first!</p>
+<p>After that, the installation will hopefully just as easy as downloading <a class="reference external" href="https://www.github.com/quarree100/cspy">the decoder’s repository</a> and doing <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>.</p>
+</section>
+<section id="programming-the-tags">
+<span id="programming-tangibles"></span><h3>Programming the Tags<a class="headerlink" href="#programming-the-tags" title="Permalink to this heading">¶</a></h3>
+<p>TODO: image of all tags with description how they are read</p>
+</section>
+</section>
+<section id="understanding-the-infoscreen">
+<h2>Understanding the Infoscreen<a class="headerlink" href="#understanding-the-infoscreen" title="Permalink to this heading">¶</a></h2>
+<section id="installing-the-infoscreen">
+<span id="installing-infoscreen"></span><h3>Installing the Infoscreen<a class="headerlink" href="#installing-the-infoscreen" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="understangin-gama">
+<h2>Understangin GAMA<a class="headerlink" href="#understangin-gama" title="Permalink to this heading">¶</a></h2>
+<section id="installing-gama">
+<span id="id2"></span><h3>Installing GAMA<a class="headerlink" href="#installing-gama" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
 </section>
 
 
@@ -457,7 +474,12 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-frontend">Installing the Frontend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#understanding-the-frontend">Understanding the Frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-your-frontend">Setup your frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-tag-decoder">Understanding the Tag Decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-infoscreen">Understanding the Infoscreen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understangin-gama">Understangin GAMA</a></li>
 </ul>
 </li>
 </ul>

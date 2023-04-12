@@ -6,7 +6,7 @@
 Welcome to qScope's documentation!
 ==================================
 
-Q-Scope is a framework for interactive visualization using tangible objects on a physical table. It is used as a decision support tool for participation processes in energy transition research. The framework is based on `MIT's CityScope platform <https://cityscope.media.mit.edu/>`_ and was developed by the `Department of Resilient Energy Systems <https://www.uni-bremen.de/res>`_ at the University of Bremen.`
+Q-Scope is a framework for interactive visualization using tangible objects on a physical table. It is used as a decision support tool for participation processes in energy transition research. The framework is based on `MIT's CityScope platform <https://cityscope.media.mit.edu/>`_ and was developed by the `Department of Resilient Energy Systems <https://www.uni-bremen.de/res>`_ at the University of Bremen.
 
 .. image:: img/Q-Scope_setup.jpg
    :width: 600

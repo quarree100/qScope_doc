@@ -1,5 +1,5 @@
 Setup
-=====
+#####
 Setting up the physical table, combining all the necessary components (cspy, infoscreen, frontend)
 
 Hardware Overview
@@ -10,6 +10,13 @@ Hardware Overview
 
 The whole setup is made of two physical tables, with interactive components on top; two cameras sitting inside the tables; a projector casting an image onto the tables; and a TV screen to show additional information.
 The table tops are of acrylic glass, on top of which there is a grid of tiles. Some of the tiles are tagged on the underside, so they can be decoded by the cameras from below. Each interaction with any of the tagged tiles will cause the projection and the infoscreen to respond in real time.
+
+.. image:: img/Q-Scope_tangibles_tags.jpg
+    :align: center
+    :alt: Image of four 3D-printed, colored houses with black and white tags on the underside.
+
+In the image above you see four groups of :ref:`tangibles<programming_tangibles>` - objects with the same color (human-readable) share the same tag (machine-readable).
+
 
 Software Overview
 *****************
@@ -48,12 +55,21 @@ where:
 * qScope_infoscreen: https://github.com/quarree100/qScope_infoscreen
 * qScope_frontend: https://github.com/quarree100/qScope_frontend
 
+Go directly to:
+
+* :ref:`Installing the frontend<installing_frontend>`
+* :ref:`Installing the decoder<installing_cspy>`
+* :ref:`Installing the infoscreen<installing_infoscreen>`
+* :ref:`Installing GAMA<installing_gama>`
+
 .. _Data:
 
 Data
 ****
 
-TODO: write about what kind of data is stored, needed, and how it is organized
+Q-Scope relies on a local data folder with GIS information on the map, the polygons and data on the houses that shall be displayed. The folder contains Shapefiles used to display both an aerial photograph (raster file) and polygon information for each houses to be able to interact with - provided as Shapefiles. Some additional, household-specific data in the form of csv files are provided, which can be lined to the polygons.
+
+TODO: provide simple working example data folder without sensitive data!
 
 Starting the software
 *********************
@@ -89,4 +105,4 @@ You can start each program individually, but be aware that, for the handshake be
     cd path/to/qScope_frontend
     python3 run_q100viz.py
 
-We put these commands into a shell script calld run_qScope.sh to be executed automatically upon startup of the computer.
+We put these commands into a shell script called run_qScope.sh to be executed automatically upon startup of the computer.

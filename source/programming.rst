@@ -1,16 +1,24 @@
 Programming
-===========
+###########
 
 How to program the Q-Scope according to your own needs.
 
 * TODO: Preprogrammed Q100-scripts
 * TODO: Advanced programming - making your own thing
 
+.. _installing_frontend:
+
+Installing the Frontend
+***********************
+
+After `cloning <https://github.com/git-guides/git-clone>`_ the frontend's repository, you can simply install all required python modules by executing ``pip install -r requirements.txt``. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via ``pip3 install [MODULE]``.)
+Simply run the script via ``python3 run_q100viz.py``
+
 Understanding the Frontend
 **************************
 
 File Structure
-^^^^^^^^^^^^^^
+==============
 
 .. code-block::
 
@@ -23,34 +31,42 @@ File Structure
   └───run_q100viz.py
 
 Modes
-^^^^^
-Q-Scope runs at different machine states:
+=====
 
+* there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
+* implemented modes are:
+    * :ref:`Interaction <buildings_interaction>`
+    * :ref:`Simulation <simulation_mode>`
+    * :ref:`Data View <data_view>`
+    * :ref:`Calibration<calibration_mode>`
 
-.. _input_mode:
+each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
+The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
 
-Input_Mode
-----------
+.. _buildings_interaction:
+
+Interaction
+-----------
 In the Input Mode, users can set household-, buildings- global parameters. They can leave the mode placing a token on the "simulation mode" selector.
 
-.. _data_view:
-
-Data View
----------
-The Data View starts after finishing of a simulation. Here, aggregated values are shown in graphs as a f(t) and can be accessed interactively.
-
-.. _simulation:
+.. _simulation_mode:
 
 Simulation
 ----------
 The Simulation can be started using ``S`` key. It will generate an experiment API file for GAMA according to this scheme: https://gama-platform.org/wiki/Headless#simulation-output and run the provided model file using the gama-headless.sh . These two files are to be set up in ``config.py``.
 
 
+.. _data_view:
+
+Data View
+---------
+
+
 Setup your frontend
-^^^^^^^^^^^^^^^^^^^
+*******************
 
 coordinates:
-------------
+============
 
 **ROI for distorted polygons:**
 
@@ -127,7 +143,7 @@ grid
   grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
 
 Drawing on Canvas
-^^^^^^^^^^^^^^^^^
+=================
 
 **displaying text**:
 
@@ -170,7 +186,7 @@ The sliders have a bool called ``show_text`` that, when ``True``, activates the 
 
 
 keystone transformation
-^^^^^^^^^^^^^^^^^^^^^^^
+=======================
 
 general information on image transofrmation using opencv:
 
@@ -228,30 +244,10 @@ frontend representation
 
 with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper-right[x], upper-right[y]], [bottom-right[x], bottom-right[y]]]``
 
+.. _calibration_mode:
 
-Modes
-^^^^^
-* there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
-* implemented modes are:
-    * CalibrationMode_
-    * EditMode_: deprecated!
-    * InputMode_
-    * SimulationMode_
-    * QuestionnaireMode_
-
-each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
-The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
-
-CalibrationMode
----------------
-
-EditMode
---------
-...deprecated!
-
-InputMode
----------
-general mode for interaction with Tangible User Interface.
+Calibration
+-----------
 
 examples:
 ~~~~~~~~~
@@ -291,7 +287,7 @@ In this mode, the user will be confronted with questions that can be asked eithe
 (the options are yet to be decided)
 
 ModeSelector
-^^^^^^^^^^^^
+============
 
 A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.
 
@@ -346,13 +342,14 @@ zusätzlich kann `save_energy` eingestellt werden als Einstellung von Agentenver
 **colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
 
 The Modes can be switched using either the input keys:
-* T: InputMode_ (TUI Mode)
-* C: CalibrationMode_
+
+* T: InputMode (TUI Mode)
+* C: CalibrationMode
 * S: Simulation
 
 
 API
-^^^
+===
 JSON and CSV constructs used for the communication between GAMA, the Q-Scope-infoscreen and -frontend.
 
 
@@ -402,3 +399,39 @@ and then in `input_mode.py`:
       f = open('../data/simulation_df.xml', 'w')
       f.write(xml)
       f.close()
+
+
+.. _installing_cspy:
+
+Understanding the Tag Decoder
+*****************************
+
+Installing the tag decoder
+==========================
+
+TODO: install librealsense first!
+
+After that, the installation will hopefully just as easy as downloading `the decoder's repository <https://www.github.com/quarree100/cspy>`_ and doing ``pip3 install -r requirements.txt``.
+
+.. _programming_tangibles:
+
+Programming the Tags
+====================
+
+TODO: image of all tags with description how they are read
+
+Understanding the Infoscreen
+****************************
+
+.. _installing_infoscreen:
+
+Installing the Infoscreen
+=========================
+
+Understangin GAMA
+*****************
+
+.. _installing_gama:
+
+Installing GAMA
+===============
