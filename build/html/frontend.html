@@ -14,7 +14,8 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Setup" href="setup.html" />
+    <link rel="next" title="Communication" href="communication.html" />
+    <link rel="prev" title="Tag Decoder" href="tag_decoder.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,7 +34,7 @@
             
   <section id="frontend">
 <h1>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading">¶</a></h1>
-<p>How to program the Q-Scope according to your own needs.</p>
+<p>The Q-Scope frontend, as used in the project QUARRE100, was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games.</p>
 <ul class="simple">
 <li><p>TODO: Preprogrammed Q100-scripts</p></li>
 <li><p>TODO: Advanced programming - making your own thing</p></li>
@@ -57,21 +58,51 @@ Simply run the script via <code class="docutils literal notranslate"><span class
 └───run_q100viz.py
 </pre></div>
 </div>
+</section>
 <section id="frontend-main-script">
-<h4>Frontend Main Script<a class="headerlink" href="#frontend-main-script" title="Permalink to this heading">¶</a></h4>
+<h3>Frontend Main Script<a class="headerlink" href="#frontend-main-script" title="Permalink to this heading">¶</a></h3>
 <p>The main script is called <code class="docutils literal notranslate"><span class="pre">run_q100viz.py</span></code>. You can start it from the qScope_frontend folder by running <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code>. Some flags can be set to enable debug options:</p>
 <blockquote id="frontent-startup-flags">
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--select_random</span> <span class="pre">[NUMBER_OF_HOUSES]</span></code>: preselects n houses to opt in for a connection to the heat grid</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--simulate_until</span> <span class="pre">[NUMBER_OF_YEAR]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: activates verbose mode to print more information to console</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--simulate_until</span> <span class="pre">[NUMBER_OF_YEAR]</span></code>: run the gama-simulation until the given year. last simulation step will be last day before entered year.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--connect</span></code>: force buildings to opt in for “connection_to_heat_grid”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--refurbish</span></code>: force buildings to opt in for “refurbish”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--save_energy</span></code>: force buildings to opt in for “save_energy”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--start_at</span></code>: force the frontend to start at a certain <a class="reference internal" href="#frontend-mode">frontend_mode</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--test</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--main_window</span></code>: forces the projection canvas to pop up at the current monitor.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--research_model</span></code>: There are two simulation files provided. If specified, the research model will be used for simulation (rather than the workshop model)</p></li>
 </ul>
 </div></blockquote>
-<p>The script begins with general argument parsing.</p>
+<p>These flags are specified in the first section of the main script.
+At the end of the main script, an instance of the frontend is created and run in the loop. The frontend class itself is defined in q100viz/frontend.py.</p>
 </section>
+<section id="the-frontend-setup">
+<span id="frontend-pygame-setup"></span><h3>The Frontend Setup<a class="headerlink" href="#the-frontend-setup" title="Permalink to this heading">¶</a></h3>
+<p>The whole frontend was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.</p>
+<p>Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.</p>
+<p id="frontend-setup-window">You can set the window’s position using the os module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># set window position</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">run_in_main_window</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># left</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">2560</span>  <span class="c1"># height of upper monitor --&gt; display on lower monitor</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;SDL_VIDEO_WINDOW_POS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">2560</span><span class="p">)</span>  <span class="c1"># projection to the left</span>
+</pre></div>
+</div>
+<p>For this setting, the monitors should be organized as follows:</p>
+<img alt="[Image of two schematic monitors, above each other and aligned left]" class="align-center" src="_images/frontend_screen-position.png" />
+<p>The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">mask_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>The last step in the canvas initialization is the setup of the <a class="reference internal" href="communication.html#communication"><span class="std std-ref">Communication</span></a>.</p>
 </section>
 <section id="modes">
-<h3>Modes<a class="headerlink" href="#modes" title="Permalink to this heading">¶</a></h3>
+<span id="frontend-mode"></span><h3>Modes<a class="headerlink" href="#modes" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
 <li><dl class="simple">
@@ -96,7 +127,7 @@ The <code class="docutils literal notranslate"><span class="pre">__init__</span>
 <p>The Simulation can be started using <code class="docutils literal notranslate"><span class="pre">S</span></code> key. It will generate an experiment API file for GAMA according to this scheme: <a class="reference external" href="https://gama-platform.org/wiki/Headless#simulation-output">https://gama-platform.org/wiki/Headless#simulation-output</a> and run the provided model file using the gama-headless.sh . These two files are to be set up in <code class="docutils literal notranslate"><span class="pre">config.py</span></code>.</p>
 </section>
 <section id="data-view">
-<span id="id2"></span><h4>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h4>
+<span id="id3"></span><h4>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h4>
 </section>
 </section>
 </section>
@@ -440,18 +471,6 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 </section>
 </section>
 </section>
-<section id="understanding-the-infoscreen">
-<h2>Understanding the Infoscreen<a class="headerlink" href="#understanding-the-infoscreen" title="Permalink to this heading">¶</a></h2>
-<section id="installing-the-infoscreen">
-<span id="installing-infoscreen"></span><h3>Installing the Infoscreen<a class="headerlink" href="#installing-the-infoscreen" title="Permalink to this heading">¶</a></h3>
-</section>
-</section>
-<section id="understangin-gama">
-<h2>Understangin GAMA<a class="headerlink" href="#understangin-gama" title="Permalink to this heading">¶</a></h2>
-<section id="installing-gama">
-<span id="id3"></span><h3>Installing GAMA<a class="headerlink" href="#installing-gama" title="Permalink to this heading">¶</a></h3>
-</section>
-</section>
 </section>
 
 
@@ -474,21 +493,24 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tag_decoder.html">Tag Decoder</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Frontend</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#frontend-installation">Frontend Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#understanding-the-frontend">Understanding the Frontend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setup-your-frontend">Setup your frontend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#understanding-the-infoscreen">Understanding the Infoscreen</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#understangin-gama">Understangin GAMA</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infoscreen.html">Infoscreen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ABM.html">ABM</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="setup.html" title="previous chapter">Setup</a></li>
+      <li>Previous: <a href="tag_decoder.html" title="previous chapter">Tag Decoder</a></li>
+      <li>Next: <a href="communication.html" title="next chapter">Communication</a></li>
   </ul></li>
 </ul>
 </div>
@@ -522,7 +544,7 @@ Q-Scope needs to know where to find the <code class="docutils literal notranslat
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
-      <a href="_sources/programming.rst.txt"
+      <a href="_sources/frontend.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

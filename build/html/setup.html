@@ -14,7 +14,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Programming" href="programming.html" />
+    <link rel="next" title="Frontend" href="programming.html" />
     <link rel="prev" title="Introduction" href="introduction.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -49,8 +49,8 @@ The table tops are of acrylic glass, on top of which there is a grid of tiles. S
 <p>Each physical component of the setup has a piece of software it is linked with.
 The image stream (camera) of the grid of tiles are scanned and decoded by <strong>cspy</strong>. The software sends the grid information to the <strong>frontend</strong> (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the <strong>infoscreen</strong> (TV) to display metadata. A GAMA Agent-Based-Model (<strong>ABM</strong>) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
 </section>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<section id="framework-architecture">
+<h2>Framework Architecture<a class="headerlink" href="#framework-architecture" title="Permalink to this heading">¶</a></h2>
 <p>go to the repositories listed below and download them; I would recommend putting them all into one project folder like so:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>project qScope
 └───cspy_L
@@ -75,7 +75,7 @@ The image stream (camera) of the grid of tiles are scanned and decoded by <stron
 </ul>
 <p>Go directly to:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="programming.html#installing-frontend"><span class="std std-ref">Installing the frontend</span></a></p></li>
+<li><p><a class="reference internal" href="programming.html#frontend-installation"><span class="std std-ref">Installing the frontend</span></a></p></li>
 <li><p><a class="reference internal" href="programming.html#installing-cspy"><span class="std std-ref">Installing the decoder</span></a></p></li>
 <li><p><a class="reference internal" href="programming.html#installing-infoscreen"><span class="std std-ref">Installing the infoscreen</span></a></p></li>
 <li><p><a class="reference internal" href="programming.html#installing-gama"><span class="std std-ref">Installing GAMA</span></a></p></li>
@@ -92,7 +92,7 @@ The image stream (camera) of the grid of tiles are scanned and decoded by <stron
 <a class="reference internal image-reference" href="_images/frontend_full.png"><img alt="You should see an image of the frontend here. It is basically a black canvas with a map on it and some buttons on the side." class="align-center" src="_images/frontend_full.png" style="width: 600px;" /></a>
 <p>You see a lot of the black canvas around a slightly distorted map. This is due to the “keystoning”, the adjustment of the image for the angles the projector produces with respect to the table. By casting an appropriately distorted image onto the table, the distortion will even out, geometrically. ✨</p>
 <p>Now we want to interact with the things we see on the canvas - the buttons, the sliders and the map. For this, we’ll need cspy, which serves as the <strong>backend</strong>, decoding the configuration of tangibles on the table.
-Start the script for each table individually by navigating to the cspy folders and do <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_keystone.py</span></code>. A window will show up to define the Region of Interest and do the keystone calibration. After doing this once, the adjustment will be saved and this step can be skipped next time.
+Start the script for each table individually by navigating to the cspy folders and do <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_keystone.py</span></code>. A window will show up to define the Region of Interest and do the <a class="reference internal" href="#calibrating-the-table"><span class="std std-ref">keystone calibration</span></a>. After doing this once, the adjustment will be saved and this step can be skipped next time.
 The scanning will be started with <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_scanner.py</span></code>. The decoder will send interaction data now to the frontend script, which will react by altering the projection.</p>
 <p>In order for the <strong>infoscreen</strong> to receive and process information, it has to be started by executing <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">node</span> <span class="pre">q100_info.js</span></code> in the q100_info folder.</p>
 <p>You can start each program individually, but be aware that, for the handshake between the programs to succeed, it is recommended to follow certain order:</p>
@@ -110,6 +110,10 @@ The scanning will be started with <code class="docutils literal notranslate"><sp
 </pre></div>
 </div>
 <p>We put these commands into a shell script called run_qScope.sh to be executed automatically upon startup of the computer.</p>
+<section id="calibrating-the-table">
+<span id="id2"></span><h3>Calibrating the Table:<a class="headerlink" href="#calibrating-the-table" title="Permalink to this heading">¶</a></h3>
+<p>TODO: process of calibration with images and hotkeys</p>
+</section>
 </section>
 </section>
 
@@ -135,12 +139,12 @@ The scanning will be started with <code class="docutils literal notranslate"><sp
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#software-overview">Software Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#framework-architecture">Framework Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#starting-the-software">Starting the software</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="programming.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programming.html">Frontend</a></li>
 </ul>
 
 <div class="relations">
@@ -148,7 +152,7 @@ The scanning will be started with <code class="docutils literal notranslate"><sp
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
-      <li>Next: <a href="programming.html" title="next chapter">Programming</a></li>
+      <li>Next: <a href="programming.html" title="next chapter">Frontend</a></li>
   </ul></li>
 </ul>
 </div>

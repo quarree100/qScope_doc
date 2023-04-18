@@ -23,7 +23,11 @@ Guide
 
    introduction
    setup
-   programming
+   frontend
+   tag_decoder
+   communication
+   infoscreen
+   ABM
 
 
 Indices and tables

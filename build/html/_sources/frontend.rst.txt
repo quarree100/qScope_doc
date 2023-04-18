@@ -1,7 +1,7 @@
 Frontend
 ########
 
-How to program the Q-Scope according to your own needs.
+The Q-Scope frontend, as used in the project QUARRE100, was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games.
 
 * TODO: Preprogrammed Q100-scripts
 * TODO: Advanced programming - making your own thing
@@ -32,17 +32,62 @@ File Structure
   └───run_q100viz.py
 
 Frontend Main Script
---------------------
+====================
 The main script is called ``run_q100viz.py``. You can start it from the qScope_frontend folder by running ``python3 run_q100viz.py``. Some flags can be set to enable debug options:
 
 .. _frontent_startup_flags:
 
   * ``--select_random [NUMBER_OF_HOUSES]``: preselects n houses to opt in for a connection to the heat grid
-  *  ``--verbose``
-  *  ``--simulate_until [NUMBER_OF_YEAR]``
+  *  ``--verbose``: activates verbose mode to print more information to console
+  *  ``--simulate_until [NUMBER_OF_YEAR]``: run the gama-simulation until the given year. last simulation step will be last day before entered year.
+  *  ``--connect``: force buildings to opt in for "connection_to_heat_grid"
+  *  ``--refurbish``: force buildings to opt in for "refurbish"
+  *  ``--save_energy``: force buildings to opt in for "save_energy"
+  *  ``--start_at``: force the frontend to start at a certain frontend_mode_
+  *  ``--test``:
+  *  ``--main_window``: forces the projection canvas to pop up at the current monitor.
+  *  ``--research_model``: There are two simulation files provided. If specified, the research model will be used for simulation (rather than the workshop model)
 
-The script begins with general argument parsing.
+These flags are specified in the first section of the main script.
+At the end of the main script, an instance of the frontend is created and run in the loop. The frontend class itself is defined in q100viz/frontend.py.
 
+.. _frontend_pygame_setup:
+
+The Frontend Setup
+==================
+The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.
+
+Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
+
+.. _frontend_setup_window:
+
+You can set the window's position using the os module:
+
+.. code-block::
+
+  # set window position
+  if not run_in_main_window:
+      x = 0  # left
+      y = 2560  # height of upper monitor --> display on lower monitor
+      os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
+          0, 2560)  # projection to the left
+
+For this setting, the monitors should be organized as follows:
+
+.. image:: img/frontend_screen-position.png
+  :align: center
+  :alt: [Image of two schematic monitors, above each other and aligned left]
+
+The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:
+
+.. code-block::
+
+    self.mask_points = [[0, 0], [85.5, 0], [85.5, 82], [0, 82], [0, -50],
+                    [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
+
+The last step in the canvas initialization is the setup of the :ref:`Communication <communication>`.
+
+.. _frontend_mode:
 
 Modes
 =====
@@ -413,20 +458,3 @@ and then in `input_mode.py`:
       f = open('../data/simulation_df.xml', 'w')
       f.write(xml)
       f.close()
-
-
-Understanding the Infoscreen
-****************************
-
-.. _installing_infoscreen:
-
-Installing the Infoscreen
-=========================
-
-Understangin GAMA
-*****************
-
-.. _installing_gama:
-
-Installing GAMA
-===============
