@@ -38,7 +38,7 @@ Now you also see predictions of CO2-emissions and energy costs, pre-calculated b
 
 The game master can now discuss the calculated data with the users in :ref:`two different visualization modes<data_view>`. Furthermore, they can pre-define the number of buildings connected to the heat grid to influence the calculation of neighborhood emissions and energy costs.
 
-.. image:: img/Infoscreen_04_totalDataView.png
+.. image:: img/Infoscreen_03b_totalDataView.png
     :align: center
     :alt: [Image of the infoscreen showing the neighborhood's cumulated data and the housesholds emissions and energy costs in comparison.]
 
