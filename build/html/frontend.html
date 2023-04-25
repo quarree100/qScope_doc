@@ -34,7 +34,8 @@
             
   <section id="frontend">
 <h1>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading">¶</a></h1>
-<p>The Q-Scope frontend, as used in the project QUARRE100, was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games.</p>
+<p>The Q-Scope frontend, as used in the project QUARRE100, was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games.
+In this chapter, we will first handle the frontend’s installation and afterwards explain its features by going through the code (more or less linearly).</p>
 <section id="frontend-installation">
 <span id="id1"></span><h2>Frontend Installation<a class="headerlink" href="#frontend-installation" title="Permalink to this heading">¶</a></h2>
 <p>After <a class="reference external" href="https://github.com/git-guides/git-clone">cloning</a> the frontend’s repository, you can simply install all required python modules by executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">[MODULE]</span></code>.)
@@ -78,42 +79,26 @@ At the end of the main script, an instance of the frontend is created and run in
 <p>The whole frontend was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.</p>
 <section id="config-file">
 <h3>Config file<a class="headerlink" href="#config-file" title="Permalink to this heading">¶</a></h3>
-<p>To configure the frontend, <code class="docutils literal notranslate"><span class="pre">q100viz/settings/config.py</span></code> can be changed before running the application. Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
-You can modify the path of files being imported/exported, <a class="reference internal" href="#simulation-setup"><span class="std std-ref">change the source file and the simulation time for the agent-based-model</span></a>, save information of the extents of the <a class="reference internal" href="#frontend-grid-setup"><span class="std std-ref">grids</span></a> and the <a class="reference internal" href="#frontend-slider-setup"><span class="std std-ref">sliders</span></a> here.</p>
-<p>TODO:</p>
+<p>To configure the frontend, the file <code class="docutils literal notranslate"><span class="pre">q100viz/settings/config.py</span></code> can be changed before running the application.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.</p>
+</div>
+<p>Here you can modify the path of files being imported/exported, <a class="reference internal" href="#simulation-setup"><span class="std std-ref">change the source file and the simulation time for the agent-based-model</span></a>, save information of the extents of the <a class="reference internal" href="#frontend-grid-setup"><span class="std std-ref">grids</span></a> and the <a class="reference internal" href="#frontend-slider-setup"><span class="std std-ref">sliders</span></a> here. The individual adjustments will be discussed in the according sections, respectively.</p>
 </section>
 <section id="session-file">
 <h3>Session file<a class="headerlink" href="#session-file" title="Permalink to this heading">¶</a></h3>
+<p>The file <code class="docutils literal notranslate"><span class="pre">q100viz/session.py</span></code> is a container for global variables. The file does some initial variable assignment, so that we won’t stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You’ll basically find anything that needs to be referred to from different parts throughout the code here, such as <a class="reference internal" href="#devtools"><span class="std std-ref">variables used for Debugging</span></a>.
+In the following graphics section, the pygame viewport is loaded and <a class="reference internal" href="#keystone-transformation"><span class="std std-ref">keystone transformation</span></a> is perfomed.
+Furthermore, a <cite>buildings</cite> variable is created as an instance of the <a class="reference internal" href="#buildings"><span class="std std-ref">Buildings class</span></a>, which represents the houses the users can interact with.</p>
+</section>
+</section>
+<section id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
+<section id="buildings">
+<span id="id3"></span><h3>Buildings<a class="headerlink" href="#buildings" title="Permalink to this heading">¶</a></h3>
 <p>TODO:</p>
 </section>
-<section id="frontend-class">
-<h3>Frontend class<a class="headerlink" href="#frontend-class" title="Permalink to this heading">¶</a></h3>
-<p>Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.</p>
-<p id="frontend-setup-window">You can set the window’s position using the os module:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># set window position</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">run_in_main_window</span><span class="p">:</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># left</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="mi">2560</span>  <span class="c1"># height of upper monitor --&gt; display on lower monitor</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;SDL_VIDEO_WINDOW_POS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
-        <span class="mi">0</span><span class="p">,</span> <span class="mi">2560</span><span class="p">)</span>  <span class="c1"># projection to the left</span>
-</pre></div>
-</div>
-<p>For this setting, the monitors should be organized as follows:</p>
-<img alt="[Image of two schematic monitors, above each other and aligned left]" class="align-center" src="_images/frontend_screen-position.png" />
-<p>The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">mask_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span>
-                <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">]]</span>
-</pre></div>
-</div>
-<p>Finally, a seperate thread for UDP observation is started. Each table (“grid”) has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the <a class="reference internal" href="communication.html#communication"><span class="std std-ref">Communication</span></a> section.</p>
-</section>
-</section>
-<section id="frontend-game-loop">
-<span id="id3"></span><h2>Frontend Game Loop<a class="headerlink" href="#frontend-game-loop" title="Permalink to this heading">¶</a></h2>
-<p>TODO:</p>
-</section>
-<section id="projection">
-<h2>Projection<a class="headerlink" href="#projection" title="Permalink to this heading">¶</a></h2>
 <section id="gis">
 <h3>GIS<a class="headerlink" href="#gis" title="Permalink to this heading">¶</a></h3>
 <p><strong>ROI for distorted polygons:</strong></p>
@@ -156,10 +141,42 @@ You can modify the path of files being imported/exported, <a class="reference in
 </pre></div>
 </div>
 </section>
+</section>
+<section id="graphics">
+<h2>Graphics<a class="headerlink" href="#graphics" title="Permalink to this heading">¶</a></h2>
+<section id="canvas-setup">
+<h3>Canvas setup<a class="headerlink" href="#canvas-setup" title="Permalink to this heading">¶</a></h3>
+<p>Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.</p>
+<p id="frontend-setup-window">You can set the window’s position using the os module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># set window position</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">run_in_main_window</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># left</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">2560</span>  <span class="c1"># height of upper monitor --&gt; display on lower monitor</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;SDL_VIDEO_WINDOW_POS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">2560</span><span class="p">)</span>  <span class="c1"># projection to the left</span>
+</pre></div>
+</div>
+<p>For this setting, the monitors should be organized as follows:</p>
+<img alt="[Image of two schematic monitors, above each other and aligned left]" class="align-center" src="_images/frontend_screen-position.png" />
+<p>The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">mask_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Finally, a seperate thread for UDP observation is started. Each table (“grid”) has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the <a class="reference internal" href="communication.html#frontend-communication"><span class="std std-ref">Communication</span></a> section.</p>
+</section>
+<section id="frontend-game-loop">
+<span id="id4"></span><h3>Frontend Game Loop<a class="headerlink" href="#frontend-game-loop" title="Permalink to this heading">¶</a></h3>
+<p>TODO:</p>
+<section id="projection">
+<h4>Projection<a class="headerlink" href="#projection" title="Permalink to this heading">¶</a></h4>
+<p id="viewport-handling">TODO: how to handle the viewport for debugging, session.show_polygons, session.show_basemap, …</p>
+</section>
+</section>
 <section id="calibration">
 <span id="calibration-mode"></span><h3>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">¶</a></h3>
 <section id="keystone-transformation">
-<h4>keystone transformation<a class="headerlink" href="#keystone-transformation" title="Permalink to this heading">¶</a></h4>
+<span id="id5"></span><h4>keystone transformation<a class="headerlink" href="#keystone-transformation" title="Permalink to this heading">¶</a></h4>
 <p>general information on image transofrmation using opencv:</p>
 <p><a class="reference external" href="https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html">tutorial_py_geometric_transformations</a></p>
 <p><a class="reference external" href="https://docs.opencv.org/3.4/d2/de8/group__core__array.html#gad327659ac03e5fd6894b90025e6900a7">using cv.perspectiveTransform for vectors</a>
@@ -263,7 +280,7 @@ The sliders have a bool called <code class="docutils literal notranslate"><span 
 <p>each mode has a function called <code class="docutils literal notranslate"><span class="pre">activate()</span></code> which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
 The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function is seldomly used, since it will be run in the beginning of the script (in <code class="docutils literal notranslate"><span class="pre">session.py</span></code>), before the variables (e.g. <code class="docutils literal notranslate"><span class="pre">grid</span></code>) are initialized.</p>
 <section id="buildings-interaction">
-<span id="id4"></span><h3>Buildings Interaction<a class="headerlink" href="#buildings-interaction" title="Permalink to this heading">¶</a></h3>
+<span id="id6"></span><h3>Buildings Interaction<a class="headerlink" href="#buildings-interaction" title="Permalink to this heading">¶</a></h3>
 <p>In the Input Mode, users can set household-, buildings- global parameters. They can leave the mode placing a token on the “simulation mode” selector.</p>
 </section>
 <section id="simulation">
@@ -282,7 +299,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </section>
 </section>
 <section id="data-view">
-<span id="id5"></span><h3>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h3>
+<span id="id7"></span><h3>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h3>
 </section>
 </section>
 <section id="user-interface">
@@ -330,13 +347,13 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 <p id="frontend-slider-setup">TODO: how to define and setup the sliders.</p>
 </section>
 <section id="modeselector">
-<span id="id6"></span><h3>ModeSelector<a class="headerlink" href="#modeselector" title="Permalink to this heading">¶</a></h3>
+<span id="id8"></span><h3>ModeSelector<a class="headerlink" href="#modeselector" title="Permalink to this heading">¶</a></h3>
 <p>A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.</p>
 <p><code class="docutils literal notranslate"><span class="pre">grid_1_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_2_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> are used to assign functionality to grid cells.</p>
 <p>valid handles are:</p>
 <p><strong>environment handles:</strong></p>
-<table class="docutils align-default" id="id7">
-<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>parameter</p></th>
 <th class="head"><p>possible values</p></th>
@@ -364,8 +381,8 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </tbody>
 </table>
 <p><strong>household-individual handles:</strong></p>
-<table class="docutils align-default" id="id8">
-<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>adjustable</p></th>
 <th class="head"><p>parameter</p></th>
@@ -439,6 +456,13 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </ul>
 </section>
 </section>
+<section id="debugging-and-devtools">
+<span id="devtools"></span><h2>Debugging and Devtools<a class="headerlink" href="#debugging-and-devtools" title="Permalink to this heading">¶</a></h2>
+<p>TODO: session.log
+TODO: session.VERBOSE_MODE
+TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbished, debug_force_save_energy</p>
+<p>TODO: refer to _viewport_handling_</p>
+</section>
 </section>
 
 
@@ -465,10 +489,11 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 <li class="toctree-l2"><a class="reference internal" href="#frontend-installation">Frontend Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#starting-the-frontend">Starting the Frontend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#frontend-initialization">Frontend Initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#frontend-game-loop">Frontend Game Loop</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#projection">Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graphics">Graphics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#game-modes">Game Modes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#user-interface">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging-and-devtools">Debugging and Devtools</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tag_decoder.html">Tag Decoder (cspy)</a></li>

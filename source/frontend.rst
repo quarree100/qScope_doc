@@ -2,6 +2,7 @@ Frontend
 ########
 
 The Q-Scope frontend, as used in the project QUARRE100, was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games.
+In this chapter, we will first handle the frontend's installation and afterwards explain its features by going through the code (more or less linearly).
 
 .. _frontend_installation:
 
@@ -54,59 +55,29 @@ The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python
 Config file
 ===========
 
-To configure the frontend, ``q100viz/settings/config.py`` can be changed before running the application. Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
-You can modify the path of files being imported/exported, :ref:`change the source file and the simulation time for the agent-based-model<simulation_setup>`, save information of the extents of the :ref:`grids<frontend_grid_setup>` and the :ref:`sliders<frontend_slider_setup>` here.
+To configure the frontend, the file ``q100viz/settings/config.py`` can be changed before running the application.
 
+.. note:: Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
 
-TODO:
+Here you can modify the path of files being imported/exported, :ref:`change the source file and the simulation time for the agent-based-model<simulation_setup>`, save information of the extents of the :ref:`grids<frontend_grid_setup>` and the :ref:`sliders<frontend_slider_setup>` here. The individual adjustments will be discussed in the according sections, respectively.
 
 Session file
 ============
 
-TODO:
+The file ``q100viz/session.py`` is a container for global variables. The file does some initial variable assignment, so that we won't stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You'll basically find anything that needs to be referred to from different parts throughout the code here, such as :ref:`variables used for Debugging<devtools>`.
+In the following graphics section, the pygame viewport is loaded and :ref:`keystone transformation<keystone_transformation>` is perfomed.
+Furthermore, a `buildings` variable is created as an instance of the :ref:`Buildings class<buildings>`, which represents the houses the users can interact with.
 
-Canvas setup
-============
 
-Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
+Data
+****
 
-.. _frontend_setup_window:
+.. _buildings:
 
-You can set the window's position using the os module:
-
-.. code-block::
-
-  # set window position
-  if not run_in_main_window:
-      x = 0  # left
-      y = 2560  # height of upper monitor --> display on lower monitor
-      os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
-          0, 2560)  # projection to the left
-
-For this setting, the monitors should be organized as follows:
-
-.. image:: img/frontend_screen-position.png
-  :align: center
-  :alt: [Image of two schematic monitors, above each other and aligned left]
-
-The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:
-
-.. code-block::
-
-    self.mask_points = [[0, 0], [85.5, 0], [85.5, 82], [0, 82], [0, -50],
-                    [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
-
-Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
-
-.. _frontend_game_loop:
-
-Frontend Game Loop
-******************
+Buildings
+=========
 
 TODO:
-
-Projection
-**********
 
 GIS
 ===
@@ -159,10 +130,62 @@ GIS
       [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]],
       viewport)
 
+Graphics
+********
+
+Canvas setup
+============
+
+Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
+
+.. _frontend_setup_window:
+
+You can set the window's position using the os module:
+
+.. code-block::
+
+  # set window position
+  if not run_in_main_window:
+      x = 0  # left
+      y = 2560  # height of upper monitor --> display on lower monitor
+      os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
+          0, 2560)  # projection to the left
+
+For this setting, the monitors should be organized as follows:
+
+.. image:: img/frontend_screen-position.png
+  :align: center
+  :alt: [Image of two schematic monitors, above each other and aligned left]
+
+The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:
+
+.. code-block::
+
+    self.mask_points = [[0, 0], [85.5, 0], [85.5, 82], [0, 82], [0, -50],
+                    [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
+
+Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
+
+.. _frontend_game_loop:
+
+Frontend Game Loop
+==================
+
+TODO:
+
+Projection
+----------
+
+.. _viewport_handling:
+
+TODO: how to handle the viewport for debugging, session.show_polygons, session.show_basemap, ...
+
 .. _calibration_mode:
 
 Calibration
 ===========
+
+.. _keystone_transformation:
 
 keystone transformation
 -----------------------
@@ -438,3 +461,14 @@ The Modes can be switched using either the input keys:
 * T: InputMode (TUI Mode)
 * C: CalibrationMode
 * S: Simulation
+
+.. _devtools:
+
+Debugging and Devtools
+**********************
+
+TODO: session.log
+TODO: session.VERBOSE_MODE
+TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbished, debug_force_save_energy
+
+TODO: refer to _viewport_handling_
