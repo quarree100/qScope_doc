@@ -70,8 +70,15 @@ Furthermore, a `buildings` variable is created as an instance of the :ref:`Build
 
 .. _environment:
 
-The `environment` variable stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.
+Further contents of the code are:
+- The `environment` variable that stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.
 
+.. _scenario:
+
+- A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the data_ folder.
+- Initialization of  GIS objects, such as the geographic canvas extents and the basemap file are initialized
+- Initialization of the grid_ objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the cspy_ tag decoder at each interaction.
+- Initialization of the _modes. The different game stages are stored in a variable called ``modes``.
 
 Data
 ****
@@ -81,7 +88,52 @@ Data
 Buildings
 =========
 
-TODO:
+The ``Buildings`` class is basically one large DataFrame containing all metadata about the buildings taken from a shapefile. The source file contains information about the houses addresses, specific heat consumption, energy carrier, building type, etc.
+Only existing buildings are regarded.
+The buildings can be clustered in groups according to similar heat consumptions:
+
+.. code-block:: python
+
+      def make_clusters(self, start_interval):
+        '''make groups of the selected buildings. group by standard deviation of energy consumption'''
+        cluster_list = []
+        for idx in range(len(self.df.index)):
+            interval = start_interval  # standard deviation
+            cluster = pandas.DataFrame()
+            while len(cluster) < 2:  # make sure no building is alone
+                cluster = self.df.loc[(
+                        (self.df['energy_source'] == self.df.loc[
+                            self.df.index[idx], 'energy_source'])
+                        &
+                        (self.df['spec_heat_consumption'] >= self.df.loc[self.df.index[idx],
+                        'spec_heat_consumption'] - self.df['spec_heat_consumption'].std() * interval)
+                        &
+                        (self.df['spec_heat_consumption'] <= self.df.loc[self.df.index[idx],
+                        'spec_heat_consumption'] + self.df['spec_heat_consumption'].std() * interval)
+                        &
+                        (self.df['spec_power_consumption'] >= self.df.loc[self.df.index[idx],
+                        'spec_power_consumption'] - self.df['spec_power_consumption'].std() * interval)
+                        &
+                        (self.df['spec_power_consumption'] <= self.df.loc[self.df.index[idx],
+                        'spec_power_consumption'] + self.df['spec_power_consumption'].std() * interval)
+                    )]
+                interval += 0.1  # increase range, try again if necessary
+
+            cluster_list.append(cluster)
+            devtools.print_verbose(
+                "building {0} is in a group of to {1} buildings with similar specs:".format(self.df.index[idx], len(cluster)), session.VERBOSE_MODE, session.log)
+            # devtools.print_verbose(cluster[['spec_heat_consumption', 'spec_power_consumption']].describe(), session.VERBOSE_MODE)
+
+        return cluster_list
+
+Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the ABM_ to be forwarded to and shown at the infoscreen.
+
+.. note::
+
+  "Behavior" data such as the connection to the QUARRE100-heat-grid, refurbishment of the house or energy-saving measures are pre-set in the following manner: ``false``, if house's energy_source (in source data) is not ``None``, else the house will come in pre-connected and refurbished.
+
+Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). cspy_ will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: read_scanner_data_ function.
+The Buildings class contains additional functions, e.g. ``find_closest_heat_grid_line`` for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.
 
 GIS
 ===
@@ -294,12 +346,24 @@ Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP i
 **display sliders**:
 The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
 
+Drawing Heat Grid Lines
+-----------------------
+
+// TODO:
+#. Buildings.find_closest_heat_grid_line
+#. draw the line
+
 .. _frontend_mode:
+.. _mode:
 
 Game Modes
 **********
 
-* there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
+.. image:: img/Q-Scope_game-stages.png
+  :align: center
+  :alt: [Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]
+
+* In the :ref:`QUARREE100 use case<quarree100>` there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
 * implemented modes are:
     * :ref:`Interaction <buildings_interaction>`
     * :ref:`Simulation <simulation_mode>`
@@ -420,6 +484,49 @@ grid coordinates:
   5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
 
   '''
+
+.. _read_scanner_data:
+
+.. code-block:: python
+  :caption: the algorithm for deciphering the incoming grid data from cspy_:
+
+      def read_scanner_data(self, message):
+        try:
+            msg = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            print("Invalid JSON")
+            return
+
+        try:
+            # update grid cells
+            for y, row in enumerate(self.grid):
+                for x, cell in enumerate(row):
+                    cell.id, cell.rot = msg['grid'][y * self.x_size + x]
+
+                    cell.selected = cell.id != 5  # any non-white object selects cells
+
+                    # calculate relative rotation
+                    # an inactive cell has a rotation value of -1
+                    if cell.rot == -1:
+                        cell.rel_rot = 0
+                    elif cell.prev_rot != cell.rot:
+                        cell.rel_rot = cell.rot - cell.prev_rot if cell.prev_rot > -1 else 0
+                    cell.prev_rot = cell.rot
+
+            session.flag_export_canvas = True
+            session.active_mode.process_grid_change()
+
+            # update slider values
+            # TODO: this causes type error when no slider value provided in cspy → provide 0 by default?
+            for slider_id in self.sliders.keys():
+                if msg['sliders'][slider_id] is not None: self.sliders[slider_id].value = msg['sliders'][slider_id]
+                self.sliders[slider_id].process_value()
+
+        except TypeError as t:
+            # pass
+            print("type error", t)
+        except IndexError:
+            print("Warning: incoming grid data is incomplete")
 
 Sliders
 =======

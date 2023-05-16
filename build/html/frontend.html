@@ -91,14 +91,63 @@ At the end of the main script, an instance of the frontend is created and run in
 <p>The file <code class="docutils literal notranslate"><span class="pre">q100viz/session.py</span></code> is a container for global variables. The file does some initial variable assignment, so that we won’t stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You’ll basically find anything that needs to be referred to from different parts throughout the code here, such as <a class="reference internal" href="#devtools"><span class="std std-ref">variables used for Debugging</span></a>.
 In the following graphics section, the pygame viewport is loaded and <a class="reference internal" href="#keystone-transformation"><span class="std std-ref">keystone transformation</span></a> is perfomed.
 Furthermore, a <cite>buildings</cite> variable is created as an instance of the <a class="reference internal" href="#buildings"><span class="std std-ref">Buildings class</span></a>, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.</p>
-<p id="environment">The <cite>environment</cite> variable stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.</p>
+<p id="environment">Further contents of the code are:
+- The <cite>environment</cite> variable that stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.</p>
+<ul class="simple" id="scenario">
+<li><p>A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the <a class="reference internal" href="#data">data</a> folder.</p></li>
+<li><p>Initialization of  GIS objects, such as the geographic canvas extents and the basemap file are initialized</p></li>
+<li><p>Initialization of the <a class="reference internal" href="#grid">grid</a> objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the <a href="#id13"><span class="problematic" id="id14">cspy_</span></a> tag decoder at each interaction.</p></li>
+<li><p>Initialization of the _modes. The different game stages are stored in a variable called <code class="docutils literal notranslate"><span class="pre">modes</span></code>.</p></li>
+</ul>
 </section>
 </section>
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
 <section id="buildings">
 <span id="id3"></span><h3>Buildings<a class="headerlink" href="#buildings" title="Permalink to this heading">¶</a></h3>
-<p>TODO:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Buildings</span></code> class is basically one large DataFrame containing all metadata about the buildings taken from a shapefile. The source file contains information about the houses addresses, specific heat consumption, energy carrier, building type, etc.
+Only existing buildings are regarded.
+The buildings can be clustered in groups according to similar heat consumptions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_clusters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_interval</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;make groups of the selected buildings. group by standard deviation of energy consumption&#39;&#39;&#39;</span>
+  <span class="n">cluster_list</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+      <span class="n">interval</span> <span class="o">=</span> <span class="n">start_interval</span>  <span class="c1"># standard deviation</span>
+      <span class="n">cluster</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+      <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># make sure no building is alone</span>
+          <span class="n">cluster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span>
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;energy_source&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="s1">&#39;energy_source&#39;</span><span class="p">])</span>
+                  <span class="o">&amp;</span>
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                  <span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)</span>
+                  <span class="o">&amp;</span>
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                  <span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_heat_consumption&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)</span>
+                  <span class="o">&amp;</span>
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                  <span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)</span>
+                  <span class="o">&amp;</span>
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+                  <span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;spec_power_consumption&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)</span>
+              <span class="p">)]</span>
+          <span class="n">interval</span> <span class="o">+=</span> <span class="mf">0.1</span>  <span class="c1"># increase range, try again if necessary</span>
+
+      <span class="n">cluster_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+      <span class="n">devtools</span><span class="o">.</span><span class="n">print_verbose</span><span class="p">(</span>
+          <span class="s2">&quot;building </span><span class="si">{0}</span><span class="s2"> is in a group of to </span><span class="si">{1}</span><span class="s2"> buildings with similar specs:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">)),</span> <span class="n">session</span><span class="o">.</span><span class="n">VERBOSE_MODE</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">log</span><span class="p">)</span>
+      <span class="c1"># devtools.print_verbose(cluster[[&#39;spec_heat_consumption&#39;, &#39;spec_power_consumption&#39;]].describe(), session.VERBOSE_MODE)</span>
+
+  <span class="k">return</span> <span class="n">cluster_list</span>
+</pre></div>
+</div>
+<p>Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the <a href="#id15"><span class="problematic" id="id16">ABM_</span></a> to be forwarded to and shown at the infoscreen.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>“Behavior” data such as the connection to the QUARRE100-heat-grid, refurbishment of the house or energy-saving measures are pre-set in the following manner: <code class="docutils literal notranslate"><span class="pre">false</span></code>, if house’s energy_source (in source data) is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, else the house will come in pre-connected and refurbished.</p>
+</div>
+<p>Buildings can either be <code class="docutils literal notranslate"><span class="pre">selected</span></code> by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). <a href="#id17"><span class="problematic" id="id18">cspy_</span></a> will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the <code class="docutils literal notranslate"><span class="pre">grid.py</span></code>: <a class="reference internal" href="#read-scanner-data">read_scanner_data</a> function.
+The Buildings class contains additional functions, e.g. <code class="docutils literal notranslate"><span class="pre">find_closest_heat_grid_line</span></code> for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.</p>
 </section>
 <section id="gis">
 <h3>GIS<a class="headerlink" href="#gis" title="Permalink to this heading">¶</a></h3>
@@ -261,12 +310,19 @@ Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP i
 <p><strong>display sliders</strong>:
 The sliders have a bool called <code class="docutils literal notranslate"><span class="pre">show_text</span></code> that, when <code class="docutils literal notranslate"><span class="pre">True</span></code>, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.</p>
 </section>
+<section id="drawing-heat-grid-lines">
+<h4>Drawing Heat Grid Lines<a class="headerlink" href="#drawing-heat-grid-lines" title="Permalink to this heading">¶</a></h4>
+<p>// TODO:
+#. Buildings.find_closest_heat_grid_line
+#. draw the line</p>
+</section>
 </section>
 </section>
 <section id="game-modes">
-<span id="frontend-mode"></span><h2>Game Modes<a class="headerlink" href="#game-modes" title="Permalink to this heading">¶</a></h2>
+<span id="mode"></span><span id="frontend-mode"></span><h2>Game Modes<a class="headerlink" href="#game-modes" title="Permalink to this heading">¶</a></h2>
+<img alt="[Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]" class="align-center" src="_images/Q-Scope_game-stages.png" />
 <ul class="simple">
-<li><p>there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
+<li><p>In the <span class="xref std std-ref">QUARREE100 use case</span> there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
 <li><dl class="simple">
 <dt>implemented modes are:</dt><dd><ul>
 <li><p><a class="reference internal" href="#buildings-interaction"><span class="std std-ref">Interaction</span></a></p></li>
@@ -360,6 +416,48 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 <span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 </div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<span id="read-scanner-data"></span><div class="code-block-caption"><span class="caption-text">the algorithm for deciphering the incoming grid data from <a href="#id19"><span class="problematic" id="id20">cspy_</span></a>:</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">read_scanner_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+          <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+      <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid JSON&quot;</span><span class="p">)</span>
+          <span class="k">return</span>
+
+      <span class="k">try</span><span class="p">:</span>
+          <span class="c1"># update grid cells</span>
+          <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">):</span>
+              <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                  <span class="n">cell</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">rot</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">][</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_size</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span>
+
+                  <span class="n">cell</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">5</span>  <span class="c1"># any non-white object selects cells</span>
+
+                  <span class="c1"># calculate relative rotation</span>
+                  <span class="c1"># an inactive cell has a rotation value of -1</span>
+                  <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">rot</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                      <span class="n">cell</span><span class="o">.</span><span class="n">rel_rot</span> <span class="o">=</span> <span class="mi">0</span>
+                  <span class="k">elif</span> <span class="n">cell</span><span class="o">.</span><span class="n">prev_rot</span> <span class="o">!=</span> <span class="n">cell</span><span class="o">.</span><span class="n">rot</span><span class="p">:</span>
+                      <span class="n">cell</span><span class="o">.</span><span class="n">rel_rot</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">rot</span> <span class="o">-</span> <span class="n">cell</span><span class="o">.</span><span class="n">prev_rot</span> <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">prev_rot</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+                  <span class="n">cell</span><span class="o">.</span><span class="n">prev_rot</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">rot</span>
+
+          <span class="n">session</span><span class="o">.</span><span class="n">flag_export_canvas</span> <span class="o">=</span> <span class="kc">True</span>
+          <span class="n">session</span><span class="o">.</span><span class="n">active_mode</span><span class="o">.</span><span class="n">process_grid_change</span><span class="p">()</span>
+
+          <span class="c1"># update slider values</span>
+          <span class="c1"># TODO: this causes type error when no slider value provided in cspy → provide 0 by default?</span>
+          <span class="k">for</span> <span class="n">slider_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sliders</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+              <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;sliders&#39;</span><span class="p">][</span><span class="n">slider_id</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sliders</span><span class="p">[</span><span class="n">slider_id</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;sliders&#39;</span><span class="p">][</span><span class="n">slider_id</span><span class="p">]</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">sliders</span><span class="p">[</span><span class="n">slider_id</span><span class="p">]</span><span class="o">.</span><span class="n">process_value</span><span class="p">()</span>
+
+      <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+          <span class="c1"># pass</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;type error&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: incoming grid data is incomplete&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </section>
 </section>
 <section id="sliders">
@@ -372,8 +470,8 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 <p><code class="docutils literal notranslate"><span class="pre">grid_1_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_2_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> are used to assign functionality to grid cells.</p>
 <p>valid handles are:</p>
 <p><strong>environment handles:</strong></p>
-<table class="docutils align-default" id="id10">
-<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id11">
+<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>parameter</p></th>
 <th class="head"><p>possible values</p></th>
@@ -401,8 +499,8 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </tbody>
 </table>
 <p><strong>household-individual handles:</strong></p>
-<table class="docutils align-default" id="id11">
-<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id12">
+<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>adjustable</p></th>
 <th class="head"><p>parameter</p></th>

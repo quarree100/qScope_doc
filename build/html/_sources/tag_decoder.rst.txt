@@ -1,3 +1,5 @@
+.. _cspy:
+
 Tag Decoder (cspy)
 ##################
 

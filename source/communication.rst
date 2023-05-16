@@ -10,6 +10,8 @@ API: Backend
 
 TODO: grid, decoder-side
 
+Incoming grid status is deciphered in ``grid.py``: read_scanner_data_
+
 .. _frontend_communication:
 
 TODO: grid, frontend side

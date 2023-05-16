@@ -38,6 +38,7 @@
 <section id="api-backend">
 <h2>API: Backend<a class="headerlink" href="#api-backend" title="Permalink to this heading">¶</a></h2>
 <p>TODO: grid, decoder-side</p>
+<p>Incoming grid status is deciphered in <code class="docutils literal notranslate"><span class="pre">grid.py</span></code>: <a href="#id2"><span class="problematic" id="id3">read_scanner_data_</span></a></p>
 <p id="frontend-communication">TODO: grid, frontend side</p>
 </section>
 <section id="api-frontend">
@@ -45,7 +46,7 @@
 <p>JSON and CSV constructs used for the communication between GAMA, the Q-Scope-infoscreen and -frontend.</p>
 <section id="starting-the-gama-simulation-via-xml">
 <h3>Starting the GAMA Simulation via XML<a class="headerlink" href="#starting-the-gama-simulation-via-xml" title="Permalink to this heading">¶</a></h3>
-<p>When moving from Input Mode to Simulation Mode (by Placing a Token on the according <a href="#id2"><span class="problematic" id="id3">ModeSelector_</span></a>), an xml file is composed containing all the global environment data. The general structure looks like this:</p>
+<p>When moving from Input Mode to Simulation Mode (by Placing a Token on the according <a href="#id4"><span class="problematic" id="id5">ModeSelector_</span></a>), an xml file is composed containing all the global environment data. The general structure looks like this:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Experiment&gt;</span>
 <span class="w">  </span><span class="nt">&lt;Parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;year&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/Parameter&gt;</span>
 <span class="w">  </span><span class="nt">&lt;Parameter</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;foerderung&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/Parameter&gt;</span>

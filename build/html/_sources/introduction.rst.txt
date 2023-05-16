@@ -1,12 +1,14 @@
 Introduction
 ############
 
+.. _quarree100:
+
 QUARREE100 project
 ******************
 
-The Q-Scope framework was used in the `QUARREE100 <quarree100.de>`_ project. In this section, you'll learn how and what for.
+The Q-Scope framework was used in the `QUARREE100 <quarree100.de>`_ project. Before diving into the detailed programming of the framework, you should understand how we used it in the "pilot project" QUARREE100. This documentation will frequently refer to the setup we implemented for QUARREE100.
 
-After booting the whole setup, you see an aerial photograph of the area of importance for the QUARREE100 project, projected onto the table. All existing buildings are displayed, some marked red. These colored buildings are the ones you can interact with.
+After startup, you see an aerial photograph of the area of importance for the QUARREE100 project, projected onto the table. All existing buildings are displayed, some marked red. These colored buildings are the ones you can interact with.
 On the right side, there is an area for global settings, that is to be used only by the "game master" - a person that guides the whole group of users through the workshop. The area contains some positions to switch through the game modes and a range of fields for some gameplay scenarios.
 
 .. image:: img/Q-Scope_tokens.jpeg
