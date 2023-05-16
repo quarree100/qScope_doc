@@ -66,7 +66,11 @@ Session file
 
 The file ``q100viz/session.py`` is a container for global variables. The file does some initial variable assignment, so that we won't stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You'll basically find anything that needs to be referred to from different parts throughout the code here, such as :ref:`variables used for Debugging<devtools>`.
 In the following graphics section, the pygame viewport is loaded and :ref:`keystone transformation<keystone_transformation>` is perfomed.
-Furthermore, a `buildings` variable is created as an instance of the :ref:`Buildings class<buildings>`, which represents the houses the users can interact with.
+Furthermore, a `buildings` variable is created as an instance of the :ref:`Buildings class<buildings>`, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.
+
+.. _environment:
+
+The `environment` variable stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.
 
 
 Data
@@ -231,7 +235,7 @@ in file ``q100viz/keystone.py``
 frontend representation
 -----------------------
 
-* slider uses the transformation of the grid
+* slider uses the transformation of the grid_
 * **drawing of polygons and values** should be done via ``self.surface.blit(...)``. Slider surface is rendered and "blitted" to main canvas.
 
 ``print(slider.coords_transformed)`` returns:
@@ -342,6 +346,8 @@ Data View
 User Interface
 **************
 
+.. _grid:
+
 Grid & Tiles
 ============
 
@@ -391,6 +397,29 @@ e.g. emission, in ``InputMode.draw()``:
      elif cell.rel_rot == -1:
          i = get_intersection(session.buildings, grid, x, y)
          session.buildings.loc[i, 'CO2'] -= 20
+
+.. _grid_coordinates:
+
+grid coordinates:
+-----------------
+
+``grid.rects_transformed``
+
+.. code-block:: python
+
+  for i, (cell, coords) in enumerate(session.grid_1.rects_transformed):
+      print("{0}: ({1}|{2}): {3}".format(i, cell.x, cell.y, coords))
+
+  # returns:
+  '''
+  0: (0|0): [[134.9009246826172, 4.38118839263916], [134.4179229736328, 37.4811897277832], [167.75010681152344, 38.0572509765625], [168.22642517089844, 4.963389873504639]]
+  1: (1|0): [[168.22642517089844, 4.963389873504639], [167.75010681152344, 38.0572509765625], [201.06971740722656, 38.633094787597656], [201.53933715820312, 5.545371055603027]]
+  2: (2|0): [[201.53933715820312, 5.545371055603027], [201.06971740722656, 38.633094787597656], [234.37672424316406, 39.20872497558594], [234.8396759033203, 6.127132415771484]]
+  3: (3|0): [[234.8396759033203, 6.127132415771484], [234.37672424316406, 39.20872497558594], [267.6711730957031, 39.78413391113281], [268.12744140625, 6.708674430847168]]
+  4: (4|0): [[268.12744140625, 6.708674430847168], [267.6711730957031, 39.78413391113281], [300.9530334472656, 40.35932922363281], [301.4026184082031, 7.28999662399292]]
+  5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
+
+  '''
 
 Sliders
 =======
