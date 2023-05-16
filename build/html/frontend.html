@@ -90,7 +90,8 @@ At the end of the main script, an instance of the frontend is created and run in
 <h3>Session file<a class="headerlink" href="#session-file" title="Permalink to this heading">¶</a></h3>
 <p>The file <code class="docutils literal notranslate"><span class="pre">q100viz/session.py</span></code> is a container for global variables. The file does some initial variable assignment, so that we won’t stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You’ll basically find anything that needs to be referred to from different parts throughout the code here, such as <a class="reference internal" href="#devtools"><span class="std std-ref">variables used for Debugging</span></a>.
 In the following graphics section, the pygame viewport is loaded and <a class="reference internal" href="#keystone-transformation"><span class="std std-ref">keystone transformation</span></a> is perfomed.
-Furthermore, a <cite>buildings</cite> variable is created as an instance of the <a class="reference internal" href="#buildings"><span class="std std-ref">Buildings class</span></a>, which represents the houses the users can interact with.</p>
+Furthermore, a <cite>buildings</cite> variable is created as an instance of the <a class="reference internal" href="#buildings"><span class="std std-ref">Buildings class</span></a>, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.</p>
+<p id="environment">The <cite>environment</cite> variable stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.</p>
 </section>
 </section>
 <section id="data">

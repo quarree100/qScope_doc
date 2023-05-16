@@ -1,21 +1,28 @@
 Infoscreen
 ##########
 
-Understanding the Infoscreen
-****************************
+Overview
+***********************
 
 .. _installing_infoscreen:
 
-..  code-block:: bash
+Infoscreen Installation
+=======================
 
+..  code-block:: bash
     :caption: Clone the repository to local
+
     git clone git@github.com:quarree100/qScope_infoscreen.git``
 
+..  code-block:: bash
     :caption: install node modules
+
     cd qScope_infoscreen
     npm install
 
+..  code-block:: bash
     :caption: setup a folder public/data as a symlink pointing to qScope/data
+
     ln -s ../data/ ./public
 
 
@@ -45,8 +52,8 @@ Run the infoscreen
 =========================
 
 ..  code-block:: bash
-
     :caption: run npm shortcut command
+
     npm start #equivalent to ``npm run start``, which is defined in package.json. "start" script runs ``npx nodemon q100_info.js``
 
 Architecture
@@ -69,6 +76,7 @@ The individual data view displayes the information of one selected building. In 
 Total Data View
 =========================
 There are four different graphs to show the result of the simulation.
+
 1. Energiekosten im Vergleich / Energy costs in comparison
 shows the change of the energy cost over time per building.
 
