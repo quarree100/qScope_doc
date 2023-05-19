@@ -1,3 +1,5 @@
+.. _frontend:
+
 Frontend
 ########
 
@@ -6,8 +8,8 @@ In this chapter, we will first handle the frontend's installation and afterwards
 
 .. _frontend_installation:
 
-Frontend Installation
-*********************
+Installation
+************
 
 After `cloning <https://github.com/git-guides/git-clone>`_ the frontend's repository, you can simply install all required python modules by executing ``pip install -r requirements.txt``. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via ``pip3 install [MODULE]``.)
 Simply run the script via ``python3 run_q100viz.py``
@@ -26,8 +28,8 @@ File Structure
       └───settings
   └───run_q100viz.py
 
-Starting the Frontend
-*********************
+Running
+*******
 The main script is called ``run_q100viz.py``. You can start it from the qScope_frontend folder by running ``python3 run_q100viz.py``. Some flags can be set to enable debug options:
 
 .. _frontent_startup_flags:
@@ -48,8 +50,8 @@ At the end of the main script, an instance of the frontend is created and run in
 
 .. _frontend_pygame_setup:
 
-Frontend Initialization
-***********************
+Initialization
+**************
 The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.
 
 Config file
@@ -60,6 +62,8 @@ To configure the frontend, the file ``q100viz/settings/config.py`` can be change
 .. note:: Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
 
 Here you can modify the path of files being imported/exported, :ref:`change the source file and the simulation time for the agent-based-model<simulation_setup>`, save information of the extents of the :ref:`grids<frontend_grid_setup>` and the :ref:`sliders<frontend_slider_setup>` here. The individual adjustments will be discussed in the according sections, respectively.
+
+.. _session:
 
 Session file
 ============
@@ -80,13 +84,15 @@ Further contents of the code are:
 - Initialization of the grid_ objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the cspy_ tag decoder at each interaction.
 - Initialization of the _modes. The different game stages are stored in a variable called ``modes``.
 
-Data
-****
+GIS & Buildings Data
+********************
 
 .. _buildings:
 
 Buildings
 =========
+
+How are the buildings you see on the map colored and how can they be accessed? Most of the interaction in the QUARREE100 project is done via selection of buildings on an aerial map. The source data for these building polygons comes from a :ref:`Shapefile in the data folder<architecture>`
 
 The ``Buildings`` class is basically one large DataFrame containing all metadata about the buildings taken from a shapefile. The source file contains information about the houses addresses, specific heat consumption, energy carrier, building type, etc.
 Only existing buildings are regarded.
@@ -138,59 +144,46 @@ The Buildings class contains additional functions, e.g. ``find_closest_heat_grid
 GIS
 ===
 
-**ROI for distorted polygons:**
+The file `gis.py` contains two classes:
+
+1. **The GIS class** draws features from the source Shapefile, like polygons and lines, onto the canvas_. It provides functions to draw the whole polygon layer at once, color them in a certain style (e.g. according to heat grid connection status), etc.
+2. **The Basemap class** initiates and warps the basemap image.
+
+Positioning of the GIS layers is done during :ref:`initialization<session>` of the GIS class object, where the corner points of the ROI (region of interest) extent are set:
 
 .. code-block:: python
 
-  # Initialize geographic viewport and basemap
+  _gis = gis.GIS(
+    config['CANVAS_SIZE'],
+    # northeast          northwest           southwest           southeast
+    [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]],
+    viewport)
 
-  _gis = session.gis = gis.GIS(canvas_size,
-                 # northeast          northwest           southwest           southeast
-                 [[1013622, 7207331], [1013083, 7207150], [1013414, 7206159], [1013990, 7206366]],
-                 session.viewport)
+  basemap = gis.Basemap(
+      config['CANVAS_SIZE'], config['BASEMAP_FILE'],
+      # northwest          southwest           southeast           northeast
+      [[1012695, 7207571], [1012695, 7205976], [1014205, 7205976], [1014205, 7207571]],
+      _gis)
 
+.. note::
+  Some other ROIs we tested in QUARREE100 were:
 
-  _gis = session.gis = gis.GIS(canvas_size,
-                 # northeast          northwest           southwest           southeast
-                 [[1013640, 7207470], [1013000, 7207270], [1013400, 7206120], [1014040, 7206320]],
-                 viewport)
+  **kleinerer Kartenausschnitt:**
 
-???
+   _gis = session.gis = gis.GIS(canvas_size, [[1013578, 7207412], [1013010, 7207210], [1013386, 7206155], [1013953, 7206357]], viewport)
 
-**kleinerer Kartenausschnitt:**
+  **mit Input Area am linken Rand und Aussparung unten:**
 
-.. code-block:: python
+    _gis = session.gis = gis.GIS(canvas_size, [[1013554, 7207623], [1012884, 7207413], [1013281, 7206147], [1013952, 7206357]], viewport)
 
-  _gis = session.gis = gis.GIS(canvas_size,
-                 # northeast          northwest           southwest           southeast
-                 [[1013578, 7207412], [1013010, 7207210], [1013386, 7206155], [1013953, 7206357]],
-                 viewport)
+  **mit Input Area am rechten Rand und Aussparung unten:**
 
-**mit Input Area am linken Rand und Aussparung unten:**
+    gis = session.gis = gis.GIS(canvas_size, [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]], viewport)
 
-.. code-block:: python
-
-  _gis = session.gis = gis.GIS(
-      canvas_size,
-      # northeast          northwest           southwest           southeast
-      [[1013554, 7207623], [1012884, 7207413], [1013281, 7206147], [1013952, 7206357]],
-      viewport)
-
-**mit Input Area am rechten Rand und Aussparung unten:**
-
-.. code-block:: python
-
-  gis = session.gis = gis.GIS(
-      canvas_size,
-      # northeast          northwest           southwest           southeast
-      [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]],
-      viewport)
-
-Graphics
-********
+.. _canvas:
 
 Canvas setup
-============
+************
 
 Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
 
@@ -225,26 +218,80 @@ Finally, a seperate thread for UDP observation is started. Each table ("grid") h
 .. _frontend_game_loop:
 
 Frontend Game Loop
-==================
+******************
 
 TODO:
 
 Projection
-----------
+==========
 
 .. _viewport_handling:
 
-TODO: how to handle the viewport for debugging, session.show_polygons, session.show_basemap, ...
+TODO: how to handle the viewport for debugging (keys), session.show_polygons, session.show_basemap, ...
 
 .. _calibration_mode:
 
+simple Pygame features
+======================
+
+Drawing on Canvas
+-----------------
+
+**displaying text**:
+
+.. code-block:: python
+
+  # 1. define font:
+  font = pygame.font.SysFont('Arial', 20)
+  # 2. use font to write to canvas:
+  canvas.blit(font.render(str(mouse_pos), True, (255,255,255)), (200,700))
+
+**drawing polygons onto a specific surface**:
+
+.. code-block:: python
+
+  # general:
+  # points = [[x1, y1], [x1, y2], [x2, y1], [x2, y2]]
+  #          [[bottom-left], [top-left], [bottom-right], [top-right]]
+  # points_transformed = reference_surface.transform(points)
+  # pygame.draw.polygon(reference_surface, color, points_transformed)
+
+  # example:
+  points = [[20, 70], [20, 20], [80, 20], [80, 70]]  # percentage relative to surface
+  points_transformend = session.grid_1.surface.transform(points)
+
+  #                   surface,   color,      coords_transformed
+  pygame.draw.polygon(viewport, (255, 0, 0), viewport.transform(rect_points))
+
+**display image**
+Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files.
+
+.. code-block:: python
+
+  image = pygame.image.load("images/scenario_progressive.bmp")
+  canvas.blit(image, (0,0))
+
+
+**display sliders**:
+The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
+
+Drawing Heat Grid Lines
+-----------------------
+
+// TODO:
+#. Buildings.find_closest_heat_grid_line
+#. draw the line
+
+.. _frontend_mode:
+.. _mode:
+
 Calibration
-===========
+***********
 
 .. _keystone_transformation:
 
 keystone transformation
------------------------
+=======================
 
 general information on image transofrmation using opencv:
 
@@ -255,7 +302,7 @@ and `cv.warpPerspective for images <https://docs.opencv.org/3.4/da/d54/group__im
 
 **adding a new surface, draw on it and transform it:**
 
-.. code-block::
+.. code-block:: python
 
   class SomeClass:
     # session.canvas_size = 1920, 1080
@@ -300,61 +347,6 @@ frontend representation
   [1226.5196533203125, 923.7374267578125]]
 
 with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper-right[x], upper-right[y]], [bottom-right[x], bottom-right[y]]]``
-
-simple Pygame features
-======================
-
-Drawing on Canvas
------------------
-
-**displaying text**:
-
-.. code-block:: python
-
-  # 1. define font:
-  font = pygame.font.SysFont('Arial', 20)
-  # 2. use font to write to canvas:
-  canvas.blit(font.render(str(mouse_pos), True, (255,255,255)), (200,700))
-
-**drawing polygons onto a specific surface**:
-
-
-.. code-block:: python
-
-  # general:
-  # points = [[x1, y1], [x1, y2], [x2, y1], [x2, y2]]
-  #          [[bottom-left], [top-left], [bottom-right], [top-right]]
-  # points_transformed = reference_surface.transform(points)
-  # pygame.draw.polygon(reference_surface, color, points_transformed)
-
-  # example:
-  points = [[20, 70], [20, 20], [80, 20], [80, 70]]  # percentage relative to surface
-  points_transformend = session.grid_1.surface.transform(points)
-
-  #                   surface,   color,      coords_transformed
-  pygame.draw.polygon(viewport, (255, 0, 0), viewport.transform(rect_points))
-
-**display image**
-Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files.
-
-.. code-block:: python
-
-  image = pygame.image.load("images/scenario_progressive.bmp")
-  canvas.blit(image, (0,0))
-
-
-**display sliders**:
-The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
-
-Drawing Heat Grid Lines
------------------------
-
-// TODO:
-#. Buildings.find_closest_heat_grid_line
-#. draw the line
-
-.. _frontend_mode:
-.. _mode:
 
 Game Modes
 **********

@@ -1,6 +1,6 @@
 Setup
 #####
-Setting up the physical table, combining all the necessary components (cspy, infoscreen, frontend)
+Starting from the beginning: This section will show you how the Q-Scope is built, both physically and its software.
 
 Hardware Overview
 *****************
@@ -26,7 +26,9 @@ Software Overview
     :alt: Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm
 
 Each physical component of the setup has a piece of software it is linked with.
-The image stream (camera) of the grid of tiles are scanned and decoded by **cspy**. The software sends the grid information to the **frontend** (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the **infoscreen** (TV) to display metadata. A GAMA Agent-Based-Model (**ABM**) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
+The image stream (camera) of the grid of tiles are scanned and decoded by :ref:`cspy<cspy>`. The software sends the grid information to the :ref:`frontend<frontend>` (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the :ref:`infoscreen<infoscreen>` (TV) to display metadata. A GAMA Agent-Based-Model (:ref:`ABM<ABM>`) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
+
+.. _architecture:
 
 Framework Architecture
 **********************

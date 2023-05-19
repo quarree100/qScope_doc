@@ -21,7 +21,7 @@ Guide
 .. toctree::
    :maxdepth: 2
 
-   introduction
+   QUARREE100
    setup
    frontend
    tag_decoder

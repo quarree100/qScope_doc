@@ -1,56 +1,110 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Setup &#8212; qScope-doc 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup &mdash; qScope-doc 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Frontend" href="programming.html" />
-    <link rel="prev" title="Introduction" href="introduction.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="next" title="Frontend" href="frontend.html" />
+    <link rel="prev" title="QUARREE100" href="QUARREE100.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="index.html" class="icon icon-home">
+            qScope-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="QUARREE100.html">QUARREE100</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-overview">Software Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#framework-architecture">Framework Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#starting-the-software">Starting the software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#calibrating-the-table">Calibrating the Table:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="frontend.html">Frontend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tag_decoder.html">Tag Decoder (cspy)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infoscreen.html">Infoscreen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ABM.html">ABM</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qScope-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Setup</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/setup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="setup">
-<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h1>
-<p>Setting up the physical table, combining all the necessary components (cspy, infoscreen, frontend)</p>
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h1>
+<p>Starting from the beginning: This section will show you how the Q-Scope is built, both physically and its software.</p>
 <section id="hardware-overview">
-<h2>Hardware Overview<a class="headerlink" href="#hardware-overview" title="Permalink to this heading">¶</a></h2>
+<h2>Hardware Overview<a class="headerlink" href="#hardware-overview" title="Permalink to this heading"></a></h2>
 <img alt="_images/CAD_closeUp_annotated.png" class="align-center" src="_images/CAD_closeUp_annotated.png" />
 <p>The whole setup is made of two physical tables, with interactive components on top; two cameras sitting inside the tables; a projector casting an image onto the tables; and a TV screen to show additional information.
 The table tops are of acrylic glass, on top of which there is a grid of tiles. Some of the tiles are tagged on the underside, so they can be decoded by the cameras from below. Each interaction with any of the tagged tiles will cause the projection and the infoscreen to respond in real time.</p>
 <img alt="Image of four 3D-printed, colored houses with black and white tags on the underside." class="align-center" src="_images/Q-Scope_tangibles_tags.jpg" />
-<p>In the image above you see four groups of <a class="reference internal" href="programming.html#programming-tangibles"><span class="std std-ref">tangibles</span></a> - objects with the same color (human-readable) share the same tag (machine-readable).</p>
+<p>In the image above you see four groups of <a class="reference internal" href="tag_decoder.html#programming-tangibles"><span class="std std-ref">tangibles</span></a> - objects with the same color (human-readable) share the same tag (machine-readable).</p>
 </section>
 <section id="software-overview">
-<h2>Software Overview<a class="headerlink" href="#software-overview" title="Permalink to this heading">¶</a></h2>
+<h2>Software Overview<a class="headerlink" href="#software-overview" title="Permalink to this heading"></a></h2>
 <img alt="Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm" class="align-center" src="_images/Q-Scope_software_components.png" />
 <p>Each physical component of the setup has a piece of software it is linked with.
-The image stream (camera) of the grid of tiles are scanned and decoded by <strong>cspy</strong>. The software sends the grid information to the <strong>frontend</strong> (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the <strong>infoscreen</strong> (TV) to display metadata. A GAMA Agent-Based-Model (<strong>ABM</strong>) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
+The image stream (camera) of the grid of tiles are scanned and decoded by <a class="reference internal" href="tag_decoder.html#cspy"><span class="std std-ref">cspy</span></a>. The software sends the grid information to the <a class="reference internal" href="frontend.html#frontend"><span class="std std-ref">frontend</span></a> (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the <a class="reference internal" href="infoscreen.html#infoscreen"><span class="std std-ref">infoscreen</span></a> (TV) to display metadata. A GAMA Agent-Based-Model (<a class="reference internal" href="ABM.html#abm"><span class="std std-ref">ABM</span></a>) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.</p>
 </section>
 <section id="framework-architecture">
-<h2>Framework Architecture<a class="headerlink" href="#framework-architecture" title="Permalink to this heading">¶</a></h2>
+<span id="architecture"></span><h2>Framework Architecture<a class="headerlink" href="#framework-architecture" title="Permalink to this heading"></a></h2>
 <p>go to the repositories listed below and download them; I would recommend putting them all into one project folder like so:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>project qScope
 └───cspy_L
@@ -75,19 +129,19 @@ The image stream (camera) of the grid of tiles are scanned and decoded by <stron
 </ul>
 <p>Go directly to:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="programming.html#frontend-installation"><span class="std std-ref">Installing the frontend</span></a></p></li>
-<li><p><a class="reference internal" href="programming.html#installing-cspy"><span class="std std-ref">Installing the decoder</span></a></p></li>
-<li><p><a class="reference internal" href="programming.html#installing-infoscreen"><span class="std std-ref">Installing the infoscreen</span></a></p></li>
-<li><p><a class="reference internal" href="programming.html#installing-gama"><span class="std std-ref">Installing GAMA</span></a></p></li>
+<li><p><a class="reference internal" href="frontend.html#frontend-installation"><span class="std std-ref">Installing the frontend</span></a></p></li>
+<li><p><a class="reference internal" href="tag_decoder.html#installing-cspy"><span class="std std-ref">Installing the decoder</span></a></p></li>
+<li><p><a class="reference internal" href="infoscreen.html#installing-infoscreen"><span class="std std-ref">Installing the infoscreen</span></a></p></li>
+<li><p><a class="reference internal" href="ABM.html#installing-gama"><span class="std std-ref">Installing GAMA</span></a></p></li>
 </ul>
 </section>
 <section id="data">
-<span id="id1"></span><h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h2>
 <p>Q-Scope relies on a local data folder with GIS information on the map, the polygons and data on the houses that shall be displayed. The folder contains Shapefiles used to display both an aerial photograph (raster file) and polygon information for each houses to be able to interact with - provided as Shapefiles. Some additional, household-specific data in the form of csv files are provided, which can be lined to the polygons.</p>
 <p>TODO: provide simple working example data folder without sensitive data!</p>
 </section>
 <section id="starting-the-software">
-<h2>Starting the software<a class="headerlink" href="#starting-the-software" title="Permalink to this heading">¶</a></h2>
+<h2>Starting the software<a class="headerlink" href="#starting-the-software" title="Permalink to this heading"></a></h2>
 <p>You’ll need Python to start the <strong>frontend</strong>. The frontend will be started by navigating to the  project folder and do <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code>. A window will open and show the contents that will be projected onto the table. This is the frontend the users can see and interact with:</p>
 <a class="reference internal image-reference" href="_images/frontend_full.png"><img alt="You should see an image of the frontend here. It is basically a black canvas with a map on it and some buttons on the side." class="align-center" src="_images/frontend_full.png" style="width: 600px;" /></a>
 <p>You see a lot of the black canvas around a slightly distorted map. This is due to the “keystoning”, the adjustment of the image for the angles the projector produces with respect to the table. By casting an appropriately distorted image onto the table, the distortion will even out, geometrically. ✨</p>
@@ -111,87 +165,41 @@ The scanning will be started with <code class="docutils literal notranslate"><sp
 </div>
 <p>We put these commands into a shell script called run_qScope.sh to be executed automatically upon startup of the computer.</p>
 <section id="calibrating-the-table">
-<span id="id2"></span><h3>Calibrating the Table:<a class="headerlink" href="#calibrating-the-table" title="Permalink to this heading">¶</a></h3>
+<span id="id2"></span><h3>Calibrating the Table:<a class="headerlink" href="#calibrating-the-table" title="Permalink to this heading"></a></h3>
 <p>TODO: process of calibration with images and hotkeys</p>
 </section>
 </section>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="QUARREE100.html" class="btn btn-neutral float-left" title="QUARREE100" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="frontend.html" class="btn btn-neutral float-right" title="Frontend" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, dunland.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">qScope-doc</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#software-overview">Software Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#framework-architecture">Framework Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#starting-the-software">Starting the software</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="programming.html">Frontend</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
-      <li>Next: <a href="programming.html" title="next chapter">Frontend</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, dunland.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
-      
-      |
-      <a href="_sources/setup.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

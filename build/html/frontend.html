@@ -1,47 +1,146 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Frontend &#8212; qScope-doc 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frontend &mdash; qScope-doc 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tag Decoder (cspy)" href="tag_decoder.html" />
-    <link rel="prev" title="Setup" href="setup.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Setup" href="setup.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="index.html" class="icon icon-home">
+            qScope-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="QUARREE100.html">QUARREE100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frontend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-structure">File Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#config-file">Config file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#session-file">Session file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gis-buildings-data">GIS &amp; Buildings Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buildings">Buildings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gis">GIS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#canvas-setup">Canvas setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frontend-game-loop">Frontend Game Loop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#projection">Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simple-pygame-features">simple Pygame features</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#drawing-on-canvas">Drawing on Canvas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drawing-heat-grid-lines">Drawing Heat Grid Lines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#calibration">Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#keystone-transformation">keystone transformation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#frontend-representation">frontend representation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#game-modes">Game Modes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buildings-interaction">Buildings Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation">Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-the-simulation">Setting up the simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#data-view">Data View</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#user-interface">User Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grid-tiles">Grid &amp; Tiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#grid-setup">grid setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-interaction-examples">grid interaction examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-coordinates">grid coordinates:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sliders">Sliders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modeselector">ModeSelector</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging-and-devtools">Debugging and Devtools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tag_decoder.html">Tag Decoder (cspy)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infoscreen.html">Infoscreen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ABM.html">ABM</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qScope-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Frontend</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/frontend.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="frontend">
-<h1>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading"></a></h1>
 <p>The Q-Scope frontend, as used in the project QUARRE100, was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games.
 In this chapter, we will first handle the frontend’s installation and afterwards explain its features by going through the code (more or less linearly).</p>
-<section id="frontend-installation">
-<span id="id1"></span><h2>Frontend Installation<a class="headerlink" href="#frontend-installation" title="Permalink to this heading">¶</a></h2>
+<section id="installation">
+<span id="frontend-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
 <p>After <a class="reference external" href="https://github.com/git-guides/git-clone">cloning</a> the frontend’s repository, you can simply install all required python modules by executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">[MODULE]</span></code>.)
 Simply run the script via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code></p>
 <section id="file-structure">
-<h3>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this heading">¶</a></h3>
+<h3>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this heading"></a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>qScope_frontend
 └───q100viz
     └───graphics
@@ -54,8 +153,8 @@ Simply run the script via <code class="docutils literal notranslate"><span class
 </div>
 </section>
 </section>
-<section id="starting-the-frontend">
-<h2>Starting the Frontend<a class="headerlink" href="#starting-the-frontend" title="Permalink to this heading">¶</a></h2>
+<section id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this heading"></a></h2>
 <p>The main script is called <code class="docutils literal notranslate"><span class="pre">run_q100viz.py</span></code>. You can start it from the qScope_frontend folder by running <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">run_q100viz.py</span></code>. Some flags can be set to enable debug options:</p>
 <blockquote id="frontent-startup-flags">
 <div><ul class="simple">
@@ -74,11 +173,11 @@ Simply run the script via <code class="docutils literal notranslate"><span class
 <p>These flags are specified in the first section of the main script.
 At the end of the main script, an instance of the frontend is created and run in the loop. The frontend class itself is defined in q100viz/frontend.py.</p>
 </section>
-<section id="frontend-initialization">
-<span id="frontend-pygame-setup"></span><h2>Frontend Initialization<a class="headerlink" href="#frontend-initialization" title="Permalink to this heading">¶</a></h2>
+<section id="initialization">
+<span id="frontend-pygame-setup"></span><h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this heading"></a></h2>
 <p>The whole frontend was programmed using <a class="reference external" href="pygame.org">pygame</a> - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.</p>
 <section id="config-file">
-<h3>Config file<a class="headerlink" href="#config-file" title="Permalink to this heading">¶</a></h3>
+<h3>Config file<a class="headerlink" href="#config-file" title="Permalink to this heading"></a></h3>
 <p>To configure the frontend, the file <code class="docutils literal notranslate"><span class="pre">q100viz/settings/config.py</span></code> can be changed before running the application.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -87,24 +186,25 @@ At the end of the main script, an instance of the frontend is created and run in
 <p>Here you can modify the path of files being imported/exported, <a class="reference internal" href="#simulation-setup"><span class="std std-ref">change the source file and the simulation time for the agent-based-model</span></a>, save information of the extents of the <a class="reference internal" href="#frontend-grid-setup"><span class="std std-ref">grids</span></a> and the <a class="reference internal" href="#frontend-slider-setup"><span class="std std-ref">sliders</span></a> here. The individual adjustments will be discussed in the according sections, respectively.</p>
 </section>
 <section id="session-file">
-<h3>Session file<a class="headerlink" href="#session-file" title="Permalink to this heading">¶</a></h3>
+<span id="session"></span><h3>Session file<a class="headerlink" href="#session-file" title="Permalink to this heading"></a></h3>
 <p>The file <code class="docutils literal notranslate"><span class="pre">q100viz/session.py</span></code> is a container for global variables. The file does some initial variable assignment, so that we won’t stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You’ll basically find anything that needs to be referred to from different parts throughout the code here, such as <a class="reference internal" href="#devtools"><span class="std std-ref">variables used for Debugging</span></a>.
 In the following graphics section, the pygame viewport is loaded and <a class="reference internal" href="#keystone-transformation"><span class="std std-ref">keystone transformation</span></a> is perfomed.
 Furthermore, a <cite>buildings</cite> variable is created as an instance of the <a class="reference internal" href="#buildings"><span class="std std-ref">Buildings class</span></a>, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.</p>
 <p id="environment">Further contents of the code are:
 - The <cite>environment</cite> variable that stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.</p>
 <ul class="simple" id="scenario">
-<li><p>A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the <a class="reference internal" href="#data">data</a> folder.</p></li>
+<li><p>A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the <a href="#id13"><span class="problematic" id="id14">data_</span></a> folder.</p></li>
 <li><p>Initialization of  GIS objects, such as the geographic canvas extents and the basemap file are initialized</p></li>
-<li><p>Initialization of the <a class="reference internal" href="#grid">grid</a> objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the <a href="#id13"><span class="problematic" id="id14">cspy_</span></a> tag decoder at each interaction.</p></li>
+<li><p>Initialization of the <a class="reference internal" href="#grid">grid</a> objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the <a href="#id15"><span class="problematic" id="id16">cspy_</span></a> tag decoder at each interaction.</p></li>
 <li><p>Initialization of the _modes. The different game stages are stored in a variable called <code class="docutils literal notranslate"><span class="pre">modes</span></code>.</p></li>
 </ul>
 </section>
 </section>
-<section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
+<section id="gis-buildings-data">
+<h2>GIS &amp; Buildings Data<a class="headerlink" href="#gis-buildings-data" title="Permalink to this heading"></a></h2>
 <section id="buildings">
-<span id="id3"></span><h3>Buildings<a class="headerlink" href="#buildings" title="Permalink to this heading">¶</a></h3>
+<span id="id3"></span><h3>Buildings<a class="headerlink" href="#buildings" title="Permalink to this heading"></a></h3>
+<p>How are the buildings you see on the map colored and how can they be accessed? Most of the interaction in the QUARREE100 project is done via selection of buildings on an aerial map. The source data for these building polygons comes from a <a class="reference internal" href="setup.html#architecture"><span class="std std-ref">Shapefile in the data folder</span></a></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Buildings</span></code> class is basically one large DataFrame containing all metadata about the buildings taken from a shapefile. The source file contains information about the houses addresses, specific heat consumption, energy carrier, building type, etc.
 Only existing buildings are regarded.
 The buildings can be clustered in groups according to similar heat consumptions:</p>
@@ -141,61 +241,55 @@ The buildings can be clustered in groups according to similar heat consumptions:
   <span class="k">return</span> <span class="n">cluster_list</span>
 </pre></div>
 </div>
-<p>Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the <a href="#id15"><span class="problematic" id="id16">ABM_</span></a> to be forwarded to and shown at the infoscreen.</p>
+<p>Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the <a href="#id17"><span class="problematic" id="id18">ABM_</span></a> to be forwarded to and shown at the infoscreen.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>“Behavior” data such as the connection to the QUARRE100-heat-grid, refurbishment of the house or energy-saving measures are pre-set in the following manner: <code class="docutils literal notranslate"><span class="pre">false</span></code>, if house’s energy_source (in source data) is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, else the house will come in pre-connected and refurbished.</p>
 </div>
-<p>Buildings can either be <code class="docutils literal notranslate"><span class="pre">selected</span></code> by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). <a href="#id17"><span class="problematic" id="id18">cspy_</span></a> will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the <code class="docutils literal notranslate"><span class="pre">grid.py</span></code>: <a class="reference internal" href="#read-scanner-data">read_scanner_data</a> function.
+<p>Buildings can either be <code class="docutils literal notranslate"><span class="pre">selected</span></code> by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). <a href="#id19"><span class="problematic" id="id20">cspy_</span></a> will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the <code class="docutils literal notranslate"><span class="pre">grid.py</span></code>: <a class="reference internal" href="#read-scanner-data">read_scanner_data</a> function.
 The Buildings class contains additional functions, e.g. <code class="docutils literal notranslate"><span class="pre">find_closest_heat_grid_line</span></code> for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.</p>
 </section>
 <section id="gis">
-<h3>GIS<a class="headerlink" href="#gis" title="Permalink to this heading">¶</a></h3>
-<p><strong>ROI for distorted polygons:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize geographic viewport and basemap</span>
+<h3>GIS<a class="headerlink" href="#gis" title="Permalink to this heading"></a></h3>
+<p>The file <cite>gis.py</cite> contains two classes:</p>
+<ol class="arabic simple">
+<li><p><strong>The GIS class</strong> draws features from the source Shapefile, like polygons and lines, onto the <a class="reference internal" href="#canvas">canvas</a>. It provides functions to draw the whole polygon layer at once, color them in a certain style (e.g. according to heat grid connection status), etc.</p></li>
+<li><p><strong>The Basemap class</strong> initiates and warps the basemap image.</p></li>
+</ol>
+<p>Positioning of the GIS layers is done during <a class="reference internal" href="#session"><span class="std std-ref">initialization</span></a> of the GIS class object, where the corner points of the ROI (region of interest) extent are set:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span>
+  <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CANVAS_SIZE&#39;</span><span class="p">],</span>
+  <span class="c1"># northeast          northwest           southwest           southeast</span>
+  <span class="p">[[</span><span class="mi">1013631</span><span class="p">,</span> <span class="mi">7207409</span><span class="p">],</span> <span class="p">[</span><span class="mi">1012961</span><span class="p">,</span> <span class="mi">7207198</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013359</span><span class="p">,</span> <span class="mi">7205932</span><span class="p">],</span> <span class="p">[</span><span class="mi">1014029</span><span class="p">,</span> <span class="mi">7206143</span><span class="p">]],</span>
+  <span class="n">viewport</span><span class="p">)</span>
 
-<span class="n">_gis</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span><span class="n">canvas_size</span><span class="p">,</span>
-               <span class="c1"># northeast          northwest           southwest           southeast</span>
-               <span class="p">[[</span><span class="mi">1013622</span><span class="p">,</span> <span class="mi">7207331</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013083</span><span class="p">,</span> <span class="mi">7207150</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013414</span><span class="p">,</span> <span class="mi">7206159</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013990</span><span class="p">,</span> <span class="mi">7206366</span><span class="p">]],</span>
-               <span class="n">session</span><span class="o">.</span><span class="n">viewport</span><span class="p">)</span>
-
-
-<span class="n">_gis</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span><span class="n">canvas_size</span><span class="p">,</span>
-               <span class="c1"># northeast          northwest           southwest           southeast</span>
-               <span class="p">[[</span><span class="mi">1013640</span><span class="p">,</span> <span class="mi">7207470</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013000</span><span class="p">,</span> <span class="mi">7207270</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013400</span><span class="p">,</span> <span class="mi">7206120</span><span class="p">],</span> <span class="p">[</span><span class="mi">1014040</span><span class="p">,</span> <span class="mi">7206320</span><span class="p">]],</span>
-               <span class="n">viewport</span><span class="p">)</span>
+<span class="n">basemap</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">Basemap</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CANVAS_SIZE&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;BASEMAP_FILE&#39;</span><span class="p">],</span>
+    <span class="c1"># northwest          southwest           southeast           northeast</span>
+    <span class="p">[[</span><span class="mi">1012695</span><span class="p">,</span> <span class="mi">7207571</span><span class="p">],</span> <span class="p">[</span><span class="mi">1012695</span><span class="p">,</span> <span class="mi">7205976</span><span class="p">],</span> <span class="p">[</span><span class="mi">1014205</span><span class="p">,</span> <span class="mi">7205976</span><span class="p">],</span> <span class="p">[</span><span class="mi">1014205</span><span class="p">,</span> <span class="mi">7207571</span><span class="p">]],</span>
+    <span class="n">_gis</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>???</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some other ROIs we tested in QUARREE100 were:</p>
 <p><strong>kleinerer Kartenausschnitt:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_gis</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span><span class="n">canvas_size</span><span class="p">,</span>
-               <span class="c1"># northeast          northwest           southwest           southeast</span>
-               <span class="p">[[</span><span class="mi">1013578</span><span class="p">,</span> <span class="mi">7207412</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013010</span><span class="p">,</span> <span class="mi">7207210</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013386</span><span class="p">,</span> <span class="mi">7206155</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013953</span><span class="p">,</span> <span class="mi">7206357</span><span class="p">]],</span>
-               <span class="n">viewport</span><span class="p">)</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>_gis = session.gis = gis.GIS(canvas_size, [[1013578, 7207412], [1013010, 7207210], [1013386, 7206155], [1013953, 7206357]], viewport)</p>
+</div></blockquote>
 <p><strong>mit Input Area am linken Rand und Aussparung unten:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_gis</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span>
-    <span class="n">canvas_size</span><span class="p">,</span>
-    <span class="c1"># northeast          northwest           southwest           southeast</span>
-    <span class="p">[[</span><span class="mi">1013554</span><span class="p">,</span> <span class="mi">7207623</span><span class="p">],</span> <span class="p">[</span><span class="mi">1012884</span><span class="p">,</span> <span class="mi">7207413</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013281</span><span class="p">,</span> <span class="mi">7206147</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013952</span><span class="p">,</span> <span class="mi">7206357</span><span class="p">]],</span>
-    <span class="n">viewport</span><span class="p">)</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>_gis = session.gis = gis.GIS(canvas_size, [[1013554, 7207623], [1012884, 7207413], [1013281, 7206147], [1013952, 7206357]], viewport)</p>
+</div></blockquote>
 <p><strong>mit Input Area am rechten Rand und Aussparung unten:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gis</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">gis</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">GIS</span><span class="p">(</span>
-    <span class="n">canvas_size</span><span class="p">,</span>
-    <span class="c1"># northeast          northwest           southwest           southeast</span>
-    <span class="p">[[</span><span class="mi">1013631</span><span class="p">,</span> <span class="mi">7207409</span><span class="p">],</span> <span class="p">[</span><span class="mi">1012961</span><span class="p">,</span> <span class="mi">7207198</span><span class="p">],</span> <span class="p">[</span><span class="mi">1013359</span><span class="p">,</span> <span class="mi">7205932</span><span class="p">],</span> <span class="p">[</span><span class="mi">1014029</span><span class="p">,</span> <span class="mi">7206143</span><span class="p">]],</span>
-    <span class="n">viewport</span><span class="p">)</span>
-</pre></div>
+<blockquote>
+<div><p>gis = session.gis = gis.GIS(canvas_size, [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]], viewport)</p>
+</div></blockquote>
 </div>
 </section>
 </section>
-<section id="graphics">
-<h2>Graphics<a class="headerlink" href="#graphics" title="Permalink to this heading">¶</a></h2>
 <section id="canvas-setup">
-<h3>Canvas setup<a class="headerlink" href="#canvas-setup" title="Permalink to this heading">¶</a></h3>
+<span id="canvas"></span><h2>Canvas setup<a class="headerlink" href="#canvas-setup" title="Permalink to this heading"></a></h2>
 <p>Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.</p>
 <p id="frontend-setup-window">You can set the window’s position using the os module:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># set window position</span>
@@ -216,69 +310,16 @@ The Buildings class contains additional functions, e.g. <code class="docutils li
 <p>Finally, a seperate thread for UDP observation is started. Each table (“grid”) has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the <a class="reference internal" href="communication.html#frontend-communication"><span class="std std-ref">Communication</span></a> section.</p>
 </section>
 <section id="frontend-game-loop">
-<span id="id4"></span><h3>Frontend Game Loop<a class="headerlink" href="#frontend-game-loop" title="Permalink to this heading">¶</a></h3>
+<span id="id4"></span><h2>Frontend Game Loop<a class="headerlink" href="#frontend-game-loop" title="Permalink to this heading"></a></h2>
 <p>TODO:</p>
 <section id="projection">
-<h4>Projection<a class="headerlink" href="#projection" title="Permalink to this heading">¶</a></h4>
-<p id="viewport-handling">TODO: how to handle the viewport for debugging, session.show_polygons, session.show_basemap, …</p>
-</section>
-</section>
-<section id="calibration">
-<span id="calibration-mode"></span><h3>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">¶</a></h3>
-<section id="keystone-transformation">
-<span id="id5"></span><h4>keystone transformation<a class="headerlink" href="#keystone-transformation" title="Permalink to this heading">¶</a></h4>
-<p>general information on image transofrmation using opencv:</p>
-<p><a class="reference external" href="https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html">tutorial_py_geometric_transformations</a></p>
-<p><a class="reference external" href="https://docs.opencv.org/3.4/d2/de8/group__core__array.html#gad327659ac03e5fd6894b90025e6900a7">using cv.perspectiveTransform for vectors</a>
-and <a class="reference external" href="https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#gaf73673a7e8e18ec6963e3774e6a94b87">cv.warpPerspective for images</a></p>
-<p><strong>adding a new surface, draw on it and transform it:</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SomeClass</span><span class="p">:</span>
-  <span class="c1"># session.canvas_size = 1920, 1080</span>
-  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">keystone</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">canvas_size</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>
-
-  <span class="c1"># x_size, y_size = 22, 22</span>
-  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">src_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_size</span><span class="p">],</span> <span class="p">[</span><span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">],</span> <span class="p">[</span><span class="n">x_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
-  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dst_points</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y1&#39;</span><span class="p">]],</span>
-      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y2&#39;</span><span class="p">]],</span>
-      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X2&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y2&#39;</span><span class="p">]],</span>
-      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X2&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y1&#39;</span><span class="p">]]]</span>
-  <span class="c1"># where e.g. X1 = 0, X2 = 50, Y1 = 0, Y2 = 81.818</span>
-
-  <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport</span><span class="p">):</span>
-
-    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">70</span><span class="p">]])</span>  <span class="c1"># render polygon</span>
-
-    <span class="n">viewport</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># cast it to viewport</span>
-</pre></div>
-</div>
-<p>in file <code class="docutils literal notranslate"><span class="pre">q100viz/keystone.py</span></code></p>
-<p><strong>recognition/data</strong></p>
-<ul class="simple">
-<li><p>from cspy via UDP (json)</p></li>
-<li><p>definition via <code class="docutils literal notranslate"><span class="pre">cityscopy.json</span></code></p></li>
-</ul>
-</section>
-<section id="frontend-representation">
-<h4>frontend representation<a class="headerlink" href="#frontend-representation" title="Permalink to this heading">¶</a></h4>
-<ul class="simple">
-<li><p>slider uses the transformation of the <a class="reference internal" href="#grid">grid</a></p></li>
-<li><p><strong>drawing of polygons and values</strong> should be done via <code class="docutils literal notranslate"><span class="pre">self.surface.blit(...)</span></code>. Slider surface is rendered and “blitted” to main canvas.</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">print(slider.coords_transformed)</span></code> returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">860.9641723632812</span><span class="p">,</span> <span class="mf">915.1583862304688</span><span class="p">],</span>
-<span class="p">[</span><span class="mf">863.9833984375</span><span class="p">,</span> <span class="mf">614.8511352539062</span><span class="p">],</span>
-<span class="p">[</span><span class="mf">1228.917724609375</span><span class="p">,</span> <span class="mf">622.6510009765625</span><span class="p">],</span>
-<span class="p">[</span><span class="mf">1226.5196533203125</span><span class="p">,</span> <span class="mf">923.7374267578125</span><span class="p">]]</span>
-</pre></div>
-</div>
-<p>with <code class="docutils literal notranslate"><span class="pre">[[bottom-left[x],</span> <span class="pre">bottom-left[y]],</span> <span class="pre">[upper-left[x],</span> <span class="pre">upper-left[y]],</span> <span class="pre">[upper-right[x],</span> <span class="pre">upper-right[y]],</span> <span class="pre">[bottom-right[x],</span> <span class="pre">bottom-right[y]]]</span></code></p>
-</section>
+<h3>Projection<a class="headerlink" href="#projection" title="Permalink to this heading"></a></h3>
+<p id="viewport-handling">TODO: how to handle the viewport for debugging (keys), session.show_polygons, session.show_basemap, …</p>
 </section>
 <section id="simple-pygame-features">
-<h3>simple Pygame features<a class="headerlink" href="#simple-pygame-features" title="Permalink to this heading">¶</a></h3>
+<span id="calibration-mode"></span><h3>simple Pygame features<a class="headerlink" href="#simple-pygame-features" title="Permalink to this heading"></a></h3>
 <section id="drawing-on-canvas">
-<h4>Drawing on Canvas<a class="headerlink" href="#drawing-on-canvas" title="Permalink to this heading">¶</a></h4>
+<h4>Drawing on Canvas<a class="headerlink" href="#drawing-on-canvas" title="Permalink to this heading"></a></h4>
 <p><strong>displaying text</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. define font:</span>
 <span class="n">font</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">SysFont</span><span class="p">(</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
@@ -311,15 +352,67 @@ Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP i
 The sliders have a bool called <code class="docutils literal notranslate"><span class="pre">show_text</span></code> that, when <code class="docutils literal notranslate"><span class="pre">True</span></code>, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.</p>
 </section>
 <section id="drawing-heat-grid-lines">
-<h4>Drawing Heat Grid Lines<a class="headerlink" href="#drawing-heat-grid-lines" title="Permalink to this heading">¶</a></h4>
+<h4>Drawing Heat Grid Lines<a class="headerlink" href="#drawing-heat-grid-lines" title="Permalink to this heading"></a></h4>
 <p>// TODO:
 #. Buildings.find_closest_heat_grid_line
 #. draw the line</p>
 </section>
 </section>
 </section>
+<section id="calibration">
+<span id="mode"></span><span id="frontend-mode"></span><h2>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading"></a></h2>
+<section id="keystone-transformation">
+<span id="id5"></span><h3>keystone transformation<a class="headerlink" href="#keystone-transformation" title="Permalink to this heading"></a></h3>
+<p>general information on image transofrmation using opencv:</p>
+<p><a class="reference external" href="https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html">tutorial_py_geometric_transformations</a></p>
+<p><a class="reference external" href="https://docs.opencv.org/3.4/d2/de8/group__core__array.html#gad327659ac03e5fd6894b90025e6900a7">using cv.perspectiveTransform for vectors</a>
+and <a class="reference external" href="https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#gaf73673a7e8e18ec6963e3774e6a94b87">cv.warpPerspective for images</a></p>
+<p><strong>adding a new surface, draw on it and transform it:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SomeClass</span><span class="p">:</span>
+  <span class="c1"># session.canvas_size = 1920, 1080</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">keystone</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">canvas_size</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>
+
+  <span class="c1"># x_size, y_size = 22, 22</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">src_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_size</span><span class="p">],</span> <span class="p">[</span><span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">],</span> <span class="p">[</span><span class="n">x_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dst_points</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y1&#39;</span><span class="p">]],</span>
+      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y2&#39;</span><span class="p">]],</span>
+      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X2&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y2&#39;</span><span class="p">]],</span>
+      <span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;X2&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Y1&#39;</span><span class="p">]]]</span>
+  <span class="c1"># where e.g. X1 = 0, X2 = 50, Y1 = 0, Y2 = 81.818</span>
+
+  <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport</span><span class="p">):</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">polygon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">70</span><span class="p">]])</span>  <span class="c1"># render polygon</span>
+
+    <span class="n">viewport</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># cast it to viewport</span>
+</pre></div>
+</div>
+<p>in file <code class="docutils literal notranslate"><span class="pre">q100viz/keystone.py</span></code></p>
+<p><strong>recognition/data</strong></p>
+<ul class="simple">
+<li><p>from cspy via UDP (json)</p></li>
+<li><p>definition via <code class="docutils literal notranslate"><span class="pre">cityscopy.json</span></code></p></li>
+</ul>
+<section id="frontend-representation">
+<h4>frontend representation<a class="headerlink" href="#frontend-representation" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>slider uses the transformation of the <a class="reference internal" href="#grid">grid</a></p></li>
+<li><p><strong>drawing of polygons and values</strong> should be done via <code class="docutils literal notranslate"><span class="pre">self.surface.blit(...)</span></code>. Slider surface is rendered and “blitted” to main canvas.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">print(slider.coords_transformed)</span></code> returns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">860.9641723632812</span><span class="p">,</span> <span class="mf">915.1583862304688</span><span class="p">],</span>
+<span class="p">[</span><span class="mf">863.9833984375</span><span class="p">,</span> <span class="mf">614.8511352539062</span><span class="p">],</span>
+<span class="p">[</span><span class="mf">1228.917724609375</span><span class="p">,</span> <span class="mf">622.6510009765625</span><span class="p">],</span>
+<span class="p">[</span><span class="mf">1226.5196533203125</span><span class="p">,</span> <span class="mf">923.7374267578125</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">[[bottom-left[x],</span> <span class="pre">bottom-left[y]],</span> <span class="pre">[upper-left[x],</span> <span class="pre">upper-left[y]],</span> <span class="pre">[upper-right[x],</span> <span class="pre">upper-right[y]],</span> <span class="pre">[bottom-right[x],</span> <span class="pre">bottom-right[y]]]</span></code></p>
+</section>
+</section>
+</section>
 <section id="game-modes">
-<span id="mode"></span><span id="frontend-mode"></span><h2>Game Modes<a class="headerlink" href="#game-modes" title="Permalink to this heading">¶</a></h2>
+<h2>Game Modes<a class="headerlink" href="#game-modes" title="Permalink to this heading"></a></h2>
 <img alt="[Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]" class="align-center" src="_images/Q-Scope_game-stages.png" />
 <ul class="simple">
 <li><p>In the <span class="xref std std-ref">QUARREE100 use case</span> there are different machine states, defined by the files in <code class="docutils literal notranslate"><span class="pre">q100viz/interaction/</span></code> → these are the modes the program is running at (per time)</p></li>
@@ -337,14 +430,14 @@ The sliders have a bool called <code class="docutils literal notranslate"><span 
 <p>each mode has a function called <code class="docutils literal notranslate"><span class="pre">activate()</span></code> which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
 The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function is seldomly used, since it will be run in the beginning of the script (in <code class="docutils literal notranslate"><span class="pre">session.py</span></code>), before the variables (e.g. <code class="docutils literal notranslate"><span class="pre">grid</span></code>) are initialized.</p>
 <section id="buildings-interaction">
-<span id="id6"></span><h3>Buildings Interaction<a class="headerlink" href="#buildings-interaction" title="Permalink to this heading">¶</a></h3>
+<span id="id6"></span><h3>Buildings Interaction<a class="headerlink" href="#buildings-interaction" title="Permalink to this heading"></a></h3>
 <p>In the Input Mode, users can set household-, buildings- global parameters. They can leave the mode placing a token on the “simulation mode” selector.</p>
 </section>
 <section id="simulation">
-<span id="simulation-mode"></span><h3>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading">¶</a></h3>
+<span id="simulation-mode"></span><h3>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h3>
 <p>The Simulation can be started using <code class="docutils literal notranslate"><span class="pre">S</span></code> key. It will generate an experiment API file for GAMA according to this scheme: <a class="reference external" href="https://gama-platform.org/wiki/Headless#simulation-output">https://gama-platform.org/wiki/Headless#simulation-output</a> and run the provided model file using the gama-headless.sh . These two files are to be set up in <code class="docutils literal notranslate"><span class="pre">config.py</span></code>.</p>
 <section id="setting-up-the-simulation">
-<span id="simulation-setup"></span><h4>Setting up the simulation<a class="headerlink" href="#setting-up-the-simulation" title="Permalink to this heading">¶</a></h4>
+<span id="simulation-setup"></span><h4>Setting up the simulation<a class="headerlink" href="#setting-up-the-simulation" title="Permalink to this heading"></a></h4>
 <p>TODO:</p>
 <p>… will start the GAMA headless simulation and wait for the results.
 Q-Scope needs to know where to find GAMA’s <code class="docutils literal notranslate"><span class="pre">gama-headless.sh</span></code> file, which can be found in the extracted folder <code class="docutils literal notranslate"><span class="pre">gama/headless</span></code>. Set this up in <code class="docutils literal notranslate"><span class="pre">config.py</span></code>, providing the headless folder and the location of the gama model file:</p>
@@ -356,16 +449,16 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </section>
 </section>
 <section id="data-view">
-<span id="id7"></span><h3>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading">¶</a></h3>
+<span id="id7"></span><h3>Data View<a class="headerlink" href="#data-view" title="Permalink to this heading"></a></h3>
 </section>
 </section>
 <section id="user-interface">
-<h2>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this heading">¶</a></h2>
+<h2>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this heading"></a></h2>
 <section id="grid-tiles">
-<span id="grid"></span><h3>Grid &amp; Tiles<a class="headerlink" href="#grid-tiles" title="Permalink to this heading">¶</a></h3>
+<span id="grid"></span><h3>Grid &amp; Tiles<a class="headerlink" href="#grid-tiles" title="Permalink to this heading"></a></h3>
 <p>TODO: all about the tiles &amp; tangibles. usage and setup.</p>
 <section id="grid-setup">
-<span id="frontend-grid-setup"></span><h4>grid setup<a class="headerlink" href="#grid-setup" title="Permalink to this heading">¶</a></h4>
+<span id="frontend-grid-setup"></span><h4>grid setup<a class="headerlink" href="#grid-setup" title="Permalink to this heading"></a></h4>
 <p><strong>single grid, upper left:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grid_1</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">grid_1</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">canvas_size</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="p">[[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">75</span><span class="p">,</span> <span class="mi">50</span><span class="p">]],</span> <span class="n">viewport</span><span class="p">)</span>
 <span class="n">grid_2</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">grid_2</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span><span class="n">canvas_size</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">viewport</span><span class="p">)</span>
@@ -385,7 +478,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </div>
 </section>
 <section id="grid-interaction-examples">
-<h4>grid interaction examples<a class="headerlink" href="#grid-interaction-examples" title="Permalink to this heading">¶</a></h4>
+<h4>grid interaction examples<a class="headerlink" href="#grid-interaction-examples" title="Permalink to this heading"></a></h4>
 <p><strong>increase/decrease value by relative rotation:</strong></p>
 <p>e.g. emission, in <code class="docutils literal notranslate"><span class="pre">InputMode.draw()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
@@ -399,7 +492,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </div>
 </section>
 <section id="grid-coordinates">
-<span id="id8"></span><h4>grid coordinates:<a class="headerlink" href="#grid-coordinates" title="Permalink to this heading">¶</a></h4>
+<span id="id8"></span><h4>grid coordinates:<a class="headerlink" href="#grid-coordinates" title="Permalink to this heading"></a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">grid.rects_transformed</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">grid_1</span><span class="o">.</span><span class="n">rects_transformed</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: (</span><span class="si">{1}</span><span class="s2">|</span><span class="si">{2}</span><span class="s2">): </span><span class="si">{3}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">coords</span><span class="p">))</span>
@@ -417,7 +510,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </pre></div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id10">
-<span id="read-scanner-data"></span><div class="code-block-caption"><span class="caption-text">the algorithm for deciphering the incoming grid data from <a href="#id19"><span class="problematic" id="id20">cspy_</span></a>:</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<span id="read-scanner-data"></span><div class="code-block-caption"><span class="caption-text">the algorithm for deciphering the incoming grid data from <a href="#id21"><span class="problematic" id="id22">cspy_</span></a>:</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">read_scanner_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
       <span class="k">try</span><span class="p">:</span>
           <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -461,17 +554,17 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </section>
 </section>
 <section id="sliders">
-<h3>Sliders<a class="headerlink" href="#sliders" title="Permalink to this heading">¶</a></h3>
+<h3>Sliders<a class="headerlink" href="#sliders" title="Permalink to this heading"></a></h3>
 <p id="frontend-slider-setup">TODO: how to define and setup the sliders.</p>
 </section>
 <section id="modeselector">
-<span id="id9"></span><h3>ModeSelector<a class="headerlink" href="#modeselector" title="Permalink to this heading">¶</a></h3>
+<span id="id9"></span><h3>ModeSelector<a class="headerlink" href="#modeselector" title="Permalink to this heading"></a></h3>
 <p>A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.</p>
 <p><code class="docutils literal notranslate"><span class="pre">grid_1_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_2_setup.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">input_scenarios_grid_1.csv</span></code> are used to assign functionality to grid cells.</p>
 <p>valid handles are:</p>
 <p><strong>environment handles:</strong></p>
 <table class="docutils align-default" id="id11">
-<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">environment handles</span><a class="headerlink" href="#id11" title="Permalink to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>parameter</p></th>
 <th class="head"><p>possible values</p></th>
@@ -500,7 +593,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </table>
 <p><strong>household-individual handles:</strong></p>
 <table class="docutils align-default" id="id12">
-<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">household-individual handles</span><a class="headerlink" href="#id12" title="Permalink to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>adjustable</p></th>
 <th class="head"><p>parameter</p></th>
@@ -575,7 +668,7 @@ Q-Scope needs to know where to find GAMA’s <code class="docutils literal notra
 </section>
 </section>
 <section id="debugging-and-devtools">
-<span id="devtools"></span><h2>Debugging and Devtools<a class="headerlink" href="#debugging-and-devtools" title="Permalink to this heading">¶</a></h2>
+<span id="devtools"></span><h2>Debugging and Devtools<a class="headerlink" href="#debugging-and-devtools" title="Permalink to this heading"></a></h2>
 <p>TODO: session.log
 TODO: session.VERBOSE_MODE
 TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbished, debug_force_save_energy</p>
@@ -584,87 +677,34 @@ TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbish
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tag_decoder.html" class="btn btn-neutral float-right" title="Tag Decoder (cspy)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, dunland.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">qScope-doc</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Frontend</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#frontend-installation">Frontend Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#starting-the-frontend">Starting the Frontend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#frontend-initialization">Frontend Initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#graphics">Graphics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#game-modes">Game Modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-interface">User Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#debugging-and-devtools">Debugging and Devtools</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tag_decoder.html">Tag Decoder (cspy)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="communication.html">Communication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infoscreen.html">Infoscreen</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ABM.html">ABM</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="setup.html" title="previous chapter">Setup</a></li>
-      <li>Next: <a href="tag_decoder.html" title="next chapter">Tag Decoder (cspy)</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, dunland.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
-      
-      |
-      <a href="_sources/frontend.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

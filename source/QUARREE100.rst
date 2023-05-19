@@ -1,10 +1,10 @@
-Introduction
-############
-
 .. _quarree100:
 
-QUARREE100 project
-******************
+QUARREE100
+##########
+
+Introduction
+************
 
 The Q-Scope framework was used in the `QUARREE100 <quarree100.de>`_ project. Before diving into the detailed programming of the framework, you should understand how we used it in the "pilot project" QUARREE100. This documentation will frequently refer to the setup we implemented for QUARREE100.
 
@@ -45,3 +45,10 @@ The game master can now discuss the calculated data with the users in :ref:`two 
     :alt: [Image of the infoscreen showing the neighborhood's cumulated data and the housesholds emissions and energy costs in comparison.]
 
 TODO: explain visualization modes & discussion.. how did we use the results?
+
+Quick Manuals
+*************
+
+TODO: setting up the table for an exhibition
+- transport
+- calibration
