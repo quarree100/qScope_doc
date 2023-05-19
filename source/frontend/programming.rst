@@ -1,58 +1,10 @@
-.. _frontend:
+.. _frontend_programming:
 
-Frontend
-########
-
-The Q-Scope frontend, as used in the project QUARRE100, was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games.
-In this chapter, we will first handle the frontend's installation and afterwards explain its features by going through the code (more or less linearly).
-
-.. _frontend_installation:
-
-Installation
-************
-
-After `cloning <https://github.com/git-guides/git-clone>`_ the frontend's repository, you can simply install all required python modules by executing ``pip install -r requirements.txt``. (If the requirements.txt file is incomplete, and you run into problems, just install whichever module is missing via ``pip3 install [MODULE]``.)
-Simply run the script via ``python3 run_q100viz.py``
-
-File Structure
-==============
-
-.. code-block::
-
-  qScope_frontend
-  └───q100viz
-      └───graphics
-      |   contains tools for graph creation and image handling
-      └───interaction
-      |   "gameplay" modes and interaction with sliders
-      └───settings
-  └───run_q100viz.py
-
-Running
-*******
-The main script is called ``run_q100viz.py``. You can start it from the qScope_frontend folder by running ``python3 run_q100viz.py``. Some flags can be set to enable debug options:
-
-.. _frontent_startup_flags:
-
-  * ``--select_random [NUMBER_OF_HOUSES]``: preselects n houses to opt in for a connection to the heat grid
-  *  ``--verbose``: activates verbose mode to print more information to console
-  *  ``--simulate_until [NUMBER_OF_YEAR]``: run the gama-simulation until the given year. last simulation step will be last day before entered year.
-  *  ``--connect``: force buildings to opt in for "connection_to_heat_grid"
-  *  ``--refurbish``: force buildings to opt in for "refurbish"
-  *  ``--save_energy``: force buildings to opt in for "save_energy"
-  *  ``--start_at``: force the frontend to start at a certain frontend_mode_
-  *  ``--test``:
-  *  ``--main_window``: forces the projection canvas to pop up at the current monitor.
-  *  ``--research_model``: There are two simulation files provided. If specified, the research model will be used for simulation (rather than the workshop model)
-
-These flags are specified in the first section of the main script.
-At the end of the main script, an instance of the frontend is created and run in the loop. The frontend class itself is defined in q100viz/frontend.py.
-
-.. _frontend_pygame_setup:
+Programming
+###########
 
 Initialization
 **************
-The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.
 
 Config file
 ===========
@@ -79,18 +31,15 @@ Further contents of the code are:
 
 .. _scenario:
 
-- A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the data_ folder.
+- A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the :ref:`data folder<data>`.
 - Initialization of  GIS objects, such as the geographic canvas extents and the basemap file are initialized
-- Initialization of the grid_ objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the cspy_ tag decoder at each interaction.
+- Initialization of the grid_ objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the :ref:`The tag decoder software<cspy>` tag decoder at each interaction.
 - Initialization of the _modes. The different game stages are stored in a variable called ``modes``.
-
-GIS & Buildings Data
-********************
 
 .. _buildings:
 
 Buildings
-=========
+*********
 
 How are the buildings you see on the map colored and how can they be accessed? Most of the interaction in the QUARREE100 project is done via selection of buildings on an aerial map. The source data for these building polygons comes from a :ref:`Shapefile in the data folder<architecture>`
 
@@ -132,17 +81,17 @@ The buildings can be clustered in groups according to similar heat consumptions:
 
         return cluster_list
 
-Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the ABM_ to be forwarded to and shown at the infoscreen.
+Further information such as paths for pre-generated graphics are added. The DataFrame will later comprise images exported by the :ref:`ABM<abm>` to be forwarded to and shown at the infoscreen.
 
 .. note::
 
   "Behavior" data such as the connection to the QUARRE100-heat-grid, refurbishment of the house or energy-saving measures are pre-set in the following manner: ``false``, if house's energy_source (in source data) is not ``None``, else the house will come in pre-connected and refurbished.
 
-Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). cspy_ will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: read_scanner_data_ function.
+Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). :ref:`The tag decoder software<cspy>` will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: read_scanner_data_ function.
 The Buildings class contains additional functions, e.g. ``find_closest_heat_grid_line`` for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.
 
 GIS
-===
+***
 
 The file `gis.py` contains two classes:
 
@@ -185,6 +134,11 @@ Positioning of the GIS layers is done during :ref:`initialization<session>` of t
 Canvas setup
 ************
 
+The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.
+
+.. _frontend_class:
+
+The frontend class itself is defined in ``q100viz/frontend.py``.
 Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
 
 .. _frontend_setup_window:
@@ -202,7 +156,7 @@ You can set the window's position using the os module:
 
 For this setting, the monitors should be organized as follows:
 
-.. image:: img/frontend_screen-position.png
+.. image:: ../img/frontend_screen-position.png
   :align: center
   :alt: [Image of two schematic monitors, above each other and aligned left]
 
@@ -214,6 +168,124 @@ The canvas is masked by a layer that defines the margins of the region of intere
                     [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
 
 Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
+
+Grid & Tiles
+************
+
+TODO: all about the tiles & tangibles. usage and setup.
+
+.. _frontend_grid_setup:
+
+grid setup
+==========
+
+**single grid, upper left:**
+
+.. code-block:: python
+
+  grid_1 = session.grid_1 = grid.Grid(canvas_size, 11, 11, [[50, 50], [50, 0], [75, 0], [75, 50]], viewport)
+  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
+
+**16 x 22 grid rechts:**
+
+.. code-block:: python
+
+  grid_1 = session.grid_1 = grid.Grid(canvas_size, 16, 22, [[50, 0], [50, 72], [100, 72], [100, 0]], viewport)
+  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
+
+**18 x 22 grid rechts:**
+
+.. code-block:: python
+
+  ncols = 22
+  nrows = 18
+  grid_1 = session.grid_1 = grid.Grid(canvas_size, ncols, nrows, [[50, 0], [50, 81], [100, 81], [100, 0]], viewport)
+  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
+
+.. _grid_coordinates:
+
+grid coordinates:
+=================
+
+``grid.rects_transformed``
+
+.. code-block:: python
+
+  for i, (cell, coords) in enumerate(session.grid_1.rects_transformed):
+      print("{0}: ({1}|{2}): {3}".format(i, cell.x, cell.y, coords))
+
+  # returns:
+  '''
+  0: (0|0): [[134.9009246826172, 4.38118839263916], [134.4179229736328, 37.4811897277832], [167.75010681152344, 38.0572509765625], [168.22642517089844, 4.963389873504639]]
+  1: (1|0): [[168.22642517089844, 4.963389873504639], [167.75010681152344, 38.0572509765625], [201.06971740722656, 38.633094787597656], [201.53933715820312, 5.545371055603027]]
+  2: (2|0): [[201.53933715820312, 5.545371055603027], [201.06971740722656, 38.633094787597656], [234.37672424316406, 39.20872497558594], [234.8396759033203, 6.127132415771484]]
+  3: (3|0): [[234.8396759033203, 6.127132415771484], [234.37672424316406, 39.20872497558594], [267.6711730957031, 39.78413391113281], [268.12744140625, 6.708674430847168]]
+  4: (4|0): [[268.12744140625, 6.708674430847168], [267.6711730957031, 39.78413391113281], [300.9530334472656, 40.35932922363281], [301.4026184082031, 7.28999662399292]]
+  5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
+
+  '''
+
+
+grid interaction examples
+=========================
+
+**increase/decrease value by relative rotation:**
+
+e.g. emission, in ``InputMode.draw()``:
+
+.. code-block:: python
+
+  if cell.id < 4:
+     if cell.rel_rot == 1:
+         i = get_intersection(session.buildings, grid, x, y)
+         session.buildings.loc[i, 'CO2'] += 20
+     elif cell.rel_rot == -1:
+         i = get_intersection(session.buildings, grid, x, y)
+         session.buildings.loc[i, 'CO2'] -= 20
+
+
+.. _read_scanner_data:
+
+.. code-block:: python
+  :caption: the algorithm for deciphering the incoming grid data from :ref:`The tag decoder software<cspy>`:
+
+      def read_scanner_data(self, message):
+        try:
+            msg = json.loads(message)
+        except json.decoder.JSONDecodeError:
+            print("Invalid JSON")
+            return
+
+        try:
+            # update grid cells
+            for y, row in enumerate(self.grid):
+                for x, cell in enumerate(row):
+                    cell.id, cell.rot = msg['grid'][y * self.x_size + x]
+
+                    cell.selected = cell.id != 5  # any non-white object selects cells
+
+                    # calculate relative rotation
+                    # an inactive cell has a rotation value of -1
+                    if cell.rot == -1:
+                        cell.rel_rot = 0
+                    elif cell.prev_rot != cell.rot:
+                        cell.rel_rot = cell.rot - cell.prev_rot if cell.prev_rot > -1 else 0
+                    cell.prev_rot = cell.rot
+
+            session.flag_export_canvas = True
+            session.active_mode.process_grid_change()
+
+            # update slider values
+            # TODO: this causes type error when no slider value provided in cspy → provide 0 by default?
+            for slider_id in self.sliders.keys():
+                if msg['sliders'][slider_id] is not None: self.sliders[slider_id].value = msg['sliders'][slider_id]
+                self.sliders[slider_id].process_value()
+
+        except TypeError as t:
+            # pass
+            print("type error", t)
+        except IndexError:
+            print("Warning: incoming grid data is incomplete")
 
 .. _frontend_game_loop:
 
@@ -351,7 +423,7 @@ with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper
 Game Modes
 **********
 
-.. image:: img/Q-Scope_game-stages.png
+.. image:: ../img/Q-Scope_game-stages.png
   :align: center
   :alt: [Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]
 
@@ -396,129 +468,16 @@ Q-Scope needs to know where to find GAMA's ``gama-headless.sh`` file, which can 
 
 .. _data_view:
 
-Data View
-=========
+Individual Data View
+====================
+
+Total Data View
+===============
 
 User Interface
 **************
 
 .. _grid:
-
-Grid & Tiles
-============
-
-TODO: all about the tiles & tangibles. usage and setup.
-
-.. _frontend_grid_setup:
-
-grid setup
-----------
-
-**single grid, upper left:**
-
-.. code-block:: python
-
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, 11, 11, [[50, 50], [50, 0], [75, 0], [75, 50]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
-
-**16 x 22 grid rechts:**
-
-.. code-block:: python
-
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, 16, 22, [[50, 0], [50, 72], [100, 72], [100, 0]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
-
-**18 x 22 grid rechts:**
-
-.. code-block:: python
-
-  ncols = 22
-  nrows = 18
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, ncols, nrows, [[50, 0], [50, 81], [100, 81], [100, 0]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
-
-grid interaction examples
--------------------------
-
-**increase/decrease value by relative rotation:**
-
-e.g. emission, in ``InputMode.draw()``:
-
-.. code-block:: python
-
-  if cell.id < 4:
-     if cell.rel_rot == 1:
-         i = get_intersection(session.buildings, grid, x, y)
-         session.buildings.loc[i, 'CO2'] += 20
-     elif cell.rel_rot == -1:
-         i = get_intersection(session.buildings, grid, x, y)
-         session.buildings.loc[i, 'CO2'] -= 20
-
-.. _grid_coordinates:
-
-grid coordinates:
------------------
-
-``grid.rects_transformed``
-
-.. code-block:: python
-
-  for i, (cell, coords) in enumerate(session.grid_1.rects_transformed):
-      print("{0}: ({1}|{2}): {3}".format(i, cell.x, cell.y, coords))
-
-  # returns:
-  '''
-  0: (0|0): [[134.9009246826172, 4.38118839263916], [134.4179229736328, 37.4811897277832], [167.75010681152344, 38.0572509765625], [168.22642517089844, 4.963389873504639]]
-  1: (1|0): [[168.22642517089844, 4.963389873504639], [167.75010681152344, 38.0572509765625], [201.06971740722656, 38.633094787597656], [201.53933715820312, 5.545371055603027]]
-  2: (2|0): [[201.53933715820312, 5.545371055603027], [201.06971740722656, 38.633094787597656], [234.37672424316406, 39.20872497558594], [234.8396759033203, 6.127132415771484]]
-  3: (3|0): [[234.8396759033203, 6.127132415771484], [234.37672424316406, 39.20872497558594], [267.6711730957031, 39.78413391113281], [268.12744140625, 6.708674430847168]]
-  4: (4|0): [[268.12744140625, 6.708674430847168], [267.6711730957031, 39.78413391113281], [300.9530334472656, 40.35932922363281], [301.4026184082031, 7.28999662399292]]
-  5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
-
-  '''
-
-.. _read_scanner_data:
-
-.. code-block:: python
-  :caption: the algorithm for deciphering the incoming grid data from cspy_:
-
-      def read_scanner_data(self, message):
-        try:
-            msg = json.loads(message)
-        except json.decoder.JSONDecodeError:
-            print("Invalid JSON")
-            return
-
-        try:
-            # update grid cells
-            for y, row in enumerate(self.grid):
-                for x, cell in enumerate(row):
-                    cell.id, cell.rot = msg['grid'][y * self.x_size + x]
-
-                    cell.selected = cell.id != 5  # any non-white object selects cells
-
-                    # calculate relative rotation
-                    # an inactive cell has a rotation value of -1
-                    if cell.rot == -1:
-                        cell.rel_rot = 0
-                    elif cell.prev_rot != cell.rot:
-                        cell.rel_rot = cell.rot - cell.prev_rot if cell.prev_rot > -1 else 0
-                    cell.prev_rot = cell.rot
-
-            session.flag_export_canvas = True
-            session.active_mode.process_grid_change()
-
-            # update slider values
-            # TODO: this causes type error when no slider value provided in cspy → provide 0 by default?
-            for slider_id in self.sliders.keys():
-                if msg['sliders'][slider_id] is not None: self.sliders[slider_id].value = msg['sliders'][slider_id]
-                self.sliders[slider_id].process_value()
-
-        except TypeError as t:
-            # pass
-            print("type error", t)
-        except IndexError:
-            print("Warning: incoming grid data is incomplete")
 
 Sliders
 =======

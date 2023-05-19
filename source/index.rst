@@ -20,14 +20,42 @@ Guide
 
 .. toctree::
    :maxdepth: 2
+   :caption: Q-Scope
 
    QUARREE100
    setup
-   frontend
-   tag_decoder
-   communication
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Frontend
+
+   frontend/usage
+   frontend/programming
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tag decoder
+
+   cspy
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Infoscreen
+
    infoscreen
+
+.. toctree::
+   :maxdepth: 2
+   :caption: ABM
+
    ABM
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API
+
+   communication
+
 
 
 Indices and tables

@@ -10,7 +10,7 @@ API: Backend
 
 TODO: grid, decoder-side
 
-Incoming grid status is deciphered in ``grid.py``: read_scanner_data_
+Incoming grid status is deciphered in :ref:`grid.py<read_scanner_data>`
 
 .. _frontend_communication:
 
@@ -23,7 +23,7 @@ JSON and CSV constructs used for the communication between GAMA, the Q-Scope-inf
 
 Starting the GAMA Simulation via XML
 ------------------------------------
-When moving from Input Mode to Simulation Mode (by Placing a Token on the according ModeSelector_), an xml file is composed containing all the global environment data. The general structure looks like this:
+When moving from Input Mode to Simulation Mode (by Placing a Token on the according :ref:`mode selector<ModeSelector>`), an xml file is composed containing all the global environment data. The general structure looks like this:
 
 .. code-block:: xml
 
