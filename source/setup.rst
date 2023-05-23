@@ -10,6 +10,13 @@ Hardware Overview
 
 The whole setup is made of two physical tables, with interactive components on top; two cameras sitting inside the tables; a projector casting an image onto the tables; and a TV screen to show additional information.
 The table tops are of acrylic glass, on top of which there is a grid of tiles. Some of the tiles are tagged on the underside, so they can be decoded by the cameras from below. Each interaction with any of the tagged tiles will cause the projection and the infoscreen to respond in real time.
+So the Q-Scope has to of each of the following instances:
+
+- A physical table with a phyiscal grid on top
+- A camera underneath, with software to decode the current arrangement of acrylic tiles
+- A :ref:`frontend grid object<grid>` that receives messages from the according tag decoder and translates them into commands for the projection.
+
+This way, the whole framework is always in-sync, and users can interact *with the surface projection* by exchanging tiles on the tables.
 
 .. image:: img/Q-Scope_tangibles_tags.jpg
     :align: center
@@ -26,7 +33,7 @@ Software Overview
     :alt: Here you should see a schematic overview on the different software components the Q-Scope setup requires: cspy, frontend, infoscreen, abm
 
 Each physical component of the setup has a piece of software it is linked with.
-The image stream (camera) of the grid of tiles are scanned and decoded by :ref:`cspy<cspy>`. The software sends the grid information to the :ref:`frontend<frontend>` (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the :ref:`infoscreen<infoscreen>` (TV) to display metadata. A GAMA Agent-Based-Model (:ref:`ABM<ABM>`) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
+The image stream (camera) of the grid of tiles are scanned and decoded by :ref:`cspy<cspy>`. The software sends the grid information to the :ref:`frontend<frontend_usage>` (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the :ref:`infoscreen<infoscreen>` (TV) to display metadata. A GAMA Agent-Based-Model (:ref:`ABM<ABM>`) can be executed via interaction on the table. The data it outputs is stored locally and loaded by the infoscreen to display comprehensive graphs.
 
 .. _architecture:
 

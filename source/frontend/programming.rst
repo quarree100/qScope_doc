@@ -11,7 +11,7 @@ Config file
 
 To configure the frontend, the file ``q100viz/settings/config.py`` can be changed before running the application.
 
-.. note:: Make yourself a copy of this file and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
+.. note:: Make yourself a copy of the file config.py and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
 
 Here you can modify the path of files being imported/exported, :ref:`change the source file and the simulation time for the agent-based-model<simulation_setup>`, save information of the extents of the :ref:`grids<frontend_grid_setup>` and the :ref:`sliders<frontend_slider_setup>` here. The individual adjustments will be discussed in the according sections, respectively.
 
@@ -87,7 +87,7 @@ Further information such as paths for pre-generated graphics are added. The Data
 
   "Behavior" data such as the connection to the QUARRE100-heat-grid, refurbishment of the house or energy-saving measures are pre-set in the following manner: ``false``, if house's energy_source (in source data) is not ``None``, else the house will come in pre-connected and refurbished.
 
-Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). :ref:`The tag decoder software<cspy>` will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: read_scanner_data_ function.
+Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). :ref:`The tag decoder software<cspy>` will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: :ref:`read_scanner_data<read_scanner_data>` function.
 The Buildings class contains additional functions, e.g. ``find_closest_heat_grid_line`` for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.
 
 GIS
@@ -143,16 +143,23 @@ Upon initialization of the frontend class, the pygame environment is created. Th
 
 .. _frontend_setup_window:
 
+window position and size
+========================
+
 You can set the window's position using the os module:
 
-.. code-block::
+.. code-block:: python
+  :caption: frontend.py
 
-  # set window position
-  if not run_in_main_window:
-      x = 0  # left
-      y = 2560  # height of upper monitor --> display on lower monitor
-      os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
-          0, 2560)  # projection to the left
+    # window position (must be set before pygame.init!)
+    if not run_in_main_window:
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
+            0, 2560)  # projection to the left
+
+    # window size:
+    canvas_size = session.config['CANVAS_SIZE']
+    self.canvas = pygame.display.set_mode(canvas_size, NOFRAME)
+    pygame.display.set_caption("q100viz")
 
 For this setting, the monitors should be organized as follows:
 
@@ -162,7 +169,8 @@ For this setting, the monitors should be organized as follows:
 
 The canvas is masked by a layer that defines the margins of the region of interest (ROI). The following list of points defines the extent of a masking polygon:
 
-.. code-block::
+.. code-block:: python
+  :caption: frontend.py
 
     self.mask_points = [[0, 0], [85.5, 0], [85.5, 82], [0, 82], [0, -50],
                     [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
@@ -172,9 +180,19 @@ Finally, a seperate thread for UDP observation is started. Each table ("grid") h
 Grid & Tiles
 ************
 
-TODO: all about the tiles & tangibles. usage and setup.
+The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed. All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 4 (codes on the underside). Once a cell gets an ID that is not 0 (white), it is considered to be "selected". As a result, it will be :ref:`displayed with a broader frame<draw_simple_polygon_layer>`, it can be addressed via a :ref:`slider<frontend_slider_setup>`, its information will be displayed on the infoscreen, and the moment of selection can trigger :ref:`certain functions<modeselector>`.
+
+TODO:
+
+- each have a thread running to receive UDP messages to receive information on the grid cells ids and their (absolute and relative) rotation
+- grid can be toggled using `g`
+- cells can trigger events
+- cells select buildings according to intersection & rotation
+- grid interaction has to be 
 
 .. _frontend_grid_setup:
+
+TODO:
 
 grid setup
 ==========
@@ -243,50 +261,6 @@ e.g. emission, in ``InputMode.draw()``:
          i = get_intersection(session.buildings, grid, x, y)
          session.buildings.loc[i, 'CO2'] -= 20
 
-
-.. _read_scanner_data:
-
-.. code-block:: python
-  :caption: the algorithm for deciphering the incoming grid data from :ref:`The tag decoder software<cspy>`:
-
-      def read_scanner_data(self, message):
-        try:
-            msg = json.loads(message)
-        except json.decoder.JSONDecodeError:
-            print("Invalid JSON")
-            return
-
-        try:
-            # update grid cells
-            for y, row in enumerate(self.grid):
-                for x, cell in enumerate(row):
-                    cell.id, cell.rot = msg['grid'][y * self.x_size + x]
-
-                    cell.selected = cell.id != 5  # any non-white object selects cells
-
-                    # calculate relative rotation
-                    # an inactive cell has a rotation value of -1
-                    if cell.rot == -1:
-                        cell.rel_rot = 0
-                    elif cell.prev_rot != cell.rot:
-                        cell.rel_rot = cell.rot - cell.prev_rot if cell.prev_rot > -1 else 0
-                    cell.prev_rot = cell.rot
-
-            session.flag_export_canvas = True
-            session.active_mode.process_grid_change()
-
-            # update slider values
-            # TODO: this causes type error when no slider value provided in cspy → provide 0 by default?
-            for slider_id in self.sliders.keys():
-                if msg['sliders'][slider_id] is not None: self.sliders[slider_id].value = msg['sliders'][slider_id]
-                self.sliders[slider_id].process_value()
-
-        except TypeError as t:
-            # pass
-            print("type error", t)
-        except IndexError:
-            print("Warning: incoming grid data is incomplete")
-
 .. _frontend_game_loop:
 
 Frontend Game Loop
@@ -334,6 +308,73 @@ Drawing on Canvas
 
   #                   surface,   color,      coords_transformed
   pygame.draw.polygon(viewport, (255, 0, 0), viewport.transform(rect_points))
+
+.. _draw_simple_polygon_layer:
+
+**draw polygon layer (simple)**:
+
+.. code-block:: python
+  :caption: gis.py - simply draw polygons on a specific surface with a specific stroke and color. Note: when stroke is 0, the polygon will be filled.
+
+  def draw_polygon_layer(self, surface, df, stroke, fill):
+    '''draw polygon layer, do not lerp'''
+    try:
+        for polygon in df.to_dict('records'):
+            if fill:
+                fill_color = pygame.Color(*fill)
+
+            points = self.surface.transform(polygon['geometry'].exterior.coords)
+            pygame.draw.polygon(self.surface, fill_color, points, stroke)
+
+    except Exception as e:
+        session.log += "\n%s" % e
+        print("cannot draw polygon layer: ", e)
+
+**draw polygon layer and lerp color using bool**
+
+.. code-block:: python
+  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to bool
+
+  def draw_polygon_layer_bool(self, surface, df, stroke, fill_false, fill_true=None, fill_attr=None):
+    '''draw polygon layer, lerp using bool value'''
+    try:
+        for polygon in df.to_dict('records'):
+            if fill_false:
+                fill_color = pygame.Color(*fill_false)
+
+                if fill_true:
+                    fill_color = pygame.Color(fill_true) if polygon[fill_attr] else fill_color
+
+            points = self.surface.transform(polygon['geometry'].exterior.coords)
+            pygame.draw.polygon(self.surface, fill_color, points, stroke)
+
+    except Exception as e:
+        session.log += "\n%s" % e
+        print("cannot draw polygon layer: ", e)
+
+**draw polygon layer and lerp colors according to float:**
+
+.. code-block:: python
+  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float values
+
+  def draw_polygon_layer_float(self, surface, df, stroke, fill, lerp_target=None, lerp_attr=None):
+    '''draw polygon layer and lerp using float'''
+    try:
+        for polygon in df.to_dict('records'):
+            if fill:
+                fill_color = pygame.Color(*fill)
+
+                if lerp_target:
+                    target_color = pygame.Color(lerp_target)
+                    fill_color = fill_color.lerp(target_color, polygon[lerp_attr] / df[lerp_attr].max())
+
+            points = self.surface.transform(polygon['geometry'].exterior.coords)
+            pygame.draw.polygon(self.surface, fill_color, points, stroke)
+
+    except Exception as e:
+        session.log += "\n%s" % e
+        print("cannot draw polygon layer: ", e)
+
 
 **display image**
 Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files.
@@ -427,7 +468,7 @@ Game Modes
   :align: center
   :alt: [Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]
 
-* In the :ref:`QUARREE100 use case<quarree100>` there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
+* In the :ref:`QUARREE100 use case<QUARREE100>` there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
 * implemented modes are:
     * :ref:`Interaction <buildings_interaction>`
     * :ref:`Simulation <simulation_mode>`
