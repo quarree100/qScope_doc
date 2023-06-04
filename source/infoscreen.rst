@@ -138,20 +138,179 @@ Overview
 =========================
 Infoscreen is primarily a node js application. q100_info.js runs a web application using expressjs, and communicate with Q-Scope Frontend via UDP messaging using socket.io. Rendering of views are done with html+css+javascript at public folder.
 
+js/main.js receives UDP message from the frontend, and injects data and renders respevtive views.
 
 Buildings Interaction View
 ===========================
+
+the function renderHouseInfo displays information of building groups that are conitaned in the incoming data.
+
+.. code-block:: javascript
+
+    const renderHouseInfo = function (groupData, quarterID) {
+        const individualQuarter = $("#" + quarterID);
+        buildings = groupData.buildings;
+
+        if (groupData[0] == '') {
+            individualQuarter.css("visibility", "hidden");
+        }
+        else {
+            // show hidden elements:
+            if (individualQuarter.css("visibility") == "hidden") {
+            individualQuarter.css("visibility", "visible");
+            }
+
+            // get only first element of building list:
+            const targetBuilding = buildings[buildings.length - 1];
+
+            // update address:
+            individualQuarter.find('.address').text(targetBuilding.address);
+
+            // update building type
+            target = "#" + quarterID + " > .nameAndTable > .houseInfo > .buildingType > span";
+            if (targetBuilding.type == "MFH")
+            $(target).text("Mehrfamilienhaus");
+            if (targetBuilding.type == "EFH")
+            $(target).text("Einfamilienhaus");
+
+            // update consumption data:
+            target = "#" + quarterID + " > .nameAndTable > .houseInfo > .heatConsumption > img";
+            let heatConsumptionHandle = "default";
+            if (targetBuilding.spec_heat_consumption > 250)
+            heatConsumptionHandle = "h";
+            if (targetBuilding.spec_heat_consumption < 250)
+            heatConsumptionHandle = "g";
+            if (targetBuilding.spec_heat_consumption < 200)
+            heatConsumptionHandle = "f";
+            if (targetBuilding.spec_heat_consumption < 160)
+            heatConsumptionHandle = "e";
+            if (targetBuilding.spec_heat_consumption < 130)
+            heatConsumptionHandle = "d";
+            if (targetBuilding.spec_heat_consumption < 100)
+            heatConsumptionHandle = "c";
+            if (targetBuilding.spec_heat_consumption < 75)
+            heatConsumptionHandle = "b";
+            if (targetBuilding.spec_heat_consumption < 50)
+            heatConsumptionHandle = "a";
+            if (targetBuilding.spec_heat_consumption < 30)
+            heatConsumptionHandle = "aplus";
+            $(target).attr("src", "img/qscope_energy_graph_triangle_" + heatConsumptionHandle + "_.png");
+
+            // highlight selected decision:
+            if (groupData.slider_handles.length > 0) {
+            groupData.slider_handles.forEach(element => {
+                individualQuarter.find("." + element).removeClass('highlightedRow')
+                individualQuarter.find("." + element).addClass('highlightedRow')
+            });
+            }
+            else {
+            individualQuarter.find(".highlightedRow").removeClass('highlightedRow')
+            }
+
+            // update image:
+            individualQuarter.find(".emissions_graphs img").attr("src", targetBuilding["emissions_graphs"]);
+            individualQuarter.find(".energy_prices_graphs img").attr("src", targetBuilding["energy_prices_graphs"]);
+
+        }
+    }
+
 
 
 Individual Data View
 =========================
 
+
+Individual data view shows detailed information of selected building group. In addition to what is displayed in the buildings interaction view, 
+the emissions graph and the energy prices graph
+
+.. code-block::
+
+    const updateIndividualData = function (data) {
+        ...
+        individualQuarter.find(".emissions_graphs img").attr("src", targetBuilding["emissions_graphs"]);
+        individualQuarter.find(".energy_prices_graphs img").attr("src", targetBuilding["energy_prices_graphs"]);
+        ...
+    }
+
+
+
+
 Total Data View
 =========================
 
-developemnt mode
+Total data view displayes four different graphs of GAMA simulation: energy_price, emissions_neighborhood_accu, emissions_groups, and energy_prices_groups.
+
+.. code-block::
+
+    const renewResultsImages = function(data){
+        document.getElementById("energy_prices").src = data.energy_prices + "?update=" + new Date().getTime();
+        document.getElementById("emissions_neighborhood_accu").src = data.emissions_neighborhood_accu + "?update=" + new Date().getTime();
+        document.getElementById("emissions_groups").src = data.emissions_groups + "?update=" + new Date().getTime();
+        document.getElementById("energy_prices_groups").src = data.energy_prices_groups + "?update=" + new Date().getTime();
+    }
+
+
+
+
+Developemnt tools
 =========================
+
+Developemnt tools (js/devTools.js) provides useful function for debugging.
+
+Space bar: switch modes
+
+D: show data view mode
+
+V: show verbose (lines around html elements)
+
+T: inject extra round data (a column will be added in the round information table)
+
+I: inject sample data
+
 
 UDP communication API with the Frontend application
 =====================================================
+
+a message to switch modes should follow the following structure:
+
+.. code-block::
+
+    {
+        "mode" : string # "buildings_interaction", "individual_data_view" or "total_data_view"
+    }
+
+
+a message which contains building data should follow the following structure:
+
+.. code-block::
+
+    {
+        "buildings_groups": {
+            "group_0": {
+                "buildings": [
+                    {
+                        "address": string,
+                        "spec_heat_consumption": number,
+                        "spec_power_consumption": number,
+                        "cluster_size": number,
+                        "emissions_graphs": string, #path to a GAMA generated image
+                        "energy_prices_graphs": string, #path to a GAMA generated image
+                        "CO2": number,
+                        "connection_to_heat_grid": boolean,
+                        "connection_to_heat_grid_prior": boolean,
+                        "refurbished": boolean,
+                        "refurbished_prior": boolean,
+                        "save_energy": boolean,
+                        "save_energy_prior": boolean,
+                        "energy_source": string, #"Gas" or "Strom"
+                        "cell": sting
+                    },
+                    ... #can have multiple buildings
+                ],
+                "connections": 0,
+                "slider_handles": list #"save_energy", "connection_to_heat_grid", or/and "refurbished"
+            }, 
+            ...# should have group_0 to group_3 
+        }
+    }
 
