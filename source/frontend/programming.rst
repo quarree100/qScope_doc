@@ -180,7 +180,11 @@ Finally, a seperate thread for UDP observation is started. Each table ("grid") h
 Grid & Tiles
 ************
 
-The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed. All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 4 (codes on the underside). Once a cell gets an ID that is not 0 (white), it is considered to be "selected". As a result, it will be :ref:`displayed with a broader frame<draw_simple_polygon_layer>`, it can be addressed via a :ref:`slider<frontend_slider_setup>`, its information will be displayed on the infoscreen, and the moment of selection can trigger :ref:`certain functions<modeselector>`.
+TODO:
+
+- image comparing physical grid, cspy-grid, frontend-grid
+
+The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed. All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 4 (codes on the underside). Once a cell gets an ID that is not 0 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it. Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
 
 TODO:
 
@@ -188,7 +192,7 @@ TODO:
 - grid can be toggled using `g`
 - cells can trigger events
 - cells select buildings according to intersection & rotation
-- grid interaction has to be 
+- grid interaction has to be
 
 .. _frontend_grid_setup:
 
