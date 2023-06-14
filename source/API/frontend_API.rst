@@ -4,7 +4,7 @@ Frontend API
 Frontend UDP setup
 ******************
 
-UDP communication is initialized in `frontend.py`. The frontend object has a thread running for each of the physical tables and links them to each of the :ref:`grids<grid>`, so the grids can receive messages from each of the according tag decoders. Additionally, it starts a third thread to function as an UDP server to receive messages from :ref:`GAMA<ABM>` and forward them to the infoscreen.
+UDP communication is initialized in `frontend.py`. The frontend object has a thread running for each of the physical tables and links them to each of the :ref:`grids<../frontend/programming.html#grid>`, so the grids can receive messages from each of the according tag decoders. Additionally, it starts a third thread to function as an UDP server to receive messages from :ref:`GAMA<ABM>` and forward them to the infoscreen.
 Upon initialization, the grids will be allocated a callback function, that is executed whenever a message is received from the tag decoders: read_scanner_data_. In this function, :ref:`the received message<cspy_grid_message>` will be interpreted so the grids can process the id and rotation of each grid cell. It is possible to infer the relative rotation from a previous state, which can be used as means of interaction (which is NOT done in the QUARREE100 project).
 
 .. note::
@@ -13,7 +13,7 @@ Upon initialization, the grids will be allocated a callback function, that is ex
 
 .. _read_scanner_data:
 
-The :ref:`grid<grid>` is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid.
+The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid.
 
 .. code-block:: python
   :caption: the algorithm for deciphering the incoming grid data from :ref:`The tag decoder software<cspy>`:

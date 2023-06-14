@@ -3,6 +3,8 @@
 Programming
 ###########
 
+.. _frontend_initialization:
+
 Initialization
 **************
 
@@ -33,7 +35,7 @@ Further contents of the code are:
 
 - A scenario for possible energy prices and further settings affecting the dynamics of the agent-based-model are set here as well. The source csv files for this lie in the :ref:`data folder<data>`.
 - Initialization of  GIS objects, such as the geographic canvas extents and the basemap file are initialized
-- Initialization of the grid_ objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the :ref:`The tag decoder software<cspy>` tag decoder at each interaction.
+- Initialization of the :ref:`grid<grid>` objects. These are the cells representing the physical tiles on the table. They mirror the physical interaction and can be addressed by a grid object that is sent from the :ref:`The tag decoder software<cspy>` tag decoder at each interaction.
 - Initialization of the _modes. The different game stages are stored in a variable called ``modes``.
 
 .. _buildings:
@@ -263,143 +265,76 @@ grid interaction
 ================
 
 The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
+In either case, the function `gis.get_intersection_indexer` is called from `grid.get_intersection`, checking for overlapping polygons with the selected cell.
 
 .. _frontend_game_loop:
 
 Frontend Game Loop
 ******************
 
-TODO:
+After :ref:`initialization<frontend_initialization>`, the frontend will run in a loop to :ref:`update the projection<projection_routine>`, evaluate keyboard input, handle the :ref:`game modes<modeselector>`, process :ref:`slider events<slider_events>`, and finally, :ref:`update the pygame environment<update_pygame_environment>`.
+
+.. _key_events:
+
+The following key events are implemented in the `QUARREE100 <https://www.quarree100.de>`_ example project:
+
+- `p` toggle the display of GIS polygons
+- `m` toggle basemap visibility
+- `g` toggle visibility of grid outline and cell ID, rotation, coordinates
+- `n` toggle visibility of the heat grid
+- `b` toggle the black mask on viewport
+- `3` start buildings_interaction_ mode
+- `4` start simulation_mode_
+- `5` start individual_data_view_ mode
+- `6` start total_data_view_ mode
 
 Projection
 ==========
 
-.. _viewport_handling:
+.. _projection_routine:
 
-TODO: how to handle the viewport for debugging (keys), session.show_polygons, session.show_basemap, ...
+The frontend image is composed of a set of layers, which are rendered ontop of each other in the following order:
 
-.. _calibration_mode:
+#. draw polygons to _gis.surface
+#. draw grid outĺine to grid.surface
+#. draw mask to session.viewport
+#. draw basemap to frontend.canvas
+#. draw mode-specific surface (what does this do?)
+#. render GIS layer: _gis.surface to frontend.canvas
+#. slider: draw polygons, icons and text to slider.surface
+#. draw grid.surface to frontend.canvas
+#. draw session.viewport to frontend.canvas
 
-simple Pygame features
-======================
+.. note::
+  More notes on how to use simple pygame features can be found in the :ref:`Frontend/pygame section! <simple_pygame_features>`
 
-Drawing on Canvas
------------------
+Drawing polygons
+----------------
 
-**displaying text**:
-
-.. code-block:: python
-
-  # 1. define font:
-  font = pygame.font.SysFont('Arial', 20)
-  # 2. use font to write to canvas:
-  canvas.blit(font.render(str(mouse_pos), True, (255,255,255)), (200,700))
-
-**drawing polygons onto a specific surface**:
-
-.. code-block:: python
-
-  # general:
-  # points = [[x1, y1], [x1, y2], [x2, y1], [x2, y2]]
-  #          [[bottom-left], [top-left], [bottom-right], [top-right]]
-  # points_transformed = reference_surface.transform(points)
-  # pygame.draw.polygon(reference_surface, color, points_transformed)
-
-  # example:
-  points = [[20, 70], [20, 20], [80, 20], [80, 70]]  # percentage relative to surface
-  points_transformend = session.grid_1.surface.transform(points)
-
-  #                   surface,   color,      coords_transformed
-  pygame.draw.polygon(viewport, (255, 0, 0), viewport.transform(rect_points))
-
-.. _draw_simple_polygon_layer:
-
-**draw polygon layer (simple)**:
-
-.. code-block:: python
-  :caption: gis.py - simply draw polygons on a specific surface with a specific stroke and color. Note: when stroke is 0, the polygon will be filled.
-
-  def draw_polygon_layer(self, surface, df, stroke, fill):
-    '''draw polygon layer, do not lerp'''
-    try:
-        for polygon in df.to_dict('records'):
-            if fill:
-                fill_color = pygame.Color(*fill)
-
-            points = self.surface.transform(polygon['geometry'].exterior.coords)
-            pygame.draw.polygon(self.surface, fill_color, points, stroke)
-
-    except Exception as e:
-        session.log += "\n%s" % e
-        print("cannot draw polygon layer: ", e)
-
-**draw polygon layer and lerp color using bool**
-
-.. code-block:: python
-  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to bool
-
-  def draw_polygon_layer_bool(self, surface, df, stroke, fill_false, fill_true=None, fill_attr=None):
-    '''draw polygon layer, lerp using bool value'''
-    try:
-        for polygon in df.to_dict('records'):
-            if fill_false:
-                fill_color = pygame.Color(*fill_false)
-
-                if fill_true:
-                    fill_color = pygame.Color(fill_true) if polygon[fill_attr] else fill_color
-
-            points = self.surface.transform(polygon['geometry'].exterior.coords)
-            pygame.draw.polygon(self.surface, fill_color, points, stroke)
-
-    except Exception as e:
-        session.log += "\n%s" % e
-        print("cannot draw polygon layer: ", e)
-
-**draw polygon layer and lerp colors according to float:**
-
-.. code-block:: python
-  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float values
-
-  def draw_polygon_layer_float(self, surface, df, stroke, fill, lerp_target=None, lerp_attr=None):
-    '''draw polygon layer and lerp using float'''
-    try:
-        for polygon in df.to_dict('records'):
-            if fill:
-                fill_color = pygame.Color(*fill)
-
-                if lerp_target:
-                    target_color = pygame.Color(lerp_target)
-                    fill_color = fill_color.lerp(target_color, polygon[lerp_attr] / df[lerp_attr].max())
-
-            points = self.surface.transform(polygon['geometry'].exterior.coords)
-            pygame.draw.polygon(self.surface, fill_color, points, stroke)
-
-    except Exception as e:
-        session.log += "\n%s" % e
-        print("cannot draw polygon layer: ", e)
+TODO: explain GIS functions
 
 
-**display image**
-Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files.
+Drawing of Sliders
+------------------
 
-.. code-block:: python
-
-  image = pygame.image.load("images/scenario_progressive.bmp")
-  canvas.blit(image, (0,0))
-
-
-**display sliders**:
 The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
 
 Drawing Heat Grid Lines
 -----------------------
 
 // TODO:
+
 #. Buildings.find_closest_heat_grid_line
 #. draw the line
 
-.. _frontend_mode:
-.. _mode:
+.. _pygame_environment_update:
+
+Pygame Environment Update
+=========================
+
+TODO: tick, what are ticks_elapsed and seconds_elapsed used for?
+
+.. _calibration_mode:
 
 Calibration
 ***********
@@ -450,7 +385,7 @@ in file ``q100viz/keystone.py``
 frontend representation
 -----------------------
 
-* slider uses the transformation of the grid_
+* slider uses the transformation of the :ref:`grid<grid>`
 * **drawing of polygons and values** should be done via ``self.surface.blit(...)``. Slider surface is rendered and "blitted" to main canvas.
 
 ``print(slider.coords_transformed)`` returns:
@@ -464,14 +399,19 @@ frontend representation
 
 with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper-right[x], upper-right[y]], [bottom-right[x], bottom-right[y]]]``
 
+.. _frontend_mode:
+.. _mode:
+
 Game Modes
 **********
+
+TODO: general mode functions.. e.g. each mode checks for intersections with grid
 
 .. image:: ../img/Q-Scope_game-stages.png
   :align: center
   :alt: [Schematic overview on the different game stages with information on what's being displayed on frontend and infoscreen, and explanations of possible user interaction]
 
-* In the :ref:`QUARREE100 use case<QUARREE100>` there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
+* In the :ref:`QUARREE100 use case<quarree>` there are different machine states, defined by the files in ``q100viz/interaction/`` → these are the modes the program is running at (per time)
 * implemented modes are:
     * :ref:`Interaction <buildings_interaction>`
     * :ref:`Simulation <simulation_mode>`
@@ -479,6 +419,11 @@ Game Modes
     * :ref:`Calibration<calibration_mode>`
 
 TODO: is this right, or shall the mode be activated via session.current_mode = mode??: each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
+
+TODO: game mode is activated in frontend loop:
+- it runs `session.active_mode.activate()` when new mode was set
+
+
 The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
 
 Specification of mode selector cells can be done by adjusting the tables in `q100viz/settings/`. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
@@ -543,7 +488,7 @@ Total Data View
 User Interface
 **************
 
-.. _grid:
+.. _sliders:
 
 Sliders
 =======
@@ -551,6 +496,10 @@ Sliders
 .. _frontend_slider_setup:
 
 TODO: how to define and setup the sliders.
+
+.. _slider_events:
+
+TODO: how to use the sliders, what happens if you use them
 
 .. _modeselector:
 
@@ -570,4 +519,4 @@ TODO: session.log
 TODO: session.VERBOSE_MODE
 TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbished, debug_force_save_energy
 
-TODO: refer to _viewport_handling_
+TODO: refer to key_events_

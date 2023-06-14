@@ -31,6 +31,7 @@ Guide
 
    frontend/usage
    frontend/programming
+   frontend/pygame
 
 .. toctree::
    :maxdepth: 2
