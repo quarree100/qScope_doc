@@ -13,6 +13,8 @@ Upon initialization, the grids will be allocated a callback function, that is ex
 
 .. _read_scanner_data:
 
+The :ref:`grid<grid>` is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid.
+
 .. code-block:: python
   :caption: the algorithm for deciphering the incoming grid data from :ref:`The tag decoder software<cspy>`:
 

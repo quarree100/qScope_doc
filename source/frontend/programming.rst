@@ -177,59 +177,71 @@ The canvas is masked by a layer that defines the margins of the region of intere
 
 Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
 
+.. _grid:
+
 Grid & Tiles
 ************
 
-TODO:
+.. image:: ../img/grid_representations.png
+  :align: center
+  :alt: image of grid representations: photo of acrylic tiles, webcam stream from underneath, software representation in frontend
 
-- image comparing physical grid, cspy-grid, frontend-grid
+The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed.
 
-The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed. All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 4 (codes on the underside). Once a cell gets an ID that is not 0 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it. Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
+.. code-block:: python
+  :caption: frontend.py
 
-TODO:
+  for grid_, grid_udp in [[session.grid_1, grid_udp_1], [session.grid_2, grid_udp_2]]:
+    udp_server = udp.UDPServer(*grid_udp, 4096)
+    udp_thread = threading.Thread(target=udp_server.listen,
+                                  args=(grid_.read_scanner_data,),
+                                  daemon=True)
+    udp_thread.start()
 
-- each have a thread running to receive UDP messages to receive information on the grid cells ids and their (absolute and relative) rotation
-- grid can be toggled using `g`
-- cells can trigger events
-- cells select buildings according to intersection & rotation
-- grid interaction has to be
+In the frontend code of our example, there are two grid objects, each representing a grid on one of the physical tables. Each of them starts a new thread to receive UDP messages with information on the grid cells' ids and their (absolute and relative) rotation
+
+ All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 5 (codes on the underside). Once a cell gets an ID that is not 5 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it (see image above). Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
+
+Some cells can be programmed to trigger additional events, like leaving the current game mode. This is done via tables in `q100viz/settings/`. A table can look like this:
+
+
+.. csv-table:: grid initialization - q100viz/settings/buildings_interaction_grid_1.csv
+  :header: "x", "y", "handle", "color"
+
+  0,18,connection_to_heat_grid,#0075b4
+  2,18,refurbished,#0075b4
+  4,18,save_energy,#0075b4
+  11,18,connection_to_heat_grid,#fdc113
+  13,18,refurbished,#fdc114
+  15,18,save_energy,#fdc115
+
+The handles for game mode switching have to match one of the strings defined in `session.MODE_SELECTOR_HANDLES`.: `'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'`. You can find more on how these "Mode Selectors" work in :ref:`the according section<modeselector>`.
+
+.. hint::
+  The grid display can be toggled using the `g` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
 
 .. _frontend_grid_setup:
-
-TODO:
 
 grid setup
 ==========
 
-**single grid, upper left:**
+The grid objects contain lists of cells, which can be addressed using enumeration routines:
 
 .. code-block:: python
+  :caption: access cells by iterating the grids
 
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, 11, 11, [[50, 50], [50, 0], [75, 0], [75, 50]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
-
-**16 x 22 grid rechts:**
-
-.. code-block:: python
-
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, 16, 22, [[50, 0], [50, 72], [100, 72], [100, 0]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
-
-**18 x 22 grid rechts:**
-
-.. code-block:: python
-
-  ncols = 22
-  nrows = 18
-  grid_1 = session.grid_1 = grid.Grid(canvas_size, ncols, nrows, [[50, 0], [50, 81], [100, 81], [100, 0]], viewport)
-  grid_2 = session.grid_2 = grid.Grid(canvas_size, 22, 22, [[0, 0], [0, 100], [50, 100], [50, 0]], viewport)
+  # iterate grid:
+  for grid in [session.grid_1, session.grid_2]:
+      for y, row in enumerate(grid.grid):
+          for x, cell in enumerate(row):
+            # do cell operation
 
 .. _grid_coordinates:
 
 grid coordinates:
 =================
 
-``grid.rects_transformed``
+The positions of the cells are stored in ``grid.rects_transformed``. This variable contains coordinates of the absolute pixel positions **after** their keystone-transformation on the canvas.
 
 .. code-block:: python
 
@@ -247,23 +259,10 @@ grid coordinates:
 
   '''
 
+grid interaction
+================
 
-grid interaction examples
-=========================
-
-**increase/decrease value by relative rotation:**
-
-e.g. emission, in ``InputMode.draw()``:
-
-.. code-block:: python
-
-  if cell.id < 4:
-     if cell.rel_rot == 1:
-         i = get_intersection(session.buildings, grid, x, y)
-         session.buildings.loc[i, 'CO2'] += 20
-     elif cell.rel_rot == -1:
-         i = get_intersection(session.buildings, grid, x, y)
-         session.buildings.loc[i, 'CO2'] -= 20
+The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
 
 .. _frontend_game_loop:
 
@@ -479,8 +478,26 @@ Game Modes
     * :ref:`Data View <data_view>`
     * :ref:`Calibration<calibration_mode>`
 
-each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
+TODO: is this right, or shall the mode be activated via session.current_mode = mode??: each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
 The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
+
+Specification of mode selector cells can be done by adjusting the tables in `q100viz/settings/`. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
+
+valid handles are:
+
+**household-individual handles:** are set in `session.VALID_DECISION_HANDLES`: `'connection_to_heat_grid', 'refurbished', 'save_energy'``
+
+**mode selection handles**: `'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'`
+
+**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
+
+The Modes can be switched using either the input keys:
+
+- `3` activates the :ref:`Buildings Interaction<buildings_interaction>`
+- `4` starts the simulation
+- `5` enters the :ref:`individual data view<individual_data_view>`
+- `6` enters the :ref:`total (neighborhood) data view<total_data_view>`
+- `C` starts the :ref:`Calibration Mode<calibration_mode>`
 
 .. _buildings_interaction:
 
@@ -511,10 +528,14 @@ Q-Scope needs to know where to find GAMA's ``gama-headless.sh`` file, which can 
 
 **ATTENTION**: make sure to set the user rights of ``gama-headless.sh`` executable via ``chmod u+x gama-headless.sh``
 
+
 .. _data_view:
+.. _individual_data_view:
 
 Individual Data View
 ====================
+
+.. _total_data_view:
 
 Total Data View
 ===============
@@ -538,61 +559,7 @@ ModeSelector
 
 A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.
 
-``grid_1_setup.csv``, ``grid_2_setup.csv``, ``input_scenarios_grid_1.csv`` and ``input_scenarios_grid_1.csv`` are used to assign functionality to grid cells.
-
-valid handles are:
-
-**environment handles:**
-
-.. csv-table:: environment handles
-  :header: "parameter", "possible values"
-  :widths: auto
-
-  "alpha_scenario", "Static_mean, Dynamic_moderate, Dynamic_high, Static_high"
-  carbon_price_scenario, "A - Conservative, B - Moderate, C1 - Progressive, C2 - Progressive, C3 - Progressive"
-  energy_price_scenario, "Prices_Project start, Prices_2021, Prices_2022 1st half"
-  q100_price_opex_scenario, "12 ct / kWh (static), 15-9 ct / kWh (dynamic)"
-  q100_price_capex_scenario, "1 payment, 2 payments, 5 payments"
-  q100_emissions_scenario, "Constant_50g / kWh, Declining_Steps, Declining_Linear, ``Constant_ Zero emissions``"
-
-
-**household-individual handles:**
-
-.. csv-table:: household-individual handles
-  :header: "adjustable", "parameter", "possible values"
-  :widths: auto
-
-  o, my_heat_consumption, float
-  o, my_power_consumption, float
-  o, my_heat_expenses, float
-  o, my_power_expenses, float
-  o, my_heat_emissions, float
-  o, my_power_emissions, float
-  o, my_energy_emissions, float
-  ✓, mod_status, "'u', 's'"
-  ✓, spec_heat_consumption, float
-  ✓, spec_power_consumption, float
-  ✓, energy_source,"gas, oil, None"
-
-zusätzlich kann `save_energy` eingestellt werden als Einstellung von Agentenverhalten (TODO!)
-
-**questionnaire**:
-
-- 'answer' (deprecated?)
-
-**mode selection**:
-
-- 'start_input_scenarios' (starts input mode A for global parameters)
-- 'start_input_households' (input mode B for individual household parameters)
-- 'start_simulation' (creates xml to start GAMA simulation)
-
-**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
-
-The Modes can be switched using either the input keys:
-
-* T: InputMode (TUI Mode)
-* C: CalibrationMode
-* S: Simulation
+TODO: explain how a mode is triggered and hint: do not use mode.activate() but session.active_mode = mode
 
 .. _devtools:
 
