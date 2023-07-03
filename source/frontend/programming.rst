@@ -24,12 +24,12 @@ Session file
 
 The file ``q100viz/session.py`` is a container for global variables. The file does some initial variable assignment, so that we won't stumble across any NoneType errors later on. Some config variables will be stored here with more accessible variable names (rather than having to use python dictionaries all the time). You'll basically find anything that needs to be referred to from different parts throughout the code here, such as :ref:`variables used for Debugging<devtools>`.
 In the following graphics section, the pygame viewport is loaded and :ref:`keystone transformation<keystone_transformation>` is perfomed.
-Furthermore, a `buildings` variable is created as an instance of the :ref:`Buildings class<buildings>`, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.
+Furthermore, a ``buildings`` variable is created as an instance of the :ref:`Buildings class<buildings>`, which represents the houses the users can interact with. It is a DataFrame that is very commonly referred to in the project, as it stores polygon data and metadata of the GIS objects.
 
 .. _environment:
 
 Further contents of the code are:
-- The `environment` variable that stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.
+- The ``environment`` variable that stores information about the machine state, like the current game mode and iteration, global scenarios regarding the energy prices, current state of houses connected to the heat grid. It is used mostly to transfer data to the infoscreen.
 
 .. _scenario:
 
@@ -98,7 +98,7 @@ The Buildings class contains additional functions, e.g. ``find_closest_heat_grid
 GIS: Shapes and Raster
 ======================
 
-The file `gis.py` contains two classes:
+The file ``gis.py`` contains two classes:
 
 1. **The GIS class** draws features from the source Shapefile, like polygons and lines, onto the canvas_. It provides functions to draw the whole polygon layer at once, color them in a certain style (e.g. according to heat grid connection status), etc.
 2. **The Basemap class** initiates and warps the basemap image.
@@ -210,23 +210,10 @@ In the frontend code of our example, there are two grid objects, each representi
 
  All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 5 (codes on the underside). Once a cell gets an ID that is not 5 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it (see image above). Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
 
-Some cells can be programmed to trigger additional events, like leaving the current game mode. This is done via tables in `q100viz/settings/`. A table can look like this:
-
-
-.. csv-table:: grid initialization - q100viz/settings/buildings_interaction_grid_1.csv
-  :header: "x", "y", "handle", "color"
-
-  0,18,connection_to_heat_grid,#0075b4
-  2,18,refurbished,#0075b4
-  4,18,save_energy,#0075b4
-  11,18,connection_to_heat_grid,#fdc113
-  13,18,refurbished,#fdc114
-  15,18,save_energy,#fdc115
-
-The handles for game mode switching have to match one of the strings defined in `session.MODE_SELECTOR_HANDLES`.: `'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'`. You can find more on how these "Mode Selectors" work in :ref:`the according section<modeselector>`.
+Some cells can be programmed to trigger additional events, like leaving the current game mode. This is done via tables in ``q100viz/settings/``. Read more on how to program link functions to cells :ref:`here<programming_cell_functions>`.
 
 .. hint::
-  The grid display can be toggled using the `g` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
+  The grid display can be toggled using the ``g`` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
 
 .. _frontend_grid_setup:
 
@@ -271,7 +258,7 @@ grid interaction
 ----------------
 
 The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
-In either case, the function `gis.get_intersection_indexer` is called from `grid.get_intersection`, checking for overlapping polygons with the selected cell.
+In either case, the function `gis.get_intersection_indexer` is called from ``grid.get_intersection``, checking for overlapping polygons with the selected cell.
 
 .. _frontend_game_loop:
 
@@ -284,15 +271,15 @@ After :ref:`initialization<frontend_initialization>`, the frontend will run in a
 
 The following key events are implemented in the `QUARREE100 <https://www.quarree100.de>`_ example project:
 
-- `p` toggle the display of GIS polygons
-- `m` toggle basemap visibility
-- `g` toggle visibility of grid outline and cell ID, rotation, coordinates
-- `n` toggle visibility of the heat grid
-- `b` toggle the black mask on viewport
-- `3` start buildings_interaction_ mode
-- `4` start simulation_mode_
-- `5` start individual_data_view_ mode
-- `6` start total_data_view_ mode
+- ``p`` toggle the display of GIS polygons
+- ``m`` toggle basemap visibility
+- ``g`` toggle visibility of grid outline and cell ID, rotation, coordinates
+- ``n`` toggle visibility of the heat grid
+- ``b`` toggle the black mask on viewport
+- ``3`` start buildings_interaction_ mode
+- ``4`` start simulation_mode_
+- ``5`` start individual_data_view_ mode
+- ``6`` start total_data_view_ mode
 
 Projection
 ==========
@@ -319,13 +306,13 @@ Drawing polygons and lines using GIS shapes
 
 The GIS shapes are drawn using the functions of the custom GIS class:
 
-- `draw_linestring_layer`: draws GIS features as lines - in our case, the heating grid is drawn using lines.
+- ``draw_linestring_layer``: draws GIS features as lines - in our case, the heating grid is drawn using lines.
 
 the following functions are used to draw polygons from geographical data (and color them according to the selected feature):
 
-- `draw_polygon_layer`: simply draw polygons and fill them with a provided color
-- `draw_polygon_layer_bool`: draw polygons and fill them either in color A or B (true/false)
-- `draw_polygon_layer_float`: draw polygons and fill them with a color gradient with the end points of a float between 0 and 1
+- ``draw_polygon_layer``: simply draw polygons and fill them with a provided color
+- ``draw_polygon_layer_bool``: draw polygons and fill them either in color A or B (true/false)
+- ``draw_polygon_layer_float``: draw polygons and fill them with a color gradient with the end points of a float between 0 and 1
 
 Using these functions, we can color buildings on the map and fill them with a color according to a certain attribute, e.g. mapping their relative heat consumption to a color gradient between red and green, or color them either green or red, when connected to the heat grid, or not.
 The functions always use the entire :ref:`buildings-dataset<buildings>` as an input parameter and draws all contained polygons at the same time. They are regularly called in the :ref:`loop function<frontend_game_loop>` of the frontend:
@@ -340,21 +327,34 @@ The functions always use the entire :ref:`buildings-dataset<buildings>` as an in
       session._gis.draw_buildings_connections(
           session.buildings.df)  # draw lines to closest heat grid
 
-      # fill:
+      # fill and lerp:
       if session.VERBOSE_MODE:
           session._gis.draw_polygon_layer_float(
-              self.canvas, session.buildings.df, 0, (96, 205, 21), (213, 50, 21), 'spec_heat_consumption')  # fill and lerp
+            self.canvas, session.buildings.df, 0,
+            (96, 205, 21),
+            (213, 50, 21),
+            'spec_heat_consumption')
       else:
           session._gis.draw_polygon_layer_bool(
-              self.canvas, session.buildings.df, 0, (213, 50, 21), (96, 205, 21), 'connection_to_heat_grid')  # fill and lerp
+              self.canvas, session.buildings.df, 0,
+              (213, 50, 21),
+              (96, 205, 21),
+              'connection_to_heat_grid')
 
       # stroke black:
       session._gis.draw_polygon_layer_bool(
-          self.canvas, session.buildings.df, 1, (0, 0, 0), (0, 0, 0), 'connection_to_heat_grid')
+          self.canvas, session.buildings.df, 1,
+          (0, 0, 0),
+          (0, 0, 0),
+          'connection_to_heat_grid')
 
       # stroke according to connection status:
       session._gis.draw_polygon_layer_bool(
-          surface=self.canvas, df=session.buildings.df, stroke=1, fill_false=(0, 0, 0), fill_true=(0, 168, 78), fill_attr='connection_to_heat_grid')
+          surface=self.canvas, df=session.buildings.df,
+          stroke=1,
+          fill_false=(0, 0, 0),
+          fill_true=(0, 168, 78),
+          fill_attr='connection_to_heat_grid')
 
       # color buildings if connection is not -1:
       # session.gis.draw_polygon_layer_connection_year(
@@ -367,7 +367,7 @@ The functions always use the entire :ref:`buildings-dataset<buildings>` as an in
 .. hint::
   Filling a polygon is done by applying a stroke width of 0.
 
-When the buildings are set to be connected to the heat grid, a line is shown between the polygon and the closest heat grid line. This is basically a tangent to that heat grid line at the closest point and is calculated in the function `GIS.draw_buildings_connections`.
+When the buildings are set to be connected to the heat grid, a line is shown between the polygon and the closest heat grid line. This is basically a tangent to that heat grid line at the closest point and is calculated in the function ``GIS.draw_buildings_connections``.
 
 Export Canvas to file
 ---------------------
@@ -396,15 +396,15 @@ The sliders have a bool called ``show_text`` that, when ``True``, activates the 
 Pygame Environment Update
 =========================
 
-At the bottom of `frontend.py`, `pygame.display.update()` is called to actually do what it says, and a `pygame.time.Clock` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
+At the bottom of ``frontend.py``, ``pygame.display.update()`` is called to actually do what it says, and a ``pygame.time.Clock`` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
 
 .. _frontend_mode:
 .. _mode:
 
-Game Modes & User Interface
-***************************
+Game Modes
+**********
 
-All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder `q100viz/interaction`. Each game mode is represented as a custom class with similar generic functions. Each class is initiated to an object in :ref:`session.py<session>` to be able to globally access it.
+All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder ``q100viz/interaction``. Each game mode is represented as a custom class with similar generic functions. Each class is initiated to an object in :ref:`session.py<session>` to be able to globally access it.
 
 .. image:: ../img/Q-Scope_game-stages.png
   :align: center
@@ -415,48 +415,61 @@ All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder `q100v
     * :ref:`Interaction <buildings_interaction>`
     * :ref:`Simulation <simulation_mode>`
     * :ref:`Data View <data_view>`
-    * :ref:`Calibration<calibration_mode>`
+    * (:ref:`Calibration<calibration_mode>` - for Debugging)
 
+**Game Mode Generic Functions:**
 
-. The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
-- The `activate` function is called automatically in the game loop, when `session.active_mode` changes to this object in the :ref:`game loop <frontend_game_loop>`. **It should not be called manually!**. This function can be used to define which graphical parts shall be displayed, by setting `session.show_polygons` etc to true or false. The same can be done for each slider individually.
-- `process_event` is a function that takes care of mouse events (for debugging purposes, it is possible to select and alter the buildings via mouse L/M/R clicks).
-- `process_grid_change` is the most important function in each of the game mode classes, as it takes care of the interaction possibilities: It is called each time a :ref:`grid change<read_scanner_data>` is received from cspy. Let's take the :ref:`buildings interaction mode<buildings_interaction>` as an example: After each incoming grid change, the whole grid is iterated with the following routine:
+* The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
+* The ``activate`` function is called automatically in the game loop, when `session.active_mode` changes to this object in the :ref:`game loop <frontend_game_loop>`. **It should not be called manually!**. This function can be used to define which graphical parts shall be displayed, by setting ``session.show_polygons`` etc to true or false. The same can be done for each slider individually.
+* ``process_event`` is a function that takes care of mouse events (for debugging purposes, it is possible to select and alter the buildings via mouse L/M/R clicks).
+* ``process_grid_change`` is the most important function in each of the game mode classes, as it takes care of the interaction possibilities: It is called each time a :ref:`grid change<read_scanner_data>` is received from cspy. See the :ref:`buildings interaction mode<buildings_interaction>` code as an example.
 
-  #. check for intersections with selected (non-white) cells and polygons
-  #. according to the rotation of the cell, set the selection of an overlapping building to true
-  #. for slider handles: update the selected feature of the building with the current slider value
-  #. for mode selectors: enable countdown timer for next mode to start
-  #. for global/scenario handles: connect additional buildings to the heat grid
+Some cells can be programmed to trigger additional events, like leaving the current game mode. This is done via tables in ``q100viz/settings/``. Read more on how to program link functions to cells :ref:`here<programming_cell_functions>`.
 
-TODO: Specification of mode selector cells can be done by adjusting the tables in `q100viz/settings/`. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
+.. hint::
 
-valid handles are:
+  For debugging purposes, the Game Modes can be switched using input keys:
 
-**household-individual handles:** are set in `session.VALID_DECISION_HANDLES`: `'connection_to_heat_grid', 'refurbished', 'save_energy'``
-
-**mode selection handles**: `'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'`
-
-**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
-
-The Modes can be switched using either the input keys:
-
-- `3` activates the :ref:`Buildings Interaction<buildings_interaction>`
-- `4` starts the simulation
-- `5` enters the :ref:`individual data view<individual_data_view>`
-- `6` enters the :ref:`total (neighborhood) data view<total_data_view>`
-- `C` starts the :ref:`Calibration Mode<calibration_mode>`
+  - ``3`` activates the :ref:`Buildings Interaction<buildings_interaction>`
+  - ``4`` starts the simulation
+  - ``5`` enters the :ref:`individual data view<individual_data_view>`
+  - ``6`` enters the :ref:`total (neighborhood) data view<total_data_view>`
+  - ``C`` starts the :ref:`Calibration Mode<calibration_mode>`
 
 .. _buildings_interaction:
 
-Buildings Interaction
-=====================
+1. Buildings Interaction Mode
+=============================
 In the Input Mode, users can set household-, buildings- global parameters. They can leave the mode placing a token on the "simulation mode" selector.
+
+Buildings Interaction
+---------------------
+
+The ``process_grid_change`` function of this mode make sure that, after each incoming grid change, the whole grid is iterated using the following routine:
+
+  #. check for intersections with selected (non-white) cells and polygons
+  #. according to the rotation of the cell, set the selection of an overlapping building to true and set its ``cell`` value to the ID of the cell. (IDs of the building will later be used for the grouping of buildings - and to allocate them to the users)
+  #. for slider handles: update the selected feature of the building with the current slider value
+  #. for mode selectors: enable countdown timer for next mode to start
+  #. for global/scenario handles: connect additional buildings to the heat grid. There is a dedicated dataframe for these additionally selected buildings called ``session.scenario_selected_buildings`` that excludes all user-selected buildings, so they can be specifically referred to. These buildings will be set 'selected'.
+  #. Finally, environment- and buildings-information will be :ref:`sent via UDP to the infoscreen<frontend_UDP_transmitter>`.
+
+Buildings Mode Display
+----------------------
+
+.. image:: ../img/frontend_full.png
+  :align: center
+  :alt: Image of the Frontend in Buildings Mode.
+
+TODO: add links in text below !
+
+The Buildings Interaction Mode is the most feature-rich display. It shows the basemap with buildings polygons and the heat grid on top. Selected buildings are highlighted by the user-specific color (according to the ID of the token used for selection). On the right, there is a global section containing some functional cells to force-connect a selectable number of buildings to the heat grid.
+It contains interaction possibilites for the change of the game modes and sliders for individual setting of the buildings' decision features.
 
 .. _simulation_mode:
 
-Simulation
-==========
+2. Simulation
+=============
 The Simulation can be started using ``S`` key. It will generate an experiment API file for GAMA according to this scheme: https://gama-platform.org/wiki/Headless#simulation-output and run the provided model file using the gama-headless.sh . These two files are to be set up in ``config.py``.
 
 .. _simulation_setup:
@@ -476,17 +489,54 @@ Q-Scope needs to know where to find GAMA's ``gama-headless.sh`` file, which can 
 
 **ATTENTION**: make sure to set the user rights of ``gama-headless.sh`` executable via ``chmod u+x gama-headless.sh``
 
+Simulation Mode View
+--------------------
+
+TODO: There is no interaction. The user will have to wait. Display: There is a countup & time for discussion.
 
 .. _data_view:
 .. _individual_data_view:
 
-Individual Data View
-====================
+3a. Individual Data View
+========================
 
 .. _total_data_view:
 
-Total Data View
-===============
+3b. Total Data View
+===================
+
+
+User Interface: Sliders and Global Cells
+****************************************
+
+.. _programming_cell_functions:
+
+Programming Cell Functions
+==========================
+
+In order to create a new game mode or make a cell "do something" upon selection/interaction, functions can be allocated to cells by adjusting the tables in ``q100viz/settings/``. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
+
+A table can look like this:
+
+.. csv-table:: grid initialization - q100viz/settings/buildings_interaction_grid_1.csv
+  :header: "x", "y", "handle", "color"
+
+  0,18,connection_to_heat_grid,#0075b4
+  2,18,refurbished,#0075b4
+  4,18,save_energy,#0075b4
+  11,18,connection_to_heat_grid,#fdc113
+  13,18,refurbished,#fdc114
+  15,18,save_energy,#fdc115
+
+The handles for game mode switching have to match one of the strings defined in ``session.MODE_SELECTOR_HANDLES``.: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``. You can find more on how these "Mode Selectors" work in :ref:`the according section<modeselector>`.
+
+valid handles are:
+
+**household-individual handles:** are set in ``session.VALID_DECISION_HANDLES``: ``'connection_to_heat_grid', 'refurbished', 'save_energy'``
+
+**mode selection handles**: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``
+
+**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
 
 .. _sliders:
 

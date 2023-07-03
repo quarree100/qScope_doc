@@ -108,3 +108,10 @@ and then in `input_mode.py`:
       f = open('../data/simulation_df.xml', 'w')
       f.write(xml)
       f.close()
+
+.. _frontend_UDP_transmitter:
+
+Frontend UDP transmitter
+************************
+
+TODO: API functions that send messages to infoscreen.
