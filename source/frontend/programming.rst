@@ -376,12 +376,6 @@ and `cv.warpPerspective for images <https://docs.opencv.org/3.4/da/d54/group__im
 
 in file ``q100viz/keystone.py``
 
-**recognition/data**
-
-
-* from cspy via UDP (json)
-* definition via ``cityscopy.json``
-
 frontend representation
 -----------------------
 
