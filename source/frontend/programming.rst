@@ -5,8 +5,8 @@ Programming
 
 .. _frontend_initialization:
 
-Initialization
-**************
+Initialization: Files, paths & data
+***********************************
 
 Config file
 ===========
@@ -40,8 +40,8 @@ Further contents of the code are:
 
 .. _buildings:
 
-Buildings
-*********
+Buildings & Metadata
+====================
 
 How are the buildings you see on the map colored and how can they be accessed? Most of the interaction in the QUARREE100 project is done via selection of buildings on an aerial map. The source data for these building polygons comes from a :ref:`Shapefile in the data folder<architecture>`
 
@@ -92,8 +92,11 @@ Further information such as paths for pre-generated graphics are added. The Data
 Buildings can either be ``selected`` by a user or not. Selection is done if a cell is selected on the table (by placing a token physically). :ref:`The tag decoder software<cspy>` will detect any interaction with the table surface and forward the grid information to the frontend to be deciphered in the ``grid.py``: :ref:`read_scanner_data<read_scanner_data>` function.
 The Buildings class contains additional functions, e.g. ``find_closest_heat_grid_line`` for graphical calculations and functions to organize, convert and export the DataFrame for specific needs.
 
-GIS
-***
+
+.. _gis:
+
+GIS: Shapes and Raster
+======================
 
 The file `gis.py` contains two classes:
 
@@ -119,26 +122,29 @@ Positioning of the GIS layers is done during :ref:`initialization<session>` of t
 .. note::
   Some other ROIs we tested in QUARREE100 were:
 
-  **kleinerer Kartenausschnitt:**
+  **smaller map extent:**
 
    _gis = session.gis = gis.GIS(canvas_size, [[1013578, 7207412], [1013010, 7207210], [1013386, 7206155], [1013953, 7206357]], viewport)
 
-  **mit Input Area am linken Rand und Aussparung unten:**
+  **input area at left-hand side and placeholder for cameras at bottom:**
 
     _gis = session.gis = gis.GIS(canvas_size, [[1013554, 7207623], [1012884, 7207413], [1013281, 7206147], [1013952, 7206357]], viewport)
 
-  **mit Input Area am rechten Rand und Aussparung unten:**
+  **input area at right-hand side and placeholder for cameras at bottom:**
 
     gis = session.gis = gis.GIS(canvas_size, [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]], viewport)
 
 .. _canvas:
 
-Canvas setup
-************
+Frontend Canvas & Display
+*************************
 
 The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games. Pygame will create a graphical canvas, running in the loop, which will change its appearance according to user action.
 
 .. _frontend_class:
+
+Frontend Class
+==============
 
 The frontend class itself is defined in ``q100viz/frontend.py``.
 Upon initialization of the frontend class, the pygame environment is created. Things like the display framerate, window position etc can be set here.
@@ -146,7 +152,7 @@ Upon initialization of the frontend class, the pygame environment is created. Th
 .. _frontend_setup_window:
 
 window position and size
-========================
+------------------------
 
 You can set the window's position using the os module:
 
@@ -182,7 +188,7 @@ Finally, a seperate thread for UDP observation is started. Each table ("grid") h
 .. _grid:
 
 Grid & Tiles
-************
+============
 
 .. image:: ../img/grid_representations.png
   :align: center
@@ -225,7 +231,7 @@ The handles for game mode switching have to match one of the strings defined in 
 .. _frontend_grid_setup:
 
 grid setup
-==========
+----------
 
 The grid objects contain lists of cells, which can be addressed using enumeration routines:
 
@@ -241,7 +247,7 @@ The grid objects contain lists of cells, which can be addressed using enumeratio
 .. _grid_coordinates:
 
 grid coordinates:
-=================
+-----------------
 
 The positions of the cells are stored in ``grid.rects_transformed``. This variable contains coordinates of the absolute pixel positions **after** their keystone-transformation on the canvas.
 
@@ -262,7 +268,7 @@ The positions of the cells are stored in ``grid.rects_transformed``. This variab
   '''
 
 grid interaction
-================
+----------------
 
 The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
 In either case, the function `gis.get_intersection_indexer` is called from `grid.get_intersection`, checking for overlapping polygons with the selected cell.
@@ -270,9 +276,9 @@ In either case, the function `gis.get_intersection_indexer` is called from `grid
 .. _frontend_game_loop:
 
 Frontend Game Loop
-******************
+==================
 
-After :ref:`initialization<frontend_initialization>`, the frontend will run in a loop to :ref:`update the projection<projection_routine>`, evaluate keyboard input, handle the :ref:`game modes<modeselector>`, process :ref:`slider events<slider_events>`, and finally, :ref:`update the pygame environment<update_pygame_environment>`.
+After :ref:`initialization<frontend_initialization>`, the frontend will run in a loop to :ref:`update the projection<projection_routine>`, evaluate keyboard input, handle the :ref:`game modes<modeselector>`, process :ref:`slider events<slider_events>`, and finally, :ref:`update the pygame environment<pygame_environment_update>`.
 
 .. _key_events:
 
@@ -308,98 +314,97 @@ The frontend image is composed of a set of layers, which are rendered ontop of e
 .. note::
   More notes on how to use simple pygame features can be found in the :ref:`Frontend/pygame section! <simple_pygame_features>`
 
-Drawing polygons
-----------------
+Drawing polygons and lines using GIS shapes
+-------------------------------------------
 
-TODO: explain GIS functions
+The GIS shapes are drawn using the functions of the custom GIS class:
 
+- `draw_linestring_layer`: draws GIS features as lines - in our case, the heating grid is drawn using lines.
+
+the following functions are used to draw polygons from geographical data (and color them according to the selected feature):
+
+- `draw_polygon_layer`: simply draw polygons and fill them with a provided color
+- `draw_polygon_layer_bool`: draw polygons and fill them either in color A or B (true/false)
+- `draw_polygon_layer_float`: draw polygons and fill them with a color gradient with the end points of a float between 0 and 1
+
+Using these functions, we can color buildings on the map and fill them with a color according to a certain attribute, e.g. mapping their relative heat consumption to a color gradient between red and green, or color them either green or red, when connected to the heat grid, or not.
+The functions always use the entire :ref:`buildings-dataset<buildings>` as an input parameter and draws all contained polygons at the same time. They are regularly called in the :ref:`loop function<frontend_game_loop>` of the frontend:
+
+.. code-block:: python
+  :caption: frontend.py
+
+  # draw GIS layers:
+  if session.show_polygons:
+      session._gis.draw_linestring_layer(
+          self.canvas, session._gis.nahwaermenetz, (217, 9, 9), 3)
+      session._gis.draw_buildings_connections(
+          session.buildings.df)  # draw lines to closest heat grid
+
+      # fill:
+      if session.VERBOSE_MODE:
+          session._gis.draw_polygon_layer_float(
+              self.canvas, session.buildings.df, 0, (96, 205, 21), (213, 50, 21), 'spec_heat_consumption')  # fill and lerp
+      else:
+          session._gis.draw_polygon_layer_bool(
+              self.canvas, session.buildings.df, 0, (213, 50, 21), (96, 205, 21), 'connection_to_heat_grid')  # fill and lerp
+
+      # stroke black:
+      session._gis.draw_polygon_layer_bool(
+          self.canvas, session.buildings.df, 1, (0, 0, 0), (0, 0, 0), 'connection_to_heat_grid')
+
+      # stroke according to connection status:
+      session._gis.draw_polygon_layer_bool(
+          surface=self.canvas, df=session.buildings.df, stroke=1, fill_false=(0, 0, 0), fill_true=(0, 168, 78), fill_attr='connection_to_heat_grid')
+
+      # color buildings if connection is not -1:
+      # session.gis.draw_polygon_layer_connection_year(
+      #     session.buildings.df,
+      #     stroke=0,
+      #     fill_true=(96, 205, 21),
+      #     fill_false=(213, 50, 21),
+      #     fill_attr='connection_to_heat_grid')
+
+.. hint::
+  Filling a polygon is done by applying a stroke width of 0.
+
+When the buildings are set to be connected to the heat grid, a line is shown between the polygon and the closest heat grid line. This is basically a tangent to that heat grid line at the closest point and is calculated in the function `GIS.draw_buildings_connections`.
+
+Export Canvas to file
+---------------------
+
+We used to export the rendered canvas to a png file each frame (if changes are ready), to further use it on the :ref:`infoscreen<infoscreen>`. This is deprecated, but can be done via a code snippet like this:
+
+.. code-block:: python
+  :caption: insert this to frontend.py game loop to export the canvas to file:
+
+  # export canvas:
+    if session.flag_export_canvas:
+        # create a cropped output canvas and export:
+        temp = pygame.Surface((1460, 630))
+        temp.blit(session.gis.surface, (0,0))
+        temp = pygame.transform.rotate(temp, 270)
+        pygame.image.save(temp, '../data/canvas.png')
+        session.flag_export_canvas = False # has to be set True when changes are received from cspy
 
 Drawing of Sliders
 ------------------
 
 The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
 
-Drawing Heat Grid Lines
------------------------
-
-// TODO:
-
-#. Buildings.find_closest_heat_grid_line
-#. draw the line
-
 .. _pygame_environment_update:
 
 Pygame Environment Update
 =========================
 
-TODO: tick, what are ticks_elapsed and seconds_elapsed used for?
-
-.. _calibration_mode:
-
-Calibration
-***********
-
-.. _keystone_transformation:
-
-keystone transformation
-=======================
-
-general information on image transofrmation using opencv:
-
-`tutorial_py_geometric_transformations <https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html>`_
-
-`using cv.perspectiveTransform for vectors <https://docs.opencv.org/3.4/d2/de8/group__core__array.html#gad327659ac03e5fd6894b90025e6900a7>`_
-and `cv.warpPerspective for images <https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#gaf73673a7e8e18ec6963e3774e6a94b87>`_
-
-**adding a new surface, draw on it and transform it:**
-
-.. code-block:: python
-
-  class SomeClass:
-    # session.canvas_size = 1920, 1080
-    self.surface = keystone.Surface(session.canvas_size, pygame.SRCALPHA)
-
-    # x_size, y_size = 22, 22
-    self.surface.src_points = [[0, 0], [0, y_size], [x_size, y_size], [x_size, 0]]
-    self.surface.dst_points = [
-        [config['X1'], config['Y1']],
-        [config['X1'], config['Y2']],
-        [config['X2'], config['Y2']],
-        [config['X2'], config['Y1']]]
-    # where e.g. X1 = 0, X2 = 50, Y1 = 0, Y2 = 81.818
-
-    def draw(self, viewport):
-
-      pygame.draw.polygon(self.surface, pygame.Color(255, 255, 255), [[20, 70], [20, 20], [80, 20], [80, 70]])  # render polygon
-
-      viewport.blit(self.surface, (0,0))  # cast it to viewport
-
-in file ``q100viz/keystone.py``
-
-frontend representation
------------------------
-
-* slider uses the transformation of the :ref:`grid<grid>`
-* **drawing of polygons and values** should be done via ``self.surface.blit(...)``. Slider surface is rendered and "blitted" to main canvas.
-
-``print(slider.coords_transformed)`` returns:
-
-.. code-block::
-
-  [[860.9641723632812, 915.1583862304688],
-  [863.9833984375, 614.8511352539062],
-  [1228.917724609375, 622.6510009765625],
-  [1226.5196533203125, 923.7374267578125]]
-
-with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper-right[x], upper-right[y]], [bottom-right[x], bottom-right[y]]]``
+At the bottom of `frontend.py`, `pygame.display.update()` is called to actually do what it says, and a `pygame.time.Clock` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
 
 .. _frontend_mode:
 .. _mode:
 
-Game Modes
-**********
+Game Modes & User Interface
+***************************
 
-TODO: general mode functions.. e.g. each mode checks for intersections with grid
+All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder `q100viz/interaction`. Each game mode is represented as a custom class with similar generic functions. Each class is initiated to an object in :ref:`session.py<session>` to be able to globally access it.
 
 .. image:: ../img/Q-Scope_game-stages.png
   :align: center
@@ -412,15 +417,19 @@ TODO: general mode functions.. e.g. each mode checks for intersections with grid
     * :ref:`Data View <data_view>`
     * :ref:`Calibration<calibration_mode>`
 
-TODO: is this right, or shall the mode be activated via session.current_mode = mode??: each mode has a function called ``activate()`` which is used to (re-)active the mode and set the specific display settings accordingly. Do I want to see a slider (or two)? Shall the basemap be visible? Define it here.
 
-TODO: game mode is activated in frontend loop:
-- it runs `session.active_mode.activate()` when new mode was set
+. The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
+- The `activate` function is called automatically in the game loop, when `session.active_mode` changes to this object in the :ref:`game loop <frontend_game_loop>`. **It should not be called manually!**. This function can be used to define which graphical parts shall be displayed, by setting `session.show_polygons` etc to true or false. The same can be done for each slider individually.
+- `process_event` is a function that takes care of mouse events (for debugging purposes, it is possible to select and alter the buildings via mouse L/M/R clicks).
+- `process_grid_change` is the most important function in each of the game mode classes, as it takes care of the interaction possibilities: It is called each time a :ref:`grid change<read_scanner_data>` is received from cspy. Let's take the :ref:`buildings interaction mode<buildings_interaction>` as an example: After each incoming grid change, the whole grid is iterated with the following routine:
 
+  #. check for intersections with selected (non-white) cells and polygons
+  #. according to the rotation of the cell, set the selection of an overlapping building to true
+  #. for slider handles: update the selected feature of the building with the current slider value
+  #. for mode selectors: enable countdown timer for next mode to start
+  #. for global/scenario handles: connect additional buildings to the heat grid
 
-The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
-
-Specification of mode selector cells can be done by adjusting the tables in `q100viz/settings/`. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
+TODO: Specification of mode selector cells can be done by adjusting the tables in `q100viz/settings/`. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
 
 valid handles are:
 
@@ -479,9 +488,6 @@ Individual Data View
 Total Data View
 ===============
 
-User Interface
-**************
-
 .. _sliders:
 
 Sliders
@@ -514,3 +520,62 @@ TODO: session.VERBOSE_MODE
 TODO: debug_num_of_random_buildings, debug_connection_date,debug_force_refurbished, debug_force_save_energy
 
 TODO: refer to key_events_
+
+.. _calibration_mode:
+
+Calibration
+===========
+
+.. _keystone_transformation:
+
+keystone transformation
+=======================
+
+general information on image transofrmation using opencv:
+
+`tutorial_py_geometric_transformations <https://docs.opencv.org/3.4/da/d6e/tutorial_py_geometric_transformations.html>`_
+
+`using cv.perspectiveTransform for vectors <https://docs.opencv.org/3.4/d2/de8/group__core__array.html#gad327659ac03e5fd6894b90025e6900a7>`_
+and `cv.warpPerspective for images <https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html#gaf73673a7e8e18ec6963e3774e6a94b87>`_
+
+**adding a new surface, draw on it and transform it:**
+
+.. code-block:: python
+
+  class SomeClass:
+    # session.canvas_size = 1920, 1080
+    self.surface = keystone.Surface(session.canvas_size, pygame.SRCALPHA)
+
+    # x_size, y_size = 22, 22
+    self.surface.src_points = [[0, 0], [0, y_size], [x_size, y_size], [x_size, 0]]
+    self.surface.dst_points = [
+        [config['X1'], config['Y1']],
+        [config['X1'], config['Y2']],
+        [config['X2'], config['Y2']],
+        [config['X2'], config['Y1']]]
+    # where e.g. X1 = 0, X2 = 50, Y1 = 0, Y2 = 81.818
+
+    def draw(self, viewport):
+
+      pygame.draw.polygon(self.surface, pygame.Color(255, 255, 255), [[20, 70], [20, 20], [80, 20], [80, 70]])  # render polygon
+
+      viewport.blit(self.surface, (0,0))  # cast it to viewport
+
+in file ``q100viz/keystone.py``
+
+frontend representation
+-----------------------
+
+* slider uses the transformation of the :ref:`grid<grid>`
+* **drawing of polygons and values** should be done via ``self.surface.blit(...)``. Slider surface is rendered and "blitted" to main canvas.
+
+``print(slider.coords_transformed)`` returns:
+
+.. code-block::
+
+  [[860.9641723632812, 915.1583862304688],
+  [863.9833984375, 614.8511352539062],
+  [1228.917724609375, 622.6510009765625],
+  [1226.5196533203125, 923.7374267578125]]
+
+with ``[[bottom-left[x], bottom-left[y]], [upper-left[x], upper-left[y]], [upper-right[x], upper-right[y]], [bottom-right[x], bottom-right[y]]]``

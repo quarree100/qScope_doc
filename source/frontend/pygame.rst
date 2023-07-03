@@ -78,9 +78,7 @@ Drawing on Canvas
 **draw polygon layer and lerp colors according to float:**
 
 .. code-block:: python
-  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float values
-
-  def draw_polygon_layer_float(self, surface, df, stroke, fill, lerp_target=None, lerp_attr=None):
+  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float valuesupdate_pylerp_target=None, lerp_attr=None):
     '''draw polygon layer and lerp using float'''
     try:
         for polygon in df.to_dict('records'):
