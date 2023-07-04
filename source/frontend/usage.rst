@@ -32,7 +32,7 @@ Run
 ***
 The main script is called ``run_q100viz.py``. You can start it from the qScope_frontend folder by running ``python3 run_q100viz.py``. Some flags can be set to enable debug options:
 
-.. _frontent_startup_flags:
+.. _frontend_startup_flags:
 
   * ``--select_random [NUMBER_OF_HOUSES]``: preselects n houses to opt in for a connection to the heat grid
   *  ``--verbose``: activates verbose mode to print more information to console

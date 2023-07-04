@@ -25,4 +25,10 @@ Programming
 Programming the Tags
 ====================
 
-TODO: image of all tags with description how they are read
+.. image:: img/Q-Scope_tangibles_tags.jpg
+    :align: center
+    :alt: Image of four 3D-printed, colored houses with black and white tags on the underside.
+
+TODO: show how/where they are programmed.
+
+TODO: description how they are read

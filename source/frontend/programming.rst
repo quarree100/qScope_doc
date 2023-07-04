@@ -461,38 +461,100 @@ Buildings Mode Display
   :align: center
   :alt: Image of the Frontend in Buildings Mode.
 
-TODO: add links in text below !
-
-The Buildings Interaction Mode is the most feature-rich display. It shows the basemap with buildings polygons and the heat grid on top. Selected buildings are highlighted by the user-specific color (according to the ID of the token used for selection). On the right, there is a global section containing some functional cells to force-connect a selectable number of buildings to the heat grid.
+The Buildings Interaction Mode is the most feature-rich display. It shows the basemap with buildings polygons and the heat grid on top. Selected buildings are highlighted by the user-specific color (according to the :ref:`ID<programming_tangibles>` of the token used for selection). On the right, there is a global section containing some functional cells to force-connect a selectable number of buildings to the heat grid.
 It contains interaction possibilites for the change of the game modes and sliders for individual setting of the buildings' decision features.
 
 .. _simulation_mode:
 
-2. Simulation
+1. Simulation
 =============
-The Simulation can be started using ``S`` key. It will generate an experiment API file for GAMA according to this scheme: https://gama-platform.org/wiki/Headless#simulation-output and run the provided model file using the gama-headless.sh . These two files are to be set up in ``config.py``.
 
-.. _simulation_setup:
+The "Simulation Mode" is the second mode to be run, once all users have selected and specified their households. In this mode, the frontend will start :ref:`GAMA<installing_gama>` in headless mode (no GUI) a subprocess to run the agent-based-model. The users will have to wait until the simulation finished, and the only thing the frontend does is forwarding status information via UDP from GAMA to the infoscreen.
 
-Setting up the simulation
--------------------------
-
-TODO:
-
-... will start the GAMA headless simulation and wait for the results.
-Q-Scope needs to know where to find GAMA's ``gama-headless.sh`` file, which can be found in the extracted folder ``gama/headless``. Set this up in ``config.py``, providing the headless folder and the location of the gama model file:
+The Simulation can be started by either placing a token on the specified cell on the right side of the frontend (or using the ``S`` key). It will generate an experiment API file for GAMA according to this scheme: https://gama-platform.org/wiki/Headless#simulation-output and run the provided model file using the ``gama-headless.sh``. These two files are to be set up in ``config.py``:
 
 .. code-block:: python
+  :caption: config.py
 
   'GAMA_HEADLESS_FOLDER' : '/home/qscope/GAMA/headless/',
   'GAMA_MODEL_FILE' : '../q100_abm/q100/models/qscope_ABM.gaml',
 
 **ATTENTION**: make sure to set the user rights of ``gama-headless.sh`` executable via ``chmod u+x gama-headless.sh``
 
+.. _simulation_setup:
+
+Setting up the simulation
+-------------------------
+
+Upon initialization of this game stage, a new thread is started for the gama simulation to run (later), so the rendering of the pygame canvas will not be stopped when the subprocess begins.
+
+In order to start the simulation, it first has to be set up, using the ``simulation.setup()`` function. Only after that it can be started by setting ``session.active_mode = simulation``.
+
+The function accepts the following **Input Parameters**:
+* ``input_max_year`` (int): until which year should the simulation run? providing "2045" will make the simulation run up until 2044-12-31.
+* ``export_neighborhood_graphs`` (bool) disable export of individual graphs, for debugging purposes
+
+The **simulation setup algorithm** logs the simulation start time and defines the output path to export the results in the following manner:
+
+1. Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+
+.. code-block::
+  :caption: tree view of output folder
+
+    project qScope
+    └───data
+        └───outputs
+            └───output_YYYYmmdd_HH-MM-SS
+            |   └───connections
+            |   └───emissions
+            |   └───energy_prices
+            |   └───snapshot
+            └───buildings_clusters_YYYYmmdd_HH-MM-SS.csv
+            └───buildings_power_suppliers.csv
+            └───console-outputs-null.txt
+            └───simulation_parameters_YYYYmmdd_HH-MM-SS.xml
+            └───simulation_outputsnull.xml
+
+Read more about the simulation results in the :ref:`ABM section<simulation_outputs>`.
+
+2. An xml file necessary to start the simulation in headless mode is created from the ``session.environment`` parameters. Here we store initial values for certain variables in GAMA. These parameters are:
+   * Alpha scenario
+   * Carbon price scenario
+   * Energy prices scenario
+   * Q100 OpEx prices scenario
+   * Q100 CapEx prices scenario
+   * Q100 Emissions scenario
+   * Q100 Emissions scenario
+   * Carbon price for households?
+
+The xml struct is created in a function called ``make_xml`` and saved in the output folder using the time stamp of the simulation start. ``simulation_parameters_YYYYmmdd_HH-MM-SS.xml``
+
+A set of different scenarios can be found in the data folder in the scenario_X.csv files. These all regard different energy price scenarios under which the model can be investigated.
+
+In short, the **Input Data** for the simulations in QUARREE100 are defined in the ``qScope/data/`` folder via the files ``scenario_X.csv``. Which one of these files is taken, will be defined in ``session.py`` in the ``environment['active_scenario_handle']`` entry. The file this entry points to, will be read in ``simulation.setup()``, and transfered to an xml file to eventually set the simulation's input data accordingly.
+
+.. csv-table:: example of a simulation scenario to serve as input data for GAMA variables.
+  :widths: 20, 15, 20, 30, 20
+  :header: name,type,value,name_human_readable,value_human_readable
+
+  alpha_scenario,string,Dynamic_moderate,Anteil monatlicher Energieausgaben am Haushaltsbudget,Moderat ansteigend (ca. 7 - 10 %)
+  carbon_price_scenario,string,B - Moderate,CO2-Bepreisung,Moderat ansteigend (ca. 25 - 350 € / Tonne CO2)
+  energy_price_scenario,string,Prices_2022 1st half,Energiepreisentwicklung (ohne politische Maßnahmen), Preisentwicklung 2022
+  q100_price_opex_scenario,string,12 ct / kWh (static),Q100-Wärmeversorgung: Betriebskosten, Dauerhaft 12 ct / kWh
+  q100_price_capex_scenario,string,5 payments,Q100-Wärmeversorgung: Investitionskosten,Ratenzahlung (5 x 1000 €)
+  q100_emissions_scenario,string,Declining_Linear,Q100-Wärmeversorgung: Emissionsverlauf, Jährlich abnehmend (100 - 0 g / kWh)
+
+.. note::
+  For debugging purposes, some random N buildings can be marked as selected and force-connected to the heat grid for the simulation by starting the frontend script with the input flag ``--select_random N`` (int). :ref:`See more about the frontend startup flags here<frontend_startup_flags>`.
+
+3. After setting up the simulation input data, ``simulation.running`` will be set ``True``, which causes the simulation to actually be executed (once) in the dedicated thread via ``run_script()`` within ``simulation.run()``. The process of the latter function will sty on hold until the subprocess is done.
+
+4. Once the subprocess is done, matplotlib graphs are created from the output data and the paths of these files will be send via UDP to the infoscreen to be displayed there in the next game stage.
+
 Simulation Mode View
 --------------------
 
-TODO: There is no interaction. The user will have to wait. Display: There is a countup & time for discussion.
+There is no possibility for user interaction in this mode. The frontend only forwards information on the in simulation process in percent to the infoscreen, where that number is displayed.
 
 .. _data_view:
 .. _individual_data_view:
@@ -500,10 +562,34 @@ TODO: There is no interaction. The user will have to wait. Display: There is a c
 3a. Individual Data View
 ========================
 
+TODO: write stuff
+
+Individual Data View Initialization
+-----------------------------------
+
+TODO: explain setup
+
+Individual Data View Interaction
+--------------------------------
+
+TODO: explain interaction possibilites using images
+
 .. _total_data_view:
 
 3b. Total Data View
 ===================
+
+TODO: write stuff
+
+Total Data View Initialization
+-----------------------------------
+
+TODO: explain setup
+
+Total Data View Interaction
+--------------------------------
+
+TODO: explain interaction possibilites using images
 
 
 User Interface: Sliders and Global Cells
