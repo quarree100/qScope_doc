@@ -143,7 +143,7 @@ The whole frontend was programmed using `pygame <pygame.org>`_ - a set of Python
 
 .. _frontend_class:
 
-Frontend Class
+Frontend Setup
 ==============
 
 The frontend class itself is defined in ``q100viz/frontend.py``.
@@ -185,87 +185,13 @@ The canvas is masked by a layer that defines the margins of the region of intere
 
 Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
 
-.. _grid:
-
-Grid & Tiles
-============
-
-.. image:: ../img/grid_representations.png
-  :align: center
-  :alt: image of grid representations: photo of acrylic tiles, webcam stream from underneath, software representation in frontend
-
-The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed.
-
-.. code-block:: python
-  :caption: frontend.py
-
-  for grid_, grid_udp in [[session.grid_1, grid_udp_1], [session.grid_2, grid_udp_2]]:
-    udp_server = udp.UDPServer(*grid_udp, 4096)
-    udp_thread = threading.Thread(target=udp_server.listen,
-                                  args=(grid_.read_scanner_data,),
-                                  daemon=True)
-    udp_thread.start()
-
-In the frontend code of our example, there are two grid objects, each representing a grid on one of the physical tables. Each of them starts a new thread to receive UDP messages with information on the grid cells' ids and their (absolute and relative) rotation
-
- All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 5 (codes on the underside). Once a cell gets an ID that is not 5 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it (see image above). Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
-
-Some cells can be programmed to trigger additional events, like leaving the current game mode. This is done via tables in ``q100viz/settings/``. Read more on how to program link functions to cells :ref:`here<programming_cell_functions>`.
-
-.. hint::
-  The grid display can be toggled using the ``g`` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
-
-.. _frontend_grid_setup:
-
-grid setup
-----------
-
-The grid objects contain lists of cells, which can be addressed using enumeration routines:
-
-.. code-block:: python
-  :caption: access cells by iterating the grids
-
-  # iterate grid:
-  for grid in [session.grid_1, session.grid_2]:
-      for y, row in enumerate(grid.grid):
-          for x, cell in enumerate(row):
-            # do cell operation
-
-.. _grid_coordinates:
-
-grid coordinates:
------------------
-
-The positions of the cells are stored in ``grid.rects_transformed``. This variable contains coordinates of the absolute pixel positions **after** their keystone-transformation on the canvas.
-
-.. code-block:: python
-
-  for i, (cell, coords) in enumerate(session.grid_1.rects_transformed):
-      print("{0}: ({1}|{2}): {3}".format(i, cell.x, cell.y, coords))
-
-  # returns:
-  '''
-  0: (0|0): [[134.9009246826172, 4.38118839263916], [134.4179229736328, 37.4811897277832], [167.75010681152344, 38.0572509765625], [168.22642517089844, 4.963389873504639]]
-  1: (1|0): [[168.22642517089844, 4.963389873504639], [167.75010681152344, 38.0572509765625], [201.06971740722656, 38.633094787597656], [201.53933715820312, 5.545371055603027]]
-  2: (2|0): [[201.53933715820312, 5.545371055603027], [201.06971740722656, 38.633094787597656], [234.37672424316406, 39.20872497558594], [234.8396759033203, 6.127132415771484]]
-  3: (3|0): [[234.8396759033203, 6.127132415771484], [234.37672424316406, 39.20872497558594], [267.6711730957031, 39.78413391113281], [268.12744140625, 6.708674430847168]]
-  4: (4|0): [[268.12744140625, 6.708674430847168], [267.6711730957031, 39.78413391113281], [300.9530334472656, 40.35932922363281], [301.4026184082031, 7.28999662399292]]
-  5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
-
-  '''
-
-grid interaction
-----------------
-
-The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
-In either case, the function `gis.get_intersection_indexer` is called from ``grid.get_intersection``, checking for overlapping polygons with the selected cell.
-
 .. _frontend_game_loop:
 
-Frontend Game Loop
-==================
+Frontend Projection
+===================
 
-After :ref:`initialization<frontend_initialization>`, the frontend will run in a loop to :ref:`update the projection<projection_routine>`, evaluate keyboard input, handle the :ref:`game modes<modeselector>`, process :ref:`slider events<slider_events>`, and finally, :ref:`update the pygame environment<pygame_environment_update>`.
+After :ref:`initialization<frontend_class>`, the frontend will run in a loop to update the projection, evaluate keyboard input, handle the :ref:`game modes<modeselector>` and process :ref:`slider events<slider_events>`.
+Finally, ``pygame.display.update()`` is called to actually do what it says, and a ``pygame.time.Clock`` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
 
 .. _key_events:
 
@@ -281,10 +207,8 @@ The following key events are implemented in the `QUARREE100 <https://www.quarree
 - ``5`` start individual_data_view_ mode
 - ``6`` start total_data_view_ mode
 
-Projection
-==========
-
-.. _projection_routine:
+Canvas Composition
+==================
 
 The frontend image is composed of a set of layers, which are rendered ontop of each other in the following order:
 
@@ -391,12 +315,180 @@ Drawing of Sliders
 
 The sliders have a bool called ``show_text`` that, when ``True``, activates the display of the slider control texts. This variable can be used for the usage modes to define whether the slider controls shall be displayed.
 
-.. _pygame_environment_update:
+.. _graphictools:
 
-Pygame Environment Update
-=========================
+Graphic Tools
+=============
 
-At the bottom of ``frontend.py``, ``pygame.display.update()`` is called to actually do what it says, and a ``pygame.time.Clock`` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
+Images
+------
+
+Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files. ``q100viz/graphics/graphictools.py`` contains an Image class that can be used to load and transform images according to the needs of the warped canvas.
+Images just have to be initialized and warped, before they can be rendered to the surface.
+
+.. code-block:: python
+  :caption: example code for rendering images, see interface.py for comparison.
+
+  # 1. load image:
+  img = Image("images/piechart_disabled.tif")
+
+  # 2. warp image:
+  img.warp((1920, 1080))
+
+  # 3. render image:
+  surface.blit(img.image, (x,y))
+
+.. _graphs:
+
+Graphs
+------
+
+The frontend software creates graphs from the :ref:`simulation results<simulation_outputs>` using the matplotlib library. A toolkit is contained in ``q100viz/graphics/graphs.py``, providing the following functions:
+
+* `export_individual_emissions`: exports specified column of csv-data-file for every iteration round to graph and exports png
+* `export_individual_energy_expenses`: exports specified column of csv-data-file for every iteration round to graph and exports png
+* `export_default_graph`: exports default data to graph with gray curve
+* `export_compared_emissions`: exports all data for selected group buildings into one graph for total data view
+* `export_neighborhood_emissions_connections`: creates a bar plot for the total number of connections to the heat grid with an overlaying line plot of total emissions
+* `export_compared_energy_costs`: exports all data for selected group buildings into one graph for total data view
+* `export_neighborhood_total_data`: exports specified column of csv-data-file for every iteration round to graph and exports png
+
+and some helpful conversion functions used to get the right units:
+
+* `GAMA_time_to_datetime`
+* `grams_to_kg`
+* `grams_to_tons`
+* `rgb_to_hex`
+* `rgb_to_float_tuple`
+
+
+.. _grid:
+
+Grid & Tiles
+************
+
+.. image:: ../img/grid_representations.png
+  :align: center
+  :alt: image of grid representations: photo of acrylic tiles, webcam stream from underneath, software representation in frontend
+
+The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed.
+
+.. code-block:: python
+  :caption: frontend.py
+
+  for grid_, grid_udp in [[session.grid_1, grid_udp_1], [session.grid_2, grid_udp_2]]:
+    udp_server = udp.UDPServer(*grid_udp, 4096)
+    udp_thread = threading.Thread(target=udp_server.listen,
+                                  args=(grid_.read_scanner_data,),
+                                  daemon=True)
+    udp_thread.start()
+
+In the frontend code of our example, there are two grid objects, each representing a grid on one of the physical tables. Each of them starts a new thread to receive UDP messages with information on the grid cells' ids and their (absolute and relative) rotation
+
+All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 5 (codes on the underside). Once a cell gets an ID that is not 5 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it (see image above). Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
+
+Some cells can be programmed to trigger additional events, like leaving the current :ref:`game mode<mode>`. This is done via tables in ``q100viz/settings/``. Read more on how to program link functions to cells :ref:`here<programming_cell_functions>`.
+
+.. hint::
+  The grid display can be toggled using the ``g`` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
+
+.. _frontend_grid_setup:
+
+Grid Setup
+==========
+
+The grid objects contain lists of cells, which can be addressed using enumeration routines:
+
+.. code-block:: python
+  :caption: access cells by iterating the grids
+
+  # iterate grid:
+  for grid in [session.grid_1, session.grid_2]:
+      for y, row in enumerate(grid.grid):
+          for x, cell in enumerate(row):
+            # do cell operation
+
+.. _grid_coordinates:
+
+grid coordinates:
+-----------------
+
+The positions of the cells are stored in ``grid.rects_transformed``. This variable contains coordinates of the absolute pixel positions **after** their keystone-transformation on the canvas.
+
+.. code-block:: python
+
+  for i, (cell, coords) in enumerate(session.grid_1.rects_transformed):
+      print("{0}: ({1}|{2}): {3}".format(i, cell.x, cell.y, coords))
+
+  # returns:
+  '''
+  0: (0|0): [[134.9009246826172, 4.38118839263916], [134.4179229736328, 37.4811897277832], [167.75010681152344, 38.0572509765625], [168.22642517089844, 4.963389873504639]]
+  1: (1|0): [[168.22642517089844, 4.963389873504639], [167.75010681152344, 38.0572509765625], [201.06971740722656, 38.633094787597656], [201.53933715820312, 5.545371055603027]]
+  2: (2|0): [[201.53933715820312, 5.545371055603027], [201.06971740722656, 38.633094787597656], [234.37672424316406, 39.20872497558594], [234.8396759033203, 6.127132415771484]]
+  3: (3|0): [[234.8396759033203, 6.127132415771484], [234.37672424316406, 39.20872497558594], [267.6711730957031, 39.78413391113281], [268.12744140625, 6.708674430847168]]
+  4: (4|0): [[268.12744140625, 6.708674430847168], [267.6711730957031, 39.78413391113281], [300.9530334472656, 40.35932922363281], [301.4026184082031, 7.28999662399292]]
+  5: (5|0): [[301.4026184082031, 7.28999662399292], [300.9530334472656, 40.35932922363281], [334.2223205566406, 40.934303283691406], [334.6652526855469, 7.871099472045898]]
+
+  '''
+
+Grid Interaction
+================
+
+The grid is either updated when interacting with a computer mouse (left- right- or middle-click on the cells) or if the :ref:`tag decoder<cspy>` detects a change in the physical grid. In the latter case, a json-formatted string is sent to the frontend via UDP and decoded in the according grid. Take a look at the code :ref:`here<read_scanner_data>`
+In either case, the function `gis.get_intersection_indexer` is called from ``grid.get_intersection``, checking for overlapping polygons with the selected cell.
+
+.. _modeselector:
+
+ModeSelector
+------------
+
+A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.
+
+TODO: explain how a mode is triggered and hint: do not use mode.activate() but session.active_mode = mode
+
+.. _sliders:
+
+Sliders
+-------
+
+.. _frontend_slider_setup:
+
+TODO: how to define and setup the sliders.
+
+.. _slider_events:
+
+TODO: how to use the sliders, what happens if you use them
+
+.. _devtools:
+
+.. _programming_cell_functions:
+
+Programming Cell Functions
+--------------------------
+
+In order to create a new game mode or make a cell "do something" upon selection/interaction, functions can be allocated to cells by adjusting the tables in ``q100viz/settings/``. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
+
+A table can look like this:
+
+.. csv-table:: grid initialization - q100viz/settings/buildings_interaction_grid_1.csv
+  :header: "x", "y", "handle", "color"
+
+  0,18,connection_to_heat_grid,#0075b4
+  2,18,refurbished,#0075b4
+  4,18,save_energy,#0075b4
+  11,18,connection_to_heat_grid,#fdc113
+  13,18,refurbished,#fdc114
+  15,18,save_energy,#fdc115
+
+The handles for game mode switching have to match one of the strings defined in ``session.MODE_SELECTOR_HANDLES``.: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``. You can find more on how these "Mode Selectors" work in :ref:`the according section<modeselector>`.
+
+valid handles are:
+
+**household-individual handles:** are set in ``session.VALID_DECISION_HANDLES``: ``'connection_to_heat_grid', 'refurbished', 'save_energy'``
+
+**mode selection handles**: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``
+
+**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
 
 .. _frontend_mode:
 .. _mode:
@@ -549,7 +641,7 @@ In short, the **Input Data** for the simulations in QUARREE100 are defined in th
 
 3. After setting up the simulation input data, ``simulation.running`` will be set ``True``, which causes the simulation to actually be executed (once) in the dedicated thread via ``run_script()`` within ``simulation.run()``. The process of the latter function will sty on hold until the subprocess is done.
 
-4. Once the subprocess is done, matplotlib graphs are created from the output data and the paths of these files will be send via UDP to the infoscreen to be displayed there in the next game stage.
+4. Once the subprocess is done, :ref:`matplotlib graphs are created<graphs>` from the output data and the paths of these files will be send via UDP to the infoscreen to be displayed there in the next game stage.
 
 Simulation Mode View
 --------------------
@@ -562,91 +654,18 @@ There is no possibility for user interaction in this mode. The frontend only for
 3a. Individual Data View
 ========================
 
-TODO: write stuff
+This game stage is used to focus on single selected buildings and show the created graphs on heat consumption, CO2-emission and energy costs of that building :ref:`on the infoscreen<infoscreen_individual_data_view>`.
 
-Individual Data View Initialization
------------------------------------
-
-TODO: explain setup
-
-Individual Data View Interaction
---------------------------------
-
-TODO: explain interaction possibilites using images
+The interaction surface is constrained to the :ref:`mode selectors<modeselector>` and to four cells highlighted in the colors of the users - these can be used to focus on the building of the according user. The general basemap can not be used for interaction.
 
 .. _total_data_view:
 
 3b. Total Data View
 ===================
 
-TODO: write stuff
+The total data view mode is used to :ref:`display all neighborhood data on the infoscreen<infoscreen_individual_data_view>` displaying charts that compare the selected houses energy costs and emissions, as well as the overall energy cost development and the total amount of buildings connected to the heat grid.
 
-Total Data View Initialization
------------------------------------
-
-TODO: explain setup
-
-Total Data View Interaction
---------------------------------
-
-TODO: explain interaction possibilites using images
-
-
-User Interface: Sliders and Global Cells
-****************************************
-
-.. _programming_cell_functions:
-
-Programming Cell Functions
-==========================
-
-In order to create a new game mode or make a cell "do something" upon selection/interaction, functions can be allocated to cells by adjusting the tables in ``q100viz/settings/``. All .csv files are used to assign functionality to grid cells by combining the cell's coordinates with a certain handle and color.
-
-A table can look like this:
-
-.. csv-table:: grid initialization - q100viz/settings/buildings_interaction_grid_1.csv
-  :header: "x", "y", "handle", "color"
-
-  0,18,connection_to_heat_grid,#0075b4
-  2,18,refurbished,#0075b4
-  4,18,save_energy,#0075b4
-  11,18,connection_to_heat_grid,#fdc113
-  13,18,refurbished,#fdc114
-  15,18,save_energy,#fdc115
-
-The handles for game mode switching have to match one of the strings defined in ``session.MODE_SELECTOR_HANDLES``.: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``. You can find more on how these "Mode Selectors" work in :ref:`the according section<modeselector>`.
-
-valid handles are:
-
-**household-individual handles:** are set in ``session.VALID_DECISION_HANDLES``: ``'connection_to_heat_grid', 'refurbished', 'save_energy'``
-
-**mode selection handles**: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``
-
-**colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
-
-.. _sliders:
-
-Sliders
-=======
-
-.. _frontend_slider_setup:
-
-TODO: how to define and setup the sliders.
-
-.. _slider_events:
-
-TODO: how to use the sliders, what happens if you use them
-
-.. _modeselector:
-
-ModeSelector
-============
-
-A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.
-
-TODO: explain how a mode is triggered and hint: do not use mode.activate() but session.active_mode = mode
-
-.. _devtools:
+All possible interaction is constrained to the :ref:`game mode selectors<modeselector>`.
 
 Debugging and Devtools
 **********************

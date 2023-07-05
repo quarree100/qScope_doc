@@ -101,6 +101,8 @@ The Heat consuption is indicated in a chart in 9 scale from A+ to H.
 
 In the table these three options are displayed throughout rounds.
 
+.. _infoscreen_inidividual_data_view:
+
 Individual Data View
 =========================
 
@@ -108,8 +110,10 @@ Individual Data View
     :align: center
     :alt: [close-up of a green square showing information of one of the selected houses and two graphs with predicted CO2-emissions and energy costs up until the year 2045.]
 
+The individual data view displays the information of one selected building. In addition to the information in the buildings interaction view, emissions over time and energy costs per household over time are shown in charts.
 
-The individual data view displayes the information of one selected building. In addition to the information in the buildings interaction view, emissoins over time and energy costs per household over time are shown in charts.
+
+.. _infoscreen_individual_data_view:
 
 Total Data View
 =========================
@@ -222,7 +226,7 @@ Individual Data View
 =========================
 
 
-Individual data view shows detailed information of selected building group. In addition to what is displayed in the buildings interaction view, 
+Individual data view shows detailed information of selected building group. In addition to what is displayed in the buildings interaction view,
 the emissions graph and the energy prices graph
 
 .. code-block::

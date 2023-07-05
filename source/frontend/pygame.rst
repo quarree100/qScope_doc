@@ -6,7 +6,8 @@ simple Pygame features
 Drawing on Canvas
 *****************
 
-**displaying text**:
+Displaying Text
+===============
 
 .. code-block:: python
 
@@ -15,7 +16,11 @@ Drawing on Canvas
   # 2. use font to write to canvas:
   canvas.blit(font.render(str(mouse_pos), True, (255,255,255)), (200,700))
 
-**drawing polygons onto a specific surface**:
+Polygons
+========
+
+Draw polygons on specific surface
+---------------------------------
 
 .. code-block:: python
 
@@ -34,7 +39,8 @@ Drawing on Canvas
 
 .. _draw_simple_polygon_layer:
 
-**draw polygon layer (simple)**:
+Draw Polygon Layer (simple)
+---------------------------
 
 .. code-block:: python
   :caption: gis.py - simply draw polygons on a specific surface with a specific stroke and color. Note: when stroke is 0, the polygon will be filled.
@@ -53,7 +59,8 @@ Drawing on Canvas
         session.log += "\n%s" % e
         print("cannot draw polygon layer: ", e)
 
-**draw polygon layer and lerp color using bool**
+Draw polygon layer and lerp color using bool
+--------------------------------------------
 
 .. code-block:: python
   :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to bool
@@ -78,29 +85,34 @@ Drawing on Canvas
 **draw polygon layer and lerp colors according to float:**
 
 .. code-block:: python
-  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float valuesupdate_pylerp_target=None, lerp_attr=None):
-    '''draw polygon layer and lerp using float'''
-    try:
-        for polygon in df.to_dict('records'):
-            if fill:
-                fill_color = pygame.Color(*fill)
+  :caption: gis.py - draw polygons on a specific surface with certain stroke; lerp color according to float values
 
-                if lerp_target:
-                    target_color = pygame.Color(lerp_target)
-                    fill_color = fill_color.lerp(target_color, polygon[lerp_attr] / df[lerp_attr].max())
+    def draw_polygon_layer_float(self, surface, df, stroke, fill, lerp_target=None, lerp_attr=None):
+      '''draw polygon layer and lerp using float'''
+      try:
+          for polygon in df.to_dict('records'):
+              if fill:
+                  fill_color = pygame.Color(*fill)
 
-            points = self.surface.transform(polygon['geometry'].exterior.coords)
-            pygame.draw.polygon(self.surface, fill_color, points, stroke)
+                  if lerp_target:
+                      target_color = pygame.Color(lerp_target)
+                      fill_color = fill_color.lerp(target_color, polygon[lerp_attr] / df[lerp_attr].max())
 
-    except Exception as e:
-        session.log += "\n%s" % e
-        print("cannot draw polygon layer: ", e)
+              points = self.surface.transform(polygon['geometry'].exterior.coords)
+              pygame.draw.polygon(self.surface, fill_color, points, stroke)
 
+      except Exception as e:
+          session.log += "\n%s" % e
+          print("cannot draw polygon layer: ", e)
 
-**display image**
+Images
+======
+
 Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP image files.
 
 .. code-block:: python
 
   image = pygame.image.load("images/scenario_progressive.bmp")
   canvas.blit(image, (0,0))
+
+See more about the usage of pygame images under :ref:`graphictools<graphictools>`.
