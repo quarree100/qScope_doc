@@ -190,7 +190,7 @@ Finally, a seperate thread for UDP observation is started. Each table ("grid") h
 Frontend Projection
 ===================
 
-After :ref:`initialization<frontend_class>`, the frontend will run in a loop to update the projection, evaluate keyboard input, handle the :ref:`game modes<modeselector>` and process :ref:`slider events<slider_events>`.
+After :ref:`initialization<frontend_class>`, the frontend will run in a loop to update the projection, evaluate keyboard input, handle the :ref:`game modes<modeselector>` and process :ref:`slider changes<sliders>`.
 Finally, ``pygame.display.update()`` is called to actually do what it says, and a ``pygame.time.Clock`` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
 
 .. _key_events:
@@ -345,22 +345,21 @@ Graphs
 
 The frontend software creates graphs from the :ref:`simulation results<simulation_outputs>` using the matplotlib library. A toolkit is contained in ``q100viz/graphics/graphs.py``, providing the following functions:
 
-* `export_individual_emissions`: exports specified column of csv-data-file for every iteration round to graph and exports png
-* `export_individual_energy_expenses`: exports specified column of csv-data-file for every iteration round to graph and exports png
-* `export_default_graph`: exports default data to graph with gray curve
-* `export_compared_emissions`: exports all data for selected group buildings into one graph for total data view
-* `export_neighborhood_emissions_connections`: creates a bar plot for the total number of connections to the heat grid with an overlaying line plot of total emissions
-* `export_compared_energy_costs`: exports all data for selected group buildings into one graph for total data view
-* `export_neighborhood_total_data`: exports specified column of csv-data-file for every iteration round to graph and exports png
+* ``export_individual_emissions``: exports specified column of csv-data-file for every iteration round to graph and exports png
+* ``export_individual_energy_expenses``: exports specified column of csv-data-file for every iteration round to graph and exports png
+* ``export_default_graph``: exports default data to graph with gray curve
+* ``export_compared_emissions``: exports all data for selected group buildings into one graph for total data view
+* ``export_neighborhood_emissions_connections``: creates a bar plot for the total number of connections to the heat grid with an overlaying line plot of total emissions
+* ``export_compared_energy_costs``: exports all data for selected group buildings into one graph for total data view
+* ``export_neighborhood_total_data``: exports specified column of csv-data-file for every iteration round to graph and exports png
 
 and some helpful conversion functions used to get the right units:
 
-* `GAMA_time_to_datetime`
-* `grams_to_kg`
-* `grams_to_tons`
-* `rgb_to_hex`
-* `rgb_to_float_tuple`
-
+* ``GAMA_time_to_datetime``
+* ``grams_to_kg``
+* ``grams_to_tons``
+* ``rgb_to_hex``
+* ``rgb_to_float_tuple``
 
 .. _grid:
 
@@ -444,22 +443,11 @@ ModeSelector
 
 A ModeSelector is a specific cell on the grid, which, when selected via token, activates a certain Mode.
 
-TODO: explain how a mode is triggered and hint: do not use mode.activate() but session.active_mode = mode
+.. image:: ../img/Q-Scope_modeSelectors.png
+  :align: center
+  :alt: Image of mode selectors positioned on the right side of the frontend interface.
 
-.. _sliders:
-
-Sliders
--------
-
-.. _frontend_slider_setup:
-
-TODO: how to define and setup the sliders.
-
-.. _slider_events:
-
-TODO: how to use the sliders, what happens if you use them
-
-.. _devtools:
+On the right side there are four cells dedicated for the swichting of the :ref:`game stages<mode>`. If a non-white token is placed here, a countdown will start, after which the selected stage is entered. The countdown is implemented in order to avoid modes to be entered accidentally. As explained :ref:`below<programming_cell_functions>`, specific cell functions can be programmed using csv tables in ``q100viz/settings``.
 
 .. _programming_cell_functions:
 
@@ -489,6 +477,37 @@ valid handles are:
 **mode selection handles**: ``'start_individual_data_view', 'start_total_data_view', 'start_buildings_interaction', 'start_simulation'``
 
 **colors** can be set using strings from this list: https://www.pygame.org/docs/ref/color_list.html
+
+.. _sliders:
+
+Sliders
+=======
+
+The Sliders are interactive objects at the user-side of the projection. They comprise the slider itself and associated "slider handles" that define, what the slider actually does - in :ref:`our use case<quarree>` the users can allocate one of the following functions to the slider:
+* the selected house will apply energy-saving measures (Yes/No bool)
+* the selected house will be connected to the heat grid in the year X (int)
+* the selected house will be refurbished in the year X (int)
+
+The position of the physical slider is read by the :ref:`tag decoder software<cspy>`, which sends a float between 0 (slider at left margin) and 1 (slider at right margin) to the frontend. For more details on how the camera backend processes the slider, go to the :ref:`cspy section<cspy_slider>`.
+
+ TODO: add image!
+
+.. _frontend_slider_setup:
+
+There is a dedicated `Slider` lass in ``q100viz/interaction/interface.py`` that can be used to create slider objects. Slider objects can store information on the active slider handle and the current slider value, corresponding the phyiscal slider on the table. There are variables to define the position of the slider on the projection area. This is important for the accurate projection of features on the very position of the slider. For this, `physical_diff_L` and `physical_diff_R` are variables describing the distance FROM the left margin of the area used for slider detection in cpsy, and the distance TO the right margin of the focused area in cspy (in cm), respectively. These are set in ``config.py`` and adapted to the sliders upon initialization.
+
+Slider Functions
+----------------
+
+**q100viz/interaction/interface.py:**
+
+* The Slider's ``draw_controls()`` function will render slider handle texts and icons, as well as tool tips.
+* ``draw_area()`` draws option-specific layout onto the slider area. According to the use case, the area can either be a red/green field for binary yes/no option or show a timeline with the selection of specific year.
+* ``process_value()``: processes incoming slider values and sets the value for the variable previously selected via the slider handles. The function is regularly executed in the :ref:`grid.read_scanner_data<read_scanner_data>` function, which is called whenever new UDP messages are coming in from the backend.
+  #. Check if the slider value has changed (if yes, continue)
+  #. According to the currently active handle, change the value of the active variable using the slider's value (and multiplicators for integers or thresholds for bools)
+
+* TODO: link to API overview section
 
 .. _frontend_mode:
 .. _mode:
@@ -666,6 +685,8 @@ The interaction surface is constrained to the :ref:`mode selectors<modeselector>
 The total data view mode is used to :ref:`display all neighborhood data on the infoscreen<infoscreen_individual_data_view>` displaying charts that compare the selected houses energy costs and emissions, as well as the overall energy cost development and the total amount of buildings connected to the heat grid.
 
 All possible interaction is constrained to the :ref:`game mode selectors<modeselector>`.
+
+.. _devtools:
 
 Debugging and Devtools
 **********************

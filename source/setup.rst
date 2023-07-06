@@ -116,9 +116,17 @@ You can start each program individually, but be aware that, for the handshake be
 
 We put these commands into a shell script called run_qScope.sh to be executed automatically upon startup of the computer.
 
-.. _calibrating_the_table:
+.. _setup_manual:
 
-Calibrating the Table:
-======================
+Setup Manual
+============
 
-TODO: process of calibration with images and hotkeys
+TODO: how and where to place tiles & sliders (with images)
+
+TODO: handbook on how to place sliders & reposition them if needed
+
+TODO: process of cspy calibration with images and hotkeys
+
+TODO: positioning of projected grid using calibration mode
+
+TODO: how to disassemble & transport
