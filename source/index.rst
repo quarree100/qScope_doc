@@ -29,9 +29,13 @@ Guide
    :maxdepth: 2
    :caption: Frontend
 
-   frontend/usage
-   frontend/programming
-   frontend/pygame
+   frontend/01_install_start
+   frontend/02_init
+   frontend/03_frontend_display
+   frontend/04_frontend_interaction
+   frontend/05_game_modes
+   frontend/06_devtools
+   frontend/misc
 
 .. toctree::
    :maxdepth: 2

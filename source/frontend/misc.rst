@@ -1,10 +1,10 @@
+Miscellaneous
+#############
+
 .. _simple_pygame_features:
 
-simple Pygame features
-######################
-
-Drawing on Canvas
-*****************
+Simple Pygame Features
+**********************
 
 Displaying Text
 ===============

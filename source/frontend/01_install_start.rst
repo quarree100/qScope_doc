@@ -1,7 +1,7 @@
 .. _frontend_usage:
 
-Usage
-########
+Installation & Startup
+######################
 
 The Q-Scope frontend, as used in the project QUARRE100, was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games.
 In this chapter, we will first handle the frontend's installation and afterwards explain its features by going through the code (more or less linearly).
@@ -48,14 +48,14 @@ The main script is called ``run_q100viz.py``. You can start it from the qScope_f
 These flags are specified in the first section of the main script.
 At the end of the main script, an instance of the :ref:`frontend<frontend_class>` is created and run in the loop.
 
-The following key events are implemented in the :ref:`QUARREE100<quarree100>` example project:
+The following key events are implemented in the :ref:`QUARREE100<quarree>` example project:
 
 - ``p`` toggle the display of GIS polygons
 - ``m`` toggle basemap visibility
 - ``g`` toggle visibility of grid outline and cell ID, rotation, coordinates
 - ``n`` toggle visibility of the heat grid
 - ``b`` toggle the black mask on viewport
-- ``3`` start buildings_interaction_ mode
-- ``4`` start simulation_mode_
-- ``5`` start individual_data_view_ mode
-- ``6`` start total_data_view_ mode
+- ``3`` start :ref:`Buildings Interaction Mode<buildings_interaction>`
+- ``4`` start :ref:`Simulation Mode<simulation_mode>`
+- ``5`` start :ref:`Individual Data View Mode<individual_data_view>`
+- ``6`` start :ref:`Total Data View Mode<total_data_view>`
