@@ -15,7 +15,7 @@ All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder ``q100
     * :ref:`Interaction <buildings_interaction>`
     * :ref:`Simulation <simulation_mode>`
     * :ref:`Data View <data_view>`
-    * (:ref:`Calibration<calibration_mode>` - for Debugging)
+    * (:ref:`Calibration<frontend_calibration>` - for Debugging)
 
 **Game Mode Generic Functions:**
 
@@ -34,7 +34,7 @@ Some cells can be programmed to trigger additional events, like leaving the curr
   - ``4`` starts the simulation
   - ``5`` enters the :ref:`individual data view<individual_data_view>`
   - ``6`` enters the :ref:`total (neighborhood) data view<total_data_view>`
-  - ``C`` starts the :ref:`Calibration Mode<calibration_mode>`
+  - ``C`` starts the :ref:`Calibration Mode<frontend_calibration>`
 
 .. _buildings_interaction:
 
@@ -66,7 +66,7 @@ It contains interaction possibilites for the change of the game modes and slider
 
 .. _simulation_mode:
 
-1. Simulation
+2. Simulation
 =============
 
 The "Simulation Mode" is the second mode to be run, once all users have selected and specified their households. In this mode, the frontend will start :ref:`GAMA<installing_gama>` in headless mode (no GUI) a subprocess to run the agent-based-model. The users will have to wait until the simulation finished, and the only thing the frontend does is forwarding status information via UDP from GAMA to the infoscreen.
@@ -96,7 +96,7 @@ The function accepts the following **Input Parameters**:
 
 The **simulation setup algorithm** logs the simulation start time and defines the output path to export the results in the following manner:
 
-1. Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+**1.** Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
 
 .. code-block::
   :caption: tree view of output folder
@@ -117,7 +117,8 @@ The **simulation setup algorithm** logs the simulation start time and defines th
 
 Read more about the simulation results in the :ref:`ABM section<simulation_outputs>`.
 
-2. An xml file necessary to start the simulation in headless mode is created from the ``session.environment`` parameters. Here we store initial values for certain variables in GAMA. These parameters are:
+**2.** An xml file necessary to start the simulation in headless mode is created from the ``session.environment`` parameters. Here we store initial values for certain variables in GAMA. These parameters are:
+
    * Alpha scenario
    * Carbon price scenario
    * Energy prices scenario
@@ -147,9 +148,10 @@ In short, the **Input Data** for the simulations in QUARREE100 are defined in th
 .. note::
   For debugging purposes, some random N buildings can be marked as selected and force-connected to the heat grid for the simulation by starting the frontend script with the input flag ``--select_random N`` (int). :ref:`See more about the frontend startup flags here<frontend_startup_flags>`.
 
-3. After setting up the simulation input data, ``simulation.running`` will be set ``True``, which causes the simulation to actually be executed (once) in the dedicated thread via ``run_script()`` within ``simulation.run()``. The process of the latter function will sty on hold until the subprocess is done.
+**3.** After setting up the simulation input data, ``simulation.running`` will be set ``True``, which causes the simulation to actually be executed (once) in the dedicated thread via ``run_script()`` within ``simulation.run()``. The process of the latter function will sty on hold until the subprocess is done.
 
-4. Once the subprocess is done, :ref:`matplotlib graphs are created<graphs>` from the output data and the paths of these files will be send via UDP to the infoscreen to be displayed there in the next game stage.
+**4.** Once the subprocess is done, :ref:`matplotlib graphs are created<graphs>` from the output data and the paths of these files will be send via UDP to the infoscreen to be displayed there in the next game stage.  Some historic data will be added to these graphs for comparison. Pre-calculated data, created using one of the :ref:`auxiliary scripts<interactive_programming>`, can be added for comparison.
+
 
 Simulation Mode View
 --------------------

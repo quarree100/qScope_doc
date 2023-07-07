@@ -39,9 +39,11 @@ Guide
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tag decoder
+   :caption: Tag decoder (cspy)
 
-   cspy
+   cspy/installation_usage.rst
+   cspy/setup.rst
+   cspy/calibration.rst
 
 .. toctree::
    :maxdepth: 2
@@ -62,12 +64,3 @@ Guide
    API/frontend_API
    API/infoscreen_API.rst
    API/tag_decoder_API.rst
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

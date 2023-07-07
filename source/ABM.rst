@@ -88,7 +88,7 @@ or in short: ``/path/to/gama-headless.sh /path/to/simulation.xml /path/to/output
 
 TODO: buildings clusters are used in GAMA to define selected/focused buildings
 
-.. note:: When wanting to use and display gama-exported-images on infoscreen, try this:
+.. hint:: When wanting to use and display gama-exported-images on infoscreen, try this:
 
   .. code-block:: python
     :caption: should by implemented in simulation_mode.py right before starting the simulation via self.make_xml

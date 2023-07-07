@@ -224,3 +224,8 @@ and some helpful conversion functions used to get the right units:
 * ``grams_to_tons``
 * ``rgb_to_hex``
 * ``rgb_to_float_tuple``
+
+TODO: image of a graph and explain the lines, round iterations and pre-calculated grey lines
+
+.. attention::
+  If :ref:`verbose mode<verbose_mode>` is activated, house addresses and absolte consumption data will be added to the graphs!
