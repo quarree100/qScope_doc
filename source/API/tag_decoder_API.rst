@@ -1,7 +1,7 @@
 Tag decoder API
 ###############
 
-TODO: grid, decoder-side
+TODO: grid communication, decoder-side
 
 .. _cspy_grid_message:
 

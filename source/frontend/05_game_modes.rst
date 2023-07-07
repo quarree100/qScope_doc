@@ -17,7 +17,12 @@ All game-specific surfaces (a.k.a. "Game Modes") are stored in the folder ``q100
     * :ref:`Data View <data_view>`
     * (:ref:`Calibration<frontend_calibration>` - for Debugging)
 
-**Game Mode Generic Functions:**
+.. _game_iterations:
+
+After each simulation, a new "Game Iteration" or "Round" is started (which will also be indicated on the :ref:`infoscreen<infoscreen_buildings_interaction>`). Each Round has its own data output and data of different rounds are exported to the same graphs for comparison. This way, users can compare the results of different (refurbishment/heat grid connection/energy-saving) actions.
+
+Game Mode Generic Functions
+===========================
 
 * The ``__init__`` function is seldomly used, since it will be run in the beginning of the script (in ``session.py``), before the variables (e.g. ``grid``) are initialized.
 * The ``activate`` function is called automatically in the game loop, when `session.active_mode` changes to this object in the :ref:`game loop <frontend_game_loop>`. **It should not be called manually!**. This function can be used to define which graphical parts shall be displayed, by setting ``session.show_polygons`` etc to true or false. The same can be done for each slider individually.
@@ -96,7 +101,7 @@ The function accepts the following **Input Parameters**:
 
 The **simulation setup algorithm** logs the simulation start time and defines the output path to export the results in the following manner:
 
-**1.** Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+**1.** A new output folder is created for the current :ref:`game iteration round<game_iterations>` using the current OS time: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
 
 .. code-block::
   :caption: tree view of output folder

@@ -43,7 +43,7 @@ The :ref:`simulation setup algorithm<simulation_setup>` logs the simulation star
             └───simulation_parameters_YYYYmmdd_HH-MM-SS.xml
             └───simulation_outputsnull.xml
 
-TODO: explain contents of the folders
+* ``output_[timestamp]``: contains simulation results of the specific :ref:`game iteration round<game_iteration>`
 
 
 .. _gama_headless_mode:

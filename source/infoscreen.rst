@@ -67,6 +67,8 @@ Run npm shortcut command:
 Modes/Views
 ****************************
 
+.. _infoscreen_buildings_interaction:
+
 Buildings Interaction View
 ===========================
 
@@ -84,7 +86,7 @@ Buildings Interaction View
     :height: 3ex
 
 Tiles of information card shows the information of 4 different selected buildings.
-In each tile, at the top the name of the building is stated. Under it three icons indicates the options that user selected (?) for the current round;
+In each tile, at the top the name of the building is stated. Under it three icons indicate the options that user selected for the current round, which itself is shown in the lower right corner.
 
 |icon_heat_grid| the connection to the heat grid
 
@@ -263,12 +265,8 @@ Developemnt tools
 
 Developemnt tools (js/devTools.js) provides useful function for debugging.
 
-Space bar: switch modes
-
-D: show data view mode
-
-V: show verbose (lines around html elements)
-
-T: inject extra round data (a column will be added in the round information table)
-
-I: inject sample data
+* ``Space bar``: switch modes
+* ``D``: show data view mode
+* ``V``: show verbose (lines around html elements)
+* ``T``: inject extra round data (a column will be added in the round information table)
+* ``I``: inject sample data
