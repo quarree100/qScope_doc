@@ -27,5 +27,3 @@ Additionally to the decoding of the grid of tiles, cspy can monitor slider objec
 #. TODO: explain the algorithm: camera looking for darkes pixel group along bar
 #. TODO: explain positioning
 #. TODO: information is sent to frontend as float and has to be processed there
-
-TODO: Recommendation: place y-position of slider slightly ABOVE the slid, so you don't try to decode what's on the ceiling and other interferences with people.

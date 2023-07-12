@@ -6,10 +6,14 @@ QUARREE100
 Introduction
 ************
 
-The Q-Scope framework was used in the `QUARREE100 <https://www.quarree100.de>`_ project. Before diving into the detailed programming of the framework, you should understand how we used it in the "pilot project" QUARREE100. This documentation will frequently refer to the setup we implemented for QUARREE100.
+The Q-Scope framework was used in the `QUARREE100 <https://www.quarree100.de>`_ project. Before diving into the detailed programming of the framework, you should understand how we used it in the "pilot project" QUARREE100. This documentation will frequently refer to the setup we implemented for the project.
+QUARREE100 is a research project investigating the possibilities of renewable heating of an existing neighborhood. The Q-Scope was used to further investigate citizens' acceptance of the progress by providing a platform to interact with simulation results regarding energy prices and CO2-emissions.
 
-After startup, you see an aerial photograph of the area of importance for the QUARREE100 project, projected onto the table. All existing buildings are displayed, some marked red. These colored buildings are the ones you can interact with.
-On the right side, there is an area for global settings, that is to be used only by the "game master" - a person that guides the whole group of users through the workshop. The area contains some positions to switch through the game modes and a range of fields for some gameplay scenarios.
+QUARREE100 user interface
+*************************
+
+After startup, you see an aerial photograph of the area of importance for the QUARREE100 project, projected onto the table. All existing buildings are displayed, some marked red. These colored buildings are the ones you can interact with using some of the tokens explained below.
+On the right side, there is an area for global settings, that is to be used only by the "game master" - a person that guides the whole group of users through the workshop. The area contains some positions to switch through the :ref:`game modes<mode>` and a range of fields for some gameplay scenarios.
 
 .. image:: img/Q-Scope_tokens.jpeg
     :align: center
@@ -21,14 +25,14 @@ For the general user interaction, all users get two tokens with which they can s
     :align: center
     :alt: [Image of the infoscreen, showing four colored squares, each of which contains the address of the selected houses. In each of the squares there is a table with information on energy saving measures.]
 
-In the QUARREE100 game, actions to choose from all relate to decisions in house heating. The aim of the game will be to reduce the emissions and lower the energy costs by choosing from a combination of these measures.
+The aim of the QUARREE100 game is to reduce the emissions and lower the energy costs. In order to achieve this, users can choose from (combinations of) options concerning the heating of their house.
 There are three options to choose from:
 
 #. energy-saving behavior
 #. conducting the renovation of the house
 #. connecting the house to the QUARREE100-heat-grid
 
-In order to choose from one of these, you have to put one of your tokens into one of the fields above any of the sliders. Each of the fields represents one of the beforementioned actions. The slider will be activated for you to set the magnitude of your action. Changes will be applied to all houses you have selected simultaneously.
+In order to choose from one of these, users have to put one of their tokens into one of the fields above any of the sliders. Each of the fields represents one of the beforementioned actions. The slider will be activated so that one can define the magnitude of their action. Changes will be applied to all houses you have selected simultaneously.
 
 After all users are done with the adjustments, the game master can start the simulation by putting any non-white token onto the global simulation position. The Agent-Based model is thus started and calculates the data for the adjusted buildings.
 
@@ -44,11 +48,4 @@ The game master can now discuss the calculated data with the users in :ref:`two 
     :align: center
     :alt: [Image of the infoscreen showing the neighborhood's cumulated data and the housesholds emissions and energy costs in comparison.]
 
-TODO: explain visualization modes & discussion.. how did we use the results?
-
-Quick Manuals
-*************
-
-TODO: setting up the table for an exhibition
-- transport
-- calibration
+For the discussion, it was necessary to both focus on individual households' energy costs and emissions, as well as being able to compare the data of various households between each other.

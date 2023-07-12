@@ -3,6 +3,8 @@ Tag decoder API
 
 TODO: grid communication, decoder-side
 
+Cspy sends the grid information to the :ref:`frontend<frontend_usage>` (projector), which will cast an adjusted interface onto the table accordingly and send information about the machine state to the :ref:`infoscreen<infoscreen>` (TV) to display metadata.
+
 .. _cspy_grid_message:
 
 TODO: show an example of a grid message here.

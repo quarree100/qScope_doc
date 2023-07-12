@@ -25,6 +25,15 @@ This way, the whole framework is always in-sync, and users can interact *with th
 
 In the image above you see four groups of :ref:`tangibles<programming_tangibles>` - objects with the same color (human-readable) share the same tag (machine-readable).
 
+.. _realsense:
+
+Cameras
+=======
+
+* TODO: we use realsense cameras, but any webcam with a good resolution can be used; just take care, that the necessary ROI can be observed, which should be achieved using the mirrors
+* TODO: `realsense-viewer`
+* TODO: USB 3.0 !!
+
 
 Software Overview
 *****************

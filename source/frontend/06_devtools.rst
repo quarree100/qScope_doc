@@ -98,7 +98,7 @@ In ``q100viz/sandbox/simulation_demox.ipynb``, a batch of simulations is conduct
 Calibration
 ***********
 
-The projector is positioned above the table and will cast a distorted image onto the physical table. Thus, some calibration has to be done for the projection to match the table dimensions.
+The projector is positioned above the table and will cast a distorted image onto the physical table. Thus, some calibration has to be done for the projection to match the table dimensions. The process used for this is called "keystone transformation", meaning that the image is being remapped between four corner points with adjustable position.
 
 Frontend Calibration
 ====================
