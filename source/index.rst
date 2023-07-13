@@ -43,7 +43,6 @@ Guide
 
    cspy/00_intro_install_usage.rst
    cspy/01_setup.rst
-   cspy/02_calibration.rst
 
 .. toctree::
    :maxdepth: 2

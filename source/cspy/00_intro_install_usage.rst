@@ -48,7 +48,9 @@ The webcams have to be calibrated so that the *ROI* (region of interest) extends
     :alt: image of underside of table with the extent of the whole physical grid
 
 This is for roughly setting the corner points of the ROI. You will see the full extent of the camera stream. The camera should be installed so that the whole physical grid can be seen.
+
 **2.** Now Select 4 corner points by clicking on each of them in the order: up right, up left, bottom right, bottom left. (The program will quit once the initial keystone points were saved.)
+
 **3.** Run ``python3 run_scanner.py``.
 
 .. image:: ../img/cspy_01_calibration_blue.png
@@ -58,15 +60,20 @@ This is for roughly setting the corner points of the ROI. You will see the full 
 You now see a close-up of the region of interest.
 
 **4.** Press numbers ``1``, ``2``, ``3``, ``4``, to select the corner points.
+
 **5.** Move the corner using ``WASD`` keys until the grid cells in the edges are placed neatly in the edges of the ROI and the white grid matches the grid of the physical table.
+
 **6.** The step size for the displacing of the corner points can be toggled hitting `SPACEBAR`. A red arrow indicates slight movements, while a blue arrow indicates bigger steps.
+
 **7.** Once everything is positioned nicely, press ``k`` to save the corner points to ``keystone.txt``. Corner points will be loaded from that file upon next start of the script.
 
 .. hint::
     Placing non-white tokens in the very corners can be very helpful to set the absolute edges of the ROI.
 
-Detection Enhancement
----------------------
+.. _cspy_detection_settings:
+
+Detection Settings
+------------------
 
 In total, more than the one webcam stream window is created with cspy - there are two additional windows that help finding the best detection conditions.
 
@@ -75,6 +82,7 @@ In total, more than the one webcam stream window is created with cspy - there ar
     :alt: Ideal calibration situation with three windows showing the original RGB webcam stream, the resulting image after brightness and threshold adjustments, and a greyscale overlay to even out uneven light distribution.
 
 When running cspy, three windows are created: one showing the original RGB webcam stream, a second one showing the resulting (binary) image after brightness and threshold adjustments, and a third one showing a greyscale gradient overlay to even out uneven light distribution.
+
 In an ideal calibration (like in the image above), the **binary image** should show the tags' black quarters as perfect white squares. No light should leak through the grid.
 
 Setting up the best detection conditions requires a lot of fine-tuning of brightness and threshold levels. For this, a set of tools can be used via a keyboard:
@@ -108,8 +116,8 @@ Setting up the best detection conditions requires a lot of fine-tuning of bright
 * ``x``: change the left x position of the active slider
 * ``c``: change the right x position of the active slider
 
-After the calibration is complete, the values can be saved hitting ``k`` and will be written to the opened settings file.
-TODO: explain settings file
+After the calibration is complete, the values can be saved hitting ``k`` and will be written to the opened :ref:`settings file<cspy_settings>`.
+
 TODO: merge ``feature_export_calibration`` and ``beautifications`` to ``main``
 
 .. hint:: Recommendation: place y-position of slider slightly ABOVE the slid, so you don't try to decode what's on the ceiling and other interferences with people.

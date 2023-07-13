@@ -26,6 +26,8 @@ In the frontend code of our example, there are two grid objects, each representi
 
 All cells have an ID that can be any number ranging from 0 (corresponding a tangible with a white underside) through 5 (codes on the underside). Once a cell gets an ID that is not 5 (white), it is considered to be "selected". As a result, :ref:`a broader frame<draw_simple_polygon_layer>` will be drawn around it (see image above). Then it can be addressed via one of the :ref:`sliders<frontend_slider_setup>`, information on the object will be displayed on the infoscreen, certain functions can be triggered upon selections, such as :ref:`mode <modeselector>` switching.
 
+.. note:: The cell's IDs will be allocated by the tag decoder software according to :ref:`a list of possible tags<programming_tangibles>`. The index of the corresponding tag in that list will become the cell's ID.
+
 Some cells can be programmed to trigger additional events, like leaving the current :ref:`game mode<mode>`. This is done via tables in ``q100viz/settings/``. Read more on how to program link functions to cells :ref:`here<programming_cell_functions>`.
 
 .. hint::
