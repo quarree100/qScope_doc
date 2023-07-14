@@ -15,7 +15,7 @@ So the Q-Scope has to of each of the following instances:
 
 - A physical table with a phyiscal grid on top
 - A camera underneath, with software to decode the current arrangement of acrylic tiles
-- A :ref:`frontend grid object<grid>` that receives messages from the according tag decoder and translates them into commands for the projection.
+- A :ref:`frontend grid object<frontend_grid>` that receives messages from the according tag decoder and translates them into commands for the projection.
 
 This way, the whole framework is always in-sync, and users can interact *with the surface projection* by exchanging tiles on the tables.
 
@@ -30,9 +30,11 @@ In the image above you see four groups of :ref:`tangibles<programming_tangibles>
 Cameras
 =======
 
-* TODO: we use realsense cameras, but any webcam with a good resolution can be used; just take care, that the necessary ROI can be observed, which should be achieved using the mirrors
-* TODO: `realsense-viewer`
-* TODO: USB 3.0 !!
+For our setup, we use `Intel realsense <https://www.intelrealsense.com>`_ cameras, but any webcam with a good resolution can be used; just take care, that the necessary ROI can be observed, which should be easily achievable pointing the cameras at the mirrors at the bottom of the tables (instead of pointing the cameras directly at the table top).
+
+For debugging realsense cameras, the `realsense-viewer` is a tool that comes with librealsense and can be run from a terminal. Make sure that the USB 3 connection is well established - otherwise a FullHD stream cannot be achieved!
+
+You'll first need to install librealsense as described on `their GitHub Repository <https://github.com/IntelRealSense/librealsense#download-and-install>`. Additionally for cspy to be able to use those cameras, you must install pyrealsense - a realsense python wrapper. (See its documentation here: `https://pyrealsense.readthedocs.io/en/master <https://pyrealsense.readthedocs.io/en/master>`_)
 
 
 Software Overview
@@ -124,21 +126,10 @@ You can start each program individually, but be aware that, for the handshake be
     cd path/to/qScope_frontend
     python3 run_q100viz.py
 
-We put these commands into a shell script called run_qScope.sh to be executed automatically upon startup of the computer.
 
-.. _setup_manual:
+There is a start script ``/home/qscope/start.sh`` on the Q-Scope computer that will run automatically upon startup (see below). In order to stop all the processes, ``/home/qscope/stop.sh`` can be executed.
 
-Setup Manual
-============
+.. code-block:: bash
+    :caption: start.sh
 
-TODO: how and where to place tiles & sliders (with images)
-
-TODO: handbook on how to place sliders & reposition them if needed
-
-TODO: process of cspy calibration with images and hotkeys
-
-TODO: positioning of projected grid using calibration mode
-
-TODO: how to disassemble & transport
-
-TODO: start script for ubuntu computer
+    TODO: contents of start.sh

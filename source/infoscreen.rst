@@ -261,7 +261,7 @@ Total data view displayes four different graphs of GAMA simulation: energy_price
 
 
 Developemnt tools
-=========================
+*****************
 
 Developemnt tools (js/devTools.js) provides useful function for debugging.
 
@@ -270,3 +270,9 @@ Developemnt tools (js/devTools.js) provides useful function for debugging.
 * ``V``: show verbose (lines around html elements)
 * ``T``: inject extra round data (a column will be added in the round information table)
 * ``I``: inject sample data
+
+
+Known Errors
+************
+
+``[nodemon] Internal watch failed: ENOSPC: System limit for number of file watchers reached, watch '/home/user/github/qScope/qScope_infoscreen/public/data/outputs/output_20221111_11-51-29/energy_prices/energy_prices_4.09.csv'`` can be fixed either by restarting the computer or by `increasing the system limit for number of file watchers <https://stackoverflow.com/questions/65300153/error-enospc-system-limit-for-number-of-file-watchers-reached-angular>`_.

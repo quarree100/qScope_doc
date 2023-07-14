@@ -24,6 +24,7 @@ Guide
 
    QUARREE100
    setup
+   quick_setup
 
 .. toctree::
    :maxdepth: 2

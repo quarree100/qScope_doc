@@ -1,7 +1,7 @@
 Frontend Interaction
 ####################
 
-.. _grid:
+.. _frontend_grid:
 
 Grid & Tiles
 ************
@@ -10,7 +10,7 @@ Grid & Tiles
   :align: center
   :alt: image of grid representations: photo of acrylic tiles, webcam stream from underneath, software representation in frontend
 
-The grid objects are initialized in :ref:`frontend.py<frontend_communication>`. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed.
+The grid objects are initialized in ``q100viz/frontend.py``. They are software representations of the physical grids' configuration and define how elements shown on the aerial map are to be displayed.
 
 .. code-block:: python
   :caption: frontend.py
@@ -32,8 +32,6 @@ Some cells can be programmed to trigger additional events, like leaving the curr
 
 .. hint::
   The grid display can be toggled using the ``g`` key. In the upper left corner of each cell, the cell's ID is displayed. The number in the upper right corner represents the cell's current rotation.
-
-.. _frontend_grid_setup:
 
 Grid Setup
 ==========
@@ -132,11 +130,11 @@ The Sliders are interactive objects at the user-side of the projection. They com
 
 The position of the physical slider is read by the :ref:`tag decoder software<cspy>`, which sends a float between 0 (slider at left margin) and 1 (slider at right margin) to the frontend. For more details on how the camera backend processes the slider, go to the :ref:`cspy section<cspy_slider>`.
 
- TODO: add image!
-
 .. _frontend_slider_setup:
 
 There is a dedicated `Slider` lass in ``q100viz/interaction/interface.py`` that can be used to create slider objects. Slider objects can store information on the active slider handle and the current slider value, corresponding the phyiscal slider on the table. There are variables to define the position of the slider on the projection area. This is important for the accurate projection of features on the very position of the slider. For this, `physical_diff_L` and `physical_diff_R` are variables describing the distance FROM the left margin of the area used for slider detection in cpsy, and the distance TO the right margin of the focused area in cspy (in cm), respectively. These are set in ``config.py`` and adapted to the sliders upon initialization.
+
+ TODO: add image!
 
 Slider Functions
 ================

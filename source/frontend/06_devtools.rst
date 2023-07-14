@@ -160,7 +160,7 @@ Transformation Example
 slider transformation
 ---------------------
 
-* slider uses the transformation of the :ref:`grid<grid>`
+* slider uses the transformation of the :ref:`grid<frontend_grid>`
 * **drawing of polygons and values** should be done via ``self.surface.blit(...)``. Slider surface is rendered and "blitted" to main canvas.
 
 ``print(slider.coords_transformed)`` returns:

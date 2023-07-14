@@ -19,8 +19,8 @@ File Structure
 
 .. _cspy_settings:
 
-Settings
-********
+settings.json
+*************
 
 For both the execution of the :ref:`keystone calibration<cspy_calibration>` and the scanning, a settings file has to be provided. Here is an example of what that file looks like. Detailed description of each of the keys will follow below.
 
@@ -89,7 +89,7 @@ All of these values can be set initialially using the json file or :ref:`during 
 General
 =======
 
-The ``PORT`` defines the communication port between the decoder and the frontend application.
+The ``PORT`` defines the communication port between the decoder and the frontend application. Make sure you configure this to match the :ref:`frontends grid objects' settings<frontend_grid>`!
 ``table_name`` is used to differentiate different instances of cspy.
 ``interval`` just defines the interval of scans in ms. This will also be the minimum interval of messages sent from cspy to the frontend.
 ``gui`` toggles the visibility of calibration tool tips.
@@ -114,7 +114,7 @@ light and detection settings
 programming the tags
 ====================
 
-``tag_length`` is the resolution of tags. We only used 4-bit values, but it is possible to work with more complex tags by splitting each grid cell into more than four areas to be scanned. ``tags`` is a list of possible tags. For each entry, 1 is for "black" and 0 corresponds to "white". **Note that the order of the tags is important, since the cells represented in the frontend will get their :ref:`ID<grid>` from the index of the tag in this list!** The four digits are read like this: 1. upper left, 2. upper right, 3. lower left, 4. lower right.
+``tag_length`` is the resolution of tags. We only used 4-bit values, but it is possible to work with more complex tags by splitting each grid cell into more than four areas to be scanned. ``tags`` is a list of possible tags. For each entry, 1 is for "black" and 0 corresponds to "white". **Note that the order of the tags is important, since the cells represented in the frontend will get their :ref:`ID<frontend_grid>` from the index of the tag in this list!** The four digits are read like this: 1. upper left, 2. upper right, 3. lower left, 4. lower right.
 
 .. image:: ../img/Q-Scope_tangibles_tags.jpg
     :align: center
@@ -136,6 +136,12 @@ Slider
 
 Additionally to the decoding of the grid of tiles, cspy can monitor slider objects, to facilitate gradual setting of values by the user.
 
-#. TODO: explain the algorithm: camera looking for darkes pixel group along bar
-#. TODO: explain positioning
-#. TODO: information is sent to frontend as float and has to be processed there
+The slider objects look for the set of darkest pixels around a white line that can be positioned anywhere on the image. Each slider has its own luminance sensitivities and thresholds that can be set individually (like explained above).
+
+The physical slider is just an acrylic plate with a dark underside that can be moved along a slid - the position will be detected and converted to a float between 0 and 1 analogous to the position of the physical slider (→ darkest pixels) relative to the length of the white line. The information is sent via UDP to the frontend and will be processed :ref:`there<frontend_slider_setup>`.
+
+.. image:: ../img/cspy_slider_zoom.png
+    :align: center
+    :alt: Image of slider: a token with dark underside moving along a slid.
+
+.. hint:: Recommendation: place y-position of slider slightly ABOVE the slid, so you don't try to decode what's on the ceiling and other interferences with people. Also, it is recommended to position the white line within a big enough distance from the camera itself, since the darkness of the camera will interfere with the detection (see image above).
