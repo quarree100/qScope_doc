@@ -42,7 +42,7 @@ Setup Instructions
 #. execute ``python3 run_scanner.py`` and fine-tune the positioning of the corner points using TAB and WASD keys. Press ``k`` to save.
 #. Conduct the :ref:`calibration of the detection<cspy_detection_settings>` algorithm according to the light conditions.
 
-.. image:: ../img/cspy_all_windows.png
+.. image:: img/cspy_all_windows.png
     :align: center
     :alt: Ideal calibration situation with three windows showing the original RGB webcam stream, the resulting image after brightness and threshold adjustments, and a greyscale overlay to even out uneven light distribution.
 
@@ -50,4 +50,4 @@ In an ideal calibration (like in the image above), the **binary image** should s
 
 **8. Projection keystoning:** start the frontend projection via ``cd path/to/frontend && python3 run_q100viz.py``. Enter the keystone-calibration by pressing ``c``, put the viewports corners right on the tables edges, until no light leaks to the floor. Also, enable grid view via ``c`` - if the frontend grid matches the physical grid. Move the physical grid slightly, if needed and possible. Things should line up more or less precisely now.
 
-TODO: how to disassemble & transport
+.. TODO: how to disassemble & transport

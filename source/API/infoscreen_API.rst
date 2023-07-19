@@ -18,4 +18,4 @@ a message to switch modes should follow the following structure:
         "mode" : string # "buildings_interaction", "individual_data_view" or "total_data_view"
     }
 
-TODO: :ref:`messages received from the frontend<frontend_udp_message>` are processed using the following functions:
+.. TODO: :ref:`messages received from the frontend<frontend_udp_message>` are processed using the following functions:

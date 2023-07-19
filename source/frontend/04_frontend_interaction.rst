@@ -134,7 +134,7 @@ The position of the physical slider is read by the :ref:`tag decoder software<cs
 
 There is a dedicated `Slider` lass in ``q100viz/interaction/interface.py`` that can be used to create slider objects. Slider objects can store information on the active slider handle and the current slider value, corresponding the phyiscal slider on the table. There are variables to define the position of the slider on the projection area. This is important for the accurate projection of features on the very position of the slider. For this, `physical_diff_L` and `physical_diff_R` are variables describing the distance FROM the left margin of the area used for slider detection in cpsy, and the distance TO the right margin of the focused area in cspy (in cm), respectively. These are set in ``config.py`` and adapted to the sliders upon initialization.
 
- TODO: add image!
+..  TODO: add photo of slider and draw lines corresponding the different variables
 
 Slider Functions
 ================
@@ -147,4 +147,6 @@ Slider Functions
   #. Check if the slider value has changed (if yes, continue)
   #. According to the currently active handle, change the value of the active variable using the slider's value (and multiplicators for integers or thresholds for bools)
 
-* TODO: link to API overview section
+.. note:: You can get an overview on the UDP messaging system in the :ref:`frontend API section <frontend_API>`.
+
+.. TODO: flow chart of the frontend code, following an incoming message from cspy through the different functions.

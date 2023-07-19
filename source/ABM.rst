@@ -3,55 +3,25 @@
 ABM
 ###
 
+In `QUARREE100<quarree>` an agent-based model was developed using `GAMA <https://gama-platform.org/download>`_. The model itself is called `TREND model <https://www.github.com/quarree100/q100_abm>` (and can be found on GitHub). It models the behavior transformation of citizens involved in the district's heat transition.
+
+Usually GAMA provides a user-friendly GUI with interactive variable input possibilities and graphical outputs, but from within our :ref:`frontend<frontend_usage>`, it is run in "headless mode" - the simulation is run "invisibly" in the background.
 
 .. _installing_gama:
 
 Installing GAMA
 ***************
 
-You will have to have [GAMA](https://gama-platform.org/download) installed. It's best to choose the Version with JDK.
+`GAMA <https://gama-platform.org/download>`_ will be executed in a subprocess of the Q-Scope in :ref:`simulation mode <simulation_mode>`. It is recommended to install the Version with JDK.
 
-Understanding GAMA
-******************
-
-Simulation
-**********
-
-.. _simulation_outputs:
-
-Simulation Outputs
-------------------
-
-The :ref:`simulation setup algorithm<simulation_setup>` logs the simulation start time and defines the output path to export the results in the following manner:
-
-1. Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
-
-.. code-block::
-  :caption: tree view of output folder
-
-    project qScope
-    └───data
-        └───outputs
-            └───output_YYYYmmdd_HH-MM-SS
-            |   └───connections
-            |   └───emissions
-            |   └───energy_prices
-            |   └───snapshot
-            └───buildings_clusters_YYYYmmdd_HH-MM-SS.csv
-            └───buildings_power_suppliers.csv
-            └───console-outputs-null.txt
-            └───simulation_parameters_YYYYmmdd_HH-MM-SS.xml
-            └───simulation_outputsnull.xml
-
-* ``output_[timestamp]``: contains simulation results of the specific :ref:`game iteration round<game_iterations>`
-
-TODO: list of csv files and some insights on these (data formats)
-
+.. attention:: We used GAMA 1.8.2 to develop the code; it might not necessarily work with different versions (we experienced some issues when switching between versions)!
 
 .. _gama_headless_mode:
 
-Starting GAMA in headless mode.
--------------------------------
+Starting GAMA in headless mode
+******************************
+
+Instead of starting GAMA with its GUI (like in every usual execution), it can be run from the terminal like this: ``/path/to/gama-headless.sh /path/to/simulation.xml /path/to/output_folder``.
 
 .. _simulation_xml:
 
@@ -83,12 +53,49 @@ The GAMA headless simulation takes an input xml file to initialize variables use
      </Simulation>
     </Experiment_plan>
 
-The final shell command that is used in a :ref:`subprocess of the frontend<simulation_setup>` looks like this: ``/opt/gama-platform/headless/gama-headless.sh /home/USER/qScope/data/outputs/output_20230704_13-51-36/simulation_parameters_20230704_13-51-36.xml /home/USER/qScope/data/outputs/output_20230704_13-51-36``,
+The final shell command that is used in a :ref:`subprocess of the frontend<simulation_setup>` looks like this: ``/opt/gama-platform/headless/gama-headless.sh /home/USER/qScope/data/outputs/output_20230704_13-51-36/simulation_parameters_20230704_13-51-36.xml /home/USER/qScope/data/outputs/output_20230704_13-51-36``
 
-or in short: ``/path/to/gama-headless.sh /path/to/simulation.xml /path/to/output_folder``
+Both xml file and the command are created in the Q-Scope's :ref:`simulation mode<simulation_mode>`. Another important file for the execution of the simulation is the ``buildings_clusters_YYYYmmdd_HH-MM-SS.csv`` file dropped to the simulation output folder (described below).
 
+.. csv-table::
+    :header: id,	spec_heat_consumption,	spec_power_consumption,	energy_source,	connection_to_heat_grid,	refurbished,	save_energy,	group
 
-TODO: buildings clusters are used in GAMA to define selected/focused buildings
+    7.14	158.35729	29.34483	Strom	False	2025	False	1
+    7.21	112.92122	14.60804	Gas	2025	False	False	0
+
+This information tells GAMA which buildings are selected have preset options should to be considered upon the start of the simulation.
+
+.. _simulation_outputs:
+
+Simulation Outputs
+******************
+
+The :ref:`simulation setup algorithm<simulation_setup>` logs the simulation start time and defines the output path to export the results in the following manner:
+
+1. Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+
+.. code-block::
+  :caption: tree view of output folder
+
+    project qScope
+    └───data
+        └───outputs
+            └───output_YYYYmmdd_HH-MM-SS
+            |   └───connections
+            |   └───emissions
+            |   └───energy_prices
+            |   └───snapshot
+            └───buildings_clusters_YYYYmmdd_HH-MM-SS.csv
+            └───buildings_power_suppliers.csv
+            └───console-outputs-null.txt
+            └───simulation_parameters_YYYYmmdd_HH-MM-SS.xml
+            └───simulation_outputsnull.xml
+
+* ``output_[timestamp]``: contains simulation results of the specific :ref:`game iteration round<game_iterations>`
+* ``connections`` contains ``connections_export.csv`` providing a list of the amount of agents connected to the heat grid (in percent and absolute)
+* in ``emissions``, there are building-specific timelines with calculated CO2-emissions and graphs, depicting these lists, :ref:`created in the frontend code<graphs>`.
+* ``energy_prices`` stores building-specific, caluclated energy prices as lists and graphs
+* ``snapshot`` is the place GAMA exports its native graphical output to.
 
 .. hint:: When wanting to use and display gama-exported-images on infoscreen, try this:
 

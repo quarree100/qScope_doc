@@ -90,7 +90,7 @@ Data
 
 Q-Scope relies on a local data folder with GIS information on the map, the polygons and data on the houses that shall be displayed. The folder contains Shapefiles used to display both an aerial photograph (raster file) and polygon information for each houses to be able to interact with - provided as Shapefiles. Some additional, household-specific data in the form of csv files are provided, which can be lined to the polygons.
 
-TODO: provide simple working example data folder without sensitive data!
+.. TODO: provide simple working example data folder without sensitive data!
 
 Starting the software
 *********************
@@ -127,9 +127,4 @@ You can start each program individually, but be aware that, for the handshake be
     python3 run_q100viz.py
 
 
-There is a start script ``/home/qscope/start.sh`` on the Q-Scope computer that will run automatically upon startup (see below). In order to stop all the processes, ``/home/qscope/stop.sh`` can be executed.
-
-.. code-block:: bash
-    :caption: start.sh
-
-    TODO: contents of start.sh
+There is a start script ``/home/qscope/start.sh`` on the Q-Scope computer that will run automatically upon startup (see below). The script _frontend_startup_flags all application in the necessary order. In order to stop all the processes, ``/home/qscope/stop.sh`` can be executed.

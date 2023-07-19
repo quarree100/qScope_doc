@@ -26,7 +26,8 @@ Make sure you have your :ref:`camera drivers<realsense>` installed properly and 
 After that, the installation will hopefully just as easy as downloading `the decoder's repository <https://www.github.com/quarree100/cspy>`_ and doing ``pip3 install -r requirements.txt``.
 
 .. note::
-    You should copy the downloaded folder to be able to run two instances of the software, each using their own settings. TODO: this could be done in an easier way, using a startup flag to define which settings file to load from (and save to)
+    You should copy the downloaded folder to be able to run two instances of the software, each using their own settings.
+    .. TODO: this could be done in an easier way, using a startup flag to define which settings file to load from (and save to)
 
 Usage
 *****
@@ -105,7 +106,7 @@ Setting up the best detection conditions requires a lot of fine-tuning of bright
 
 * ``5``: change the lower end of the grey gradient overlay
 * ``6``: change the upper end of the grey gradient overlay
-*
+
 **3. sliders:**
 
 * ``j``: toggle active slider through list of available sliders
@@ -118,7 +119,7 @@ Setting up the best detection conditions requires a lot of fine-tuning of bright
 
 After the calibration is complete, the values can be saved hitting ``k`` and will be written to the opened :ref:`settings file<cspy_settings>`.
 
-TODO: merge ``feature_export_calibration`` and ``beautifications`` to ``main``
+.. TODO: merge ``feature_export_calibration`` and ``beautifications`` to ``main``
 
 .. hint:: Recommendation: place y-position of slider slightly ABOVE the slid, so you don't try to decode what's on the ceiling and other interferences with people.
 

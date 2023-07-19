@@ -47,7 +47,7 @@ The canvas is masked by a layer that defines the margins of the region of intere
     self.mask_points = [[0, 0], [85.5, 0], [85.5, 82], [0, 82], [0, -50],
                     [-50, -50], [-50, 200], [200, 200], [200, -50], [0, -50]]
 
-Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_communication>` section.
+Finally, a seperate thread for UDP observation is started. Each table ("grid") has a seperate communication thread. More about how communication between tag decoder, frontend and infoscreen works in the :ref:`Communication <frontend_api>` section.
 
 .. _frontend_game_loop:
 
@@ -209,8 +209,8 @@ Graphs
 
 The frontend software creates graphs from the :ref:`simulation results<simulation_outputs>` using the matplotlib library. A toolkit is contained in ``q100viz/graphics/graphs.py``, providing the following functions:
 
-* ``export_individual_emissions``: exports specified column of csv-data-file for every iteration round to graph and exports png
-* ``export_individual_energy_expenses``: exports specified column of csv-data-file for every iteration round to graph and exports png
+* ``export_individual_emissions``: exports emissions from csv-data-file for every :ref:`iteration round<game_iterations>` to graph and exports png
+* ``export_individual_energy_expenses``: exports energy expenses column of csv-data-file for every iteration round to graph, prepending historic energy prices. Finally, exports png
 * ``export_default_graph``: exports default data to graph with gray curve
 * ``export_compared_emissions``: exports all data for selected group buildings into one graph for total data view
 * ``export_neighborhood_emissions_connections``: creates a bar plot for the total number of connections to the heat grid with an overlaying line plot of total emissions
@@ -224,8 +224,6 @@ and some helpful conversion functions used to get the right units:
 * ``grams_to_tons``
 * ``rgb_to_hex``
 * ``rgb_to_float_tuple``
-
-TODO: image of a graph and explain the lines, round iterations and pre-calculated grey lines
 
 .. attention::
   If :ref:`verbose mode<verbose_mode>` is activated, house addresses and absolte consumption data will be added to the graphs!
