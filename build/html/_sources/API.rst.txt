@@ -1,3 +1,0 @@
-API
-===========
-JSON and CSV constructs used for the communication between GAMA, the Q-Scope-infoscreen and -frontend.

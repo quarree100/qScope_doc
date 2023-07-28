@@ -20,19 +20,47 @@ Guide
 
 .. toctree::
    :maxdepth: 2
+   :caption: Q-Scope
 
-   introduction
+   QUARREE100
    setup
-   frontend
-   tag_decoder
-   communication
+   quick_setup
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Frontend
+
+   frontend/01_install_start
+   frontend/02_init
+   frontend/03_frontend_display
+   frontend/04_frontend_interaction
+   frontend/05_game_modes
+   frontend/06_devtools
+   frontend/misc
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tag decoder (cspy)
+
+   cspy/00_intro_install_usage.rst
+   cspy/01_setup.rst
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Infoscreen
+
    infoscreen
+
+.. toctree::
+   :maxdepth: 2
+   :caption: ABM
+
    ABM
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   API/frontend_API
+   API/infoscreen_API.rst
+   API/tag_decoder_API.rst

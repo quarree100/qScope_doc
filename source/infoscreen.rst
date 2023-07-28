@@ -1,3 +1,5 @@
+.. _infoscreen:
+
 Infoscreen
 ##########
 
@@ -65,6 +67,8 @@ Run npm shortcut command:
 Modes/Views
 ****************************
 
+.. _infoscreen_buildings_interaction:
+
 Buildings Interaction View
 ===========================
 
@@ -82,7 +86,7 @@ Buildings Interaction View
     :height: 3ex
 
 Tiles of information card shows the information of 4 different selected buildings.
-In each tile, at the top the name of the building is stated. Under it three icons indicates the options that user selected (?) for the current round;
+In each tile, at the top the name of the building is stated. Under it three icons indicate the options that user selected for the current round, which itself is shown in the lower right corner.
 
 |icon_heat_grid| the connection to the heat grid
 
@@ -99,6 +103,8 @@ The Heat consuption is indicated in a chart in 9 scale from A+ to H.
 
 In the table these three options are displayed throughout rounds.
 
+.. _infoscreen_inidividual_data_view:
+
 Individual Data View
 =========================
 
@@ -106,8 +112,10 @@ Individual Data View
     :align: center
     :alt: [close-up of a green square showing information of one of the selected houses and two graphs with predicted CO2-emissions and energy costs up until the year 2045.]
 
+The individual data view displays the information of one selected building. In addition to the information in the buildings interaction view, emissions over time and energy costs per household over time are shown in charts.
 
-The individual data view displayes the information of one selected building. In addition to the information in the buildings interaction view, emissoins over time and energy costs per household over time are shown in charts.
+
+.. _infoscreen_individual_data_view:
 
 Total Data View
 =========================
@@ -220,7 +228,7 @@ Individual Data View
 =========================
 
 
-Individual data view shows detailed information of selected building group. In addition to what is displayed in the buildings interaction view, 
+Individual data view shows detailed information of selected building group. In addition to what is displayed in the buildings interaction view,
 the emissions graph and the energy prices graph
 
 .. code-block::
@@ -253,16 +261,18 @@ Total data view displayes four different graphs of GAMA simulation: energy_price
 
 
 Developemnt tools
-=========================
+*****************
 
 Developemnt tools (js/devTools.js) provides useful function for debugging.
 
-Space bar: switch modes
+* ``Space bar``: switch modes
+* ``D``: show data view mode
+* ``V``: show verbose (lines around html elements)
+* ``T``: inject extra round data (a column will be added in the round information table)
+* ``I``: inject sample data
 
-D: show data view mode
 
-V: show verbose (lines around html elements)
+Known Errors
+************
 
-T: inject extra round data (a column will be added in the round information table)
-
-I: inject sample data
+``[nodemon] Internal watch failed: ENOSPC: System limit for number of file watchers reached, watch '/home/user/github/qScope/qScope_infoscreen/public/data/outputs/output_20221111_11-51-29/energy_prices/energy_prices_4.09.csv'`` can be fixed either by restarting the computer or by `increasing the system limit for number of file watchers <https://stackoverflow.com/questions/65300153/error-enospc-system-limit-for-number-of-file-watchers-reached-angular>`_.
