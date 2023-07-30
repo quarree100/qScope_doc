@@ -148,6 +148,184 @@ Infoscreen is primarily a node js application. q100_info.js runs a web applicati
 
 js/main.js receives UDP message from the frontend, and injects data and renders respevtive views.
 
+Message handling
+===========================
+
+`mode messages` (explained in infoscreen_API) received from the `frontend<frontend_udp_message>` are processed at main.js line 15 - 20:
+
+.. code-block::  javascript
+    
+    if (json.hasOwnProperty('mode')) {
+      if (json.mode != currentUserMode) {
+        switchUserMode(json.mode);
+        currentUserMode = json.mode;
+      }
+    }
+
+switchUserMode function at render.js line 98 - 125 toggles the visibility of html elements which is relevant to the respective modes. 
+
+.. code-block::  javascript
+
+    const switchUserMode = function (mode) {
+        // TODO: wrap in resetAnswer function
+        grayoutAnswerYes()
+        grayoutAnswerNo()
+        if (mode == 'simulation') {
+            displaySimulationMode()
+        }
+        else if (mode == 'input_scenarios') {
+            displayInputEnvironmentMode()
+        }
+        else if (mode == 'buildings_interaction') {
+            displayBuildingsInteractionMode()
+            // displayDataViewIndividualMode()
+        }
+        else if (mode == 'questionnaire') {
+            const question = questions[getRandomInt(5)] //TODO: get question number from UDP
+
+            displayQuestionnaireMode(question)
+        }
+        else if (mode == 'individual_data_view') {
+            displayDataViewIndividualMode()
+            removeHouseholdCards()
+            createHouseholdCards()
+        }
+        else if (mode == 'total_data_view') {
+            displayDataViewTotalMode()
+        }
+    }
+
+if a message contains 'current_iteration_round' property, at main.js line 21 - 31 it updates the global variable currentIterationRound which is stored at appData.js and refreshes the number of the columns in the table at the buildings interation view.
+
+.. code-block::  javascript
+
+    if (json.hasOwnProperty("current_iteration_round")) {
+      if (currentIterationRound != json.current_iteration_round) {
+        currentIterationRound = json.current_iteration_round;
+        console.log("current_iteration_round = " + currentIterationRound);
+        tableAddColumn(json.current_iteration_round);
+        $('#currentRound').find('span').text(currentIterationRound + 1);
+        if (currentIterationRound == 0) {
+          location.reload(); // reload page
+        }
+      }
+    }
+
+
+if a message contains 'buildings_groups' property, at main.js line 46 - 58  renderHouseInfo funtion is triggered and it injects the data to the view for the buildings interaction view and the individual data view :
+
+.. code-block::  javascript
+
+    if (json.hasOwnProperty('buildings_groups')) {
+        if ('group_0' in json.buildings_groups) renderHouseInfo(json.buildings_groups.group_0, "dataViewIndividualQuarter0");
+        if ('group_1' in json.buildings_groups) renderHouseInfo(json.buildings_groups.group_1, "dataViewIndividualQuarter1");
+        if ('group_2' in json.buildings_groups) renderHouseInfo(json.buildings_groups.group_2, "dataViewIndividualQuarter2");
+        if ('group_3' in json.buildings_groups) renderHouseInfo(json.buildings_groups.group_3, "dataViewIndividualQuarter3");
+
+        ...
+
+        updateSelectedConnectionsNumber(json);
+        updateIndividualData(json);
+    }
+
+if a message contains 'sliders' property, at main.js line x  78 -  80, it calls processSliderHandle function in render.js and changes the display of boarder around slider handle:
+
+.. code-block::  javascript
+
+    if (json.hasOwnProperty('sliders')) {
+      processSliderHandle(json.sliders);
+    }
+
+.. code-block::  javascript
+
+    function processSliderHandle(slider_data) {
+        console.log(slider_data)
+        if (slider_data.id == "slider0") {
+            if (slider_data.handle == "scenario_energy_prices") {
+            $("#current_energy_prices_scenario").css("border", "5px goldenrod solid"); // create thick golden border
+            }
+            else {
+            $("#current_energy_prices_scenario").css("border", "1px goldenrod dotted"); // remove border
+            }
+            if (slider_data.handle == "num_connections") {
+            $("#scenario_num_connections").css("border", "5px chartreuse solid"); // create thick blue border
+            }
+            else{
+            $("#scenario_num_connections").css("border", "1px chartreuse dotted"); // create thick blue border
+            }
+        }
+    }
+
+Main.js line x 85 - 96 checks if a message contains 'data_view_neighborhood_data', 'neighborhood_images' or 'individual_data_view' property and calls respective functions at render.js to change the view in the individual data view:
+
+.. code-block::  javascript
+
+    if (json.hasOwnProperty("data_view_neighborhood_data")) {
+      injectDataToDataView(json.data_view_neighborhood_data)
+    }
+    if (json.hasOwnProperty("neighborhood_images")) {
+      renewResultsImages(json.neighborhood_images)
+    }
+
+    if (currentUserMode == 'individual_data_view') {
+      if (json.hasOwnProperty("active_user_focus_data")) {
+        focusActiveUserData(json.active_user_focus_data);
+      }
+    }
+
+.. code-block::  javascript
+
+    const injectDataToDataView = function (data) {
+        console.log(data)
+        data.forEach((data_per_iteration) => { // for each val in arr, exec func
+            renewResultsImgSrcPath(data_per_iteration.iteration_round, data_per_iteration)
+            console.log(GAMASimulationImgSrcPaths)
+            renewDataViewGAMAImgsPerSection(data_per_iteration.iteration_round)
+        });
+        removeEmissionComparisonChart()
+        createEmissionComparisonChart(data[0].emissions_data_paths)
+    }
+
+    const injectDataToDataView = function (data) {
+        console.log(data)
+        data.forEach((data_per_iteration) => { // for each val in arr, exec func
+            renewResultsImgSrcPath(data_per_iteration.iteration_round, data_per_iteration)
+            console.log(GAMASimulationImgSrcPaths)
+            renewDataViewGAMAImgsPerSection(data_per_iteration.iteration_round)
+        });
+        removeEmissionComparisonChart()
+        createEmissionComparisonChart(data[0].emissions_data_paths)
+    }
+
+    function focusActiveUserData(userNumber){
+        // hide all quarterSections:
+        for (var i = 0; i<4; i++){
+            $("#dataViewIndividualQuarter" + i).css("display", "None");
+        }
+
+        // show only active quarterSection:
+        let individualQuarter = $("#dataViewIndividualQuarter" + userNumber)
+        individualQuarter.css("display", "grid");
+    }
+
+Main.js line 102 - 104 checks if a message contains 'final_step' and renews the global variables 'simulationFinalStep' at appData.js 
+Main.js line 105 - 107 checks if a message contains 'step' property and calls updateSimulationProgress function at render.js and renews progress bar:
+
+.. code-block::  javascript
+
+    if (json.hasOwnProperty("final_step")) {
+      simulationFinalStep = json.final_step;
+    }
+    if (json.hasOwnProperty("step")) {
+      updateSimulationProgress(json.step)
+
+.. code-block::  javascript
+
+    const updateSimulationProgress = function (step) {
+        const percentage = Math.ceil(step * 100 / simulationFinalStep)
+        $("#simulationProgress").find('span').text(percentage)
+    }
+
 Buildings Interaction View
 ===========================
 
