@@ -9,8 +9,8 @@ Frontend API
 
 Purple Arrows in the image above indicate the UDP communication between the different software components of the Q-Scope framework.
 
-Frontend UDP setup
-******************
+Receiving UDP messages from cspy
+********************************
 
 The incoming grid information from cspy (as described in the :ref:`previous chapter<cspy_communication>`) is deciphered in :ref:`grid.py<read_scanner_data>`
 
@@ -72,10 +72,10 @@ The frontend can start a gama simulation in a subprocess by entering the :ref:`s
 
 More information on the exported simulation results can be found in the according `ABM section<simulation_outputs>` of this documentation.
 
-.. _frontend_UDP_message:
+.. _frontend_UDP_send:
 
-Frontend UDP messages
-*********************
+Sending UDP messages to the infoscreen
+**************************************
 
 The messages sent from the frontend have the following generic structure:
 
