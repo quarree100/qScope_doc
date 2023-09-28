@@ -15,8 +15,6 @@ The code we used is indeed a combination of the MIT cityscopy scanner and furthe
 
 Above you see an image of the output of cspy, with the camera stream split into a grid of cells that is to be monitored. Below, there are two sliders that can be observed, too. Some information on the left hand side of the window show user controls for the calibration of the detection.
 
-Since we are working with two physical tables and, thus, with two cameras, there need to be two instances of the software, each with their own keystone-calibrated settings.
-
 .. _installing_cspy:
 
 Installation
@@ -32,6 +30,12 @@ After that, the installation will hopefully just as easy as downloading `the dec
 Usage
 *****
 
+Since we are working with two physical tables and, thus, with two cameras, two instances of the software have to be started, each with their own keystone-calibrated settings.
+
+**1.** Run ``python3 run_scanner.py [settings_file]``.
+
+([settings_file] can for example be ``settings/qscope_R.json`` for the table on the right). But first, the webcams will have to be calibrated.
+
 .. _cspy_calibration:
 
 Calibrating the Webcams
@@ -42,7 +46,7 @@ Keystoning
 
 The webcams have to be calibrated so that the *ROI* (region of interest) extends properly over the whole area of the table underside.
 
-**1.** Run ``python3 run_keystone.py``.
+**1.** Run ``python3 run_keystone.py [settings_file]``.
 
 .. image:: ../img/cspy_00_keystoning.png
     :align: center
@@ -52,7 +56,7 @@ This is for roughly setting the corner points of the ROI. You will see the full 
 
 **2.** Now Select 4 corner points by clicking on each of them in the order: up right, up left, bottom right, bottom left. (The program will quit once the initial keystone points were saved.)
 
-**3.** Run ``python3 run_scanner.py``.
+**3.** Run ``python3 run_scanner.py [settings_file]``.
 
 .. image:: ../img/cspy_01_calibration_blue.png
     :align: center
@@ -117,7 +121,7 @@ Setting up the best detection conditions requires a lot of fine-tuning of bright
 * ``x``: change the left x position of the active slider
 * ``c``: change the right x position of the active slider
 
-After the calibration is complete, the values can be saved hitting ``k`` and will be written to the opened :ref:`settings file<cspy_settings>`.
+After the calibration is complete, the values can be saved hitting ``k`` and will be written to the opened :ref:`settings file<cspy_settings>`. (You can select the settings file by appending it to the python execution command like so: ``python3 run_scanner.py settings/qscope_L.json``)
 
 .. TODO: merge ``feature_export_calibration`` and ``beautifications`` to ``main``
 

@@ -105,8 +105,8 @@ You'll need Python to start the **frontend**. The frontend will be started by na
 You see a lot of the black canvas around a slightly distorted map. This is due to the "keystoning", the adjustment of the image for the angles the projector produces with respect to the table. By casting an appropriately distorted image onto the table, the distortion will even out, geometrically. ✨
 
 Now we want to interact with the things we see on the canvas - the buttons, the sliders and the map. For this, we'll need cspy, which serves as the **backend**, decoding the configuration of tangibles on the table.
-Start the script for each table individually by navigating to the cspy folders and do ``python3 run_keystone.py``. A window will show up to define the Region of Interest and do the :ref:`keystone calibration<frontend_calibration>`. After doing this once, the adjustment will be saved and this step can be skipped next time.
-The scanning will be started with ``python3 run_scanner.py``. The decoder will send interaction data now to the frontend script, which will react by altering the projection.
+Start the script for each table individually by navigating to the cspy folders and do ``python3 run_keystone.py [path/to/settings/file.json]``, indicating which :ref:`calibration settings file<cspy_calibration>` to use. A window will show up to define the Region of Interest and do the :ref:`keystone calibration<frontend_calibration>`. After doing this once, the adjustment will be saved and this step can be skipped next time.
+The scanning will be started with ``python3 run_scanner.py [path/to/settings/file.json]``. The decoder will send interaction data now to the frontend script, which will react by altering the projection.
 
 In order for the **infoscreen** to receive and process information, it has to be started by executing ``npm start`` or ``node q100_info.js`` in the q100_info folder.
 
@@ -114,16 +114,14 @@ You can start each program individually, but be aware that, for the handshake be
 
 .. code-block::
 
-    cd path/to/cspy_L
-    python3 run_scanner.py
+    cd path/to/cspy
+    python3 run_scanner.py settings/qscope_L.json &
+    python3 run_scanner.py settings/qscope_R.json
 
-    cd path/to/cspy_R
-    python3 run_scanner.py
-
-    cd path/to/qScope_infoscreen
+    cd path/to/qScope_infoscreen &
     node q100_info.js
 
-    cd path/to/qScope_frontend
+    cd path/to/qScope_frontend &
     python3 run_q100viz.py
 
 

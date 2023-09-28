@@ -37,9 +37,9 @@ Setup Instructions
 **7.** now conduct the :ref:`cspy calibration<cspy_calibration>`:
 
 #. (first stop all running programs using ``stop.sh``)
-#. go to the cspy folder and ``python3 run_keystone.py``
+#. go to the cspy folder and ``python3 run_keystone.py settings/qscope_L.json`` (do the same with ``settings/qscope_R.json``)
 #. conduct rough keystoning by positioning the corner points roughly in this order: up right, up left, bottom right, bottom left.
-#. execute ``python3 run_scanner.py`` and fine-tune the positioning of the corner points using TAB and WASD keys. Press ``k`` to save.
+#. execute ``python3 run_scanner.py settings/qscope_L.json`` (do the same with ``settings/qscope_R.json``) and fine-tune the positioning of the corner points using TAB and WASD keys. Press ``k`` to save.
 #. Conduct the :ref:`calibration of the detection<cspy_detection_settings>` algorithm according to the light conditions.
 
 .. image:: img/cspy_all_windows.png

@@ -22,7 +22,7 @@ File Structure
 settings.json
 *************
 
-For both the execution of the :ref:`keystone calibration<cspy_calibration>` and the scanning, a settings file has to be provided. Here is an example of what that file looks like. Detailed description of each of the keys will follow below.
+For both the execution of the :ref:`keystone calibration<cspy_calibration>` and the scanning, a settings file has to be provided. (You can select the settings file by appending it to the python execution command like so: ``python3 run_scanner.py settings/qscope_L.json``) Here is an example of what that file looks like. Detailed description of each of the keys will follow below.
 
 .. code-block:: json
     :caption: cspy/settings/settings.json
