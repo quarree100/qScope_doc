@@ -4,7 +4,7 @@ Debugging and Devtools
 ######################
 
 There is a set of debugging- and developer tools that can facilitate the programming of frontend elements in ``q100viz/devtools.py``.
-To begin with, there is a bunch of :ref:`startup flags<frontend_startup_flags>` and :ref:`key input events<key_events>` can be used to switch modes and change the slider values.
+To begin with, there is a bunch of :ref:`startup flags<frontend_startup_flags>` and :ref:`key input events<runtime_keys>` can be used to switch modes and change the slider values.
 
 .. _verbose_mode:
 
@@ -106,7 +106,7 @@ Frontend Calibration
 #. The calibration mode can be entered using the ``c`` key.
 #. Four corner points are shown as white rectangles, one of which is filled white and , by that, marked active.
 #. The active corner point can be moved using the arrow keys. Make sure these rectangles are positioned at the edges of the physical table, and that the line connecting these points does not leave the table extents.
-#. The next corner point can be selected using ``TAB``.
+#. The active corner point can be selected using one of the keys ``1, 2, 3, 4``.
 #. The magnitude of moving the corner points can be toggled pressing ``SPACEBAR``. The lines connecting the corner points will be blue for big steps and red for small steps.
 #. Eventually, the settings can be saved to pressing ``s``. This stores a ``keystone.save`` file to the frontend folder that will automatically be loaded next time upon startup.
 

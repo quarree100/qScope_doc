@@ -57,7 +57,7 @@ The ``process_grid_change`` function of this mode make sure that, after each inc
   #. for slider handles: update the selected feature of the building with the current slider value
   #. for mode selectors: enable countdown timer for next mode to start
   #. for global/scenario handles: connect additional buildings to the heat grid. There is a dedicated dataframe for these additionally selected buildings called ``session.scenario_selected_buildings`` that excludes all user-selected buildings, so they can be specifically referred to. These buildings will be set 'selected'.
-  #. Finally, environment- and buildings-information will be :ref:`sent via UDP to the infoscreen<frontend_UDP_transmitter>`.
+  #. Finally, environment- and buildings-information will be :ref:`sent via UDP to the infoscreen<frontend_UDP_send>`.
 
 Buildings Mode Display
 ----------------------

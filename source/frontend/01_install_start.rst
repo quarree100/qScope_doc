@@ -48,14 +48,4 @@ The main script is called ``run_q100viz.py``. You can start it from the qScope_f
 These flags are specified in the first section of the main script.
 At the end of the main script, an instance of the :ref:`frontend<frontend_class>` is created and run in the loop.
 
-The following key events are implemented in the :ref:`QUARREE100<quarree>` example project:
-
-- ``p`` toggle the display of GIS polygons
-- ``m`` toggle basemap visibility
-- ``g`` toggle visibility of grid outline and cell ID, rotation, coordinates
-- ``n`` toggle visibility of the heat grid
-- ``b`` toggle the black mask on viewport
-- ``3`` start :ref:`Buildings Interaction Mode<buildings_interaction>`
-- ``4`` start :ref:`Simulation Mode<simulation_mode>`
-- ``5`` start :ref:`Individual Data View Mode<individual_data_view>`
-- ``6`` start :ref:`Total Data View Mode<total_data_view>`
+Some :ref:`key events<runtime_keys>` are implemented in the :ref:`QUARREE100<quarree>` example project that can be used during runtime to interact with the frontend (e.g. for debugging purposes).

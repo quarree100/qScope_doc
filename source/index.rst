@@ -43,7 +43,8 @@ Guide
    :caption: Tag decoder (cspy)
 
    cspy/00_intro_install_usage.rst
-   cspy/01_setup.rst
+   cspy/01_calibration.rst
+   cspy/02_settings.rst
 
 .. toctree::
    :maxdepth: 2

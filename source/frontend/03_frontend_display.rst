@@ -57,20 +57,6 @@ Frontend Projection
 After :ref:`initialization<frontend_class>`, the frontend will run in a loop to update the projection, evaluate keyboard input, handle the :ref:`game modes<modeselector>` and process :ref:`slider changes<sliders>`.
 Finally, ``pygame.display.update()`` is called to actually do what it says, and a ``pygame.time.Clock`` is updated, using the defined framerate. We used a framerate of 12 FPS, because this is the maximum framerate used in the :ref:`tag decoder<cspy>`.
 
-.. _key_events:
-
-The following key events are implemented in the `QUARREE100 <https://www.quarree100.de>`_ example project:
-
-- ``p`` toggle the display of GIS polygons
-- ``m`` toggle basemap visibility
-- ``g`` toggle visibility of grid outline and cell ID, rotation, coordinates
-- ``n`` toggle visibility of the heat grid
-- ``b`` toggle the black mask on viewport
-- ``3`` start :ref:`Buildings Interaction Mode<buildings_interaction>`
-- ``4`` start :ref:`Simulation Mode<simulation_mode>`
-- ``5`` start :ref:`Individual Data View Mode<individual_data_view>`
-- ``6`` start :ref:`Total Data View Mode<total_data_view>`
-
 Canvas Composition
 ******************
 

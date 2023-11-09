@@ -1,6 +1,23 @@
 Frontend Interaction
 ####################
 
+.. _runtime_keys:
+
+For debugging purposes, the following key events are implemented in the :ref:`QUARREE100<quarree>` example project:
+
+- ``p`` toggle the display of GIS polygons
+- ``m`` toggle basemap visibility
+- ``g`` toggle visibility of grid outline and cell ID, rotation, coordinates
+- ``n`` toggle visibility of the heat grid
+- ``b`` toggle the black mask on viewport
+- ``v`` toggle verbose mode
+- ``0`` start :ref:`Buildings Interaction Mode<buildings_interaction>`
+- ``9`` start :ref:`Simulation Mode<simulation_mode>`
+- ``8`` start :ref:`Individual Data View Mode<individual_data_view>`
+- ``7`` start :ref:`Total Data View Mode<total_data_view>`
+
+**One can alos interact witht eh frontend using the mouse with keys L,M,R**.
+
 .. _frontend_grid:
 
 Grid & Tiles
