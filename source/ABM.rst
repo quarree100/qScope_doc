@@ -72,7 +72,9 @@ Simulation Outputs
 
 The :ref:`simulation setup algorithm<simulation_setup>` logs the simulation start time and defines the output path to export the results in the following manner:
 
-1. Each time the frontend software is started, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+1. Each time the simulation is evoked by the frontend software, a new output folder is created: ``qScope/data/outputs/output_YYYYmmdd_HH_MM_SS``
+
+.. note:: If multiple rounds are played during one workshop (as you would assume), you'll end up with more than one output-folder. Just remember to consider all the outputs of the workshop for the evaluation of your data.
 
 .. code-block::
   :caption: tree view of output folder

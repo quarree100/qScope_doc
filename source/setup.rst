@@ -57,10 +57,8 @@ go to the repositories listed below and download them; I would recommend putting
 .. code-block::
 
     project qScope
-    └───cspy_L
-    │   Token Tag Decoder (for left table)
-    └───cspy_R
-    |   Tag Decoder for the right table
+    └───cspy
+    │   Token Tag Decoder (one instance for each left and right table)
     └───data
     └───q100_abm
     └───qScope_infoscreen
@@ -70,7 +68,7 @@ go to the repositories listed below and download them; I would recommend putting
 
 where:
 
-* cspy_L and cspy_R: https://github.com/quarree100/cspy (you'll need this script twice - one for each table)
+* cspy: https://github.com/quarree100/cspy
 * data: has to be linked from Seafile server as discussed :ref:`below <Data>`.
 * GAMA: https://github.com/quarree100/q100_abm
 * qScope_infoscreen: https://github.com/quarree100/qScope_infoscreen

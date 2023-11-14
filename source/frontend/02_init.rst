@@ -4,6 +4,8 @@
 Initialization: Files, paths & data
 ###################################
 
+.. _frontend_config:
+
 Config file
 ***********
 

@@ -116,3 +116,49 @@ Pygame is able to load images onto Surface objects from PNG, JPG, GIF, and BMP i
   canvas.blit(image, (0,0))
 
 See more about the usage of pygame images under :ref:`graphictools<graphictools>`.
+
+.. _creating_your_own_project:
+
+Creating your own project
+*************************
+
+In order to transfer the project's focus to another neighborhood, you'd need to conduct the following steps:
+
+* input basemap raster file
+    * in our example project, we have a basemap file stored in ``.jpg``-format. This file is provided by the :ref:`config.py<frontend_config>` and should be set there.
+* input shapefile for polygons and raster data:
+    * further geodata can be loaded via Shapefiles using geopandas. In :ref:`our example project<quarree>`, we have implemented a custom function in ``gis.py`` called ``read_shapefile()`` (evoked in ``buildings.py/load_data()``) that handles the readout of the shapefile's metadata, transfers the data into a pandas DataFrame and adds more custom data categories.
+* define corner coordinates / ROI (using GIS) and rotation of map. :ref:`The basemap is essentially initialized<gis>` in ``session.py`` with the corner coordinates of the image:
+
+.. code-block:: python
+  :caption: ``session.py:120``
+
+  ############################## INITIALIZATION #########################
+  #--------------------------------- gis --------------------------------
+  # Initialize geographic viewport and basemap
+  _gis = gis.GIS(
+      config['CANVAS_SIZE'],
+      # northeast          northwest           southwest           southeast
+      [[1013631, 7207409], [1012961, 7207198], [1013359, 7205932], [1014029, 7206143]],
+      viewport)
+
+  basemap = gis.Basemap(
+      config['CANVAS_SIZE'], config['BASEMAP_FILE'],
+      # northwest          southwest           southeast           northeast
+      [[1012695, 7207571], [1012695, 7205976], [1014205, 7205976], [1014205, 7207571]],
+      _gis)
+  basemap.warp()
+
+
+*  Take care to crop the basemap image properly in the frontend section:
+
+.. code-block:: python
+  :caption: frontend.py:216 ``crop_width`` and ``crop_height`` define how much the basemap has to be cropped.
+
+  # basemap
+  if session.show_basemap:
+      crop_width = 4644
+      crop_height = 800
+      self.canvas.blit(session.basemap.image, (0, 0),
+                        (0, 0, crop_width, crop_height))
+
