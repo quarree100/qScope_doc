@@ -10,6 +10,7 @@ Config file
 ***********
 
 To configure the frontend, the file ``q100viz/settings/config.py`` can be changed before running the application.
+First off, you will have to provide a path to a data folder, which is predefined in the projects root location. For the complete Q-Scope setup, we placed it :ref:`one level higher in the file tree<architecture>`, because other components depend on it, too.
 
 .. note:: Make yourself a copy of the file config.py and adjust it according to the context you want to use the setup. We had different scenarios for different workshop participants.
 

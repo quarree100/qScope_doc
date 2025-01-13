@@ -1,7 +1,12 @@
 .. _cspy:
 
-Introduction, Installation and Usage
-####################################
+Tag Decoder
+###########
+
+    .. toctree::
+        Calibration <01_calibration.rst>
+        02_settings.rst
+
 
 Introduction
 ************

@@ -3,6 +3,14 @@
 Infoscreen
 ##########
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API
+
+   API/frontend_API
+   API/infoscreen_API.rst
+   API/tag_decoder_API.rst
+   
 Overview
 ***********************
 

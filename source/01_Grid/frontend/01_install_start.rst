@@ -1,7 +1,19 @@
 .. _frontend_usage:
 
-Installation & Startup
-######################
+Frontend
+########
+
+The code overview and explanation for the projected frontend.
+
+.. toctree::
+  :maxdepth: 1
+
+  02_init
+  03_frontend_display
+  04_frontend_interaction
+  05_game_modes
+  06_devtools
+  misc
 
 The Q-Scope frontend, as used in the project QUARRE100, was programmed using `pygame <pygame.org>`_ - a set of Python modules designed for writing video games.
 In this chapter, we will first handle the frontend's installation and afterwards explain its features by going through the code (more or less linearly).

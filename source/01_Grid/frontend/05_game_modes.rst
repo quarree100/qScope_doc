@@ -135,7 +135,7 @@ Read more about the simulation results in the :ref:`ABM section<simulation_outpu
 
 The xml struct is created in a function called ``make_xml`` and saved in the output folder using the time stamp of the simulation start. ``simulation_parameters_YYYYmmdd_HH-MM-SS.xml``
 
-A set of different scenarios can be found in the data folder in the scenario_X.csv files. These all regard different energy price scenarios under which the model can be investigated.
+A set of different scenarios can be found in the ``data/scenarios`` folder in the form of .csv files. These all regard different energy price scenarios under which the model can be investigated.
 
 In short, the **Input Data** for the simulations in QUARREE100 are defined in the ``qScope/data/`` folder via the files ``scenario_X.csv``. Which one of these files is taken, will be defined in ``session.py`` in the ``environment['active_scenario_handle']`` entry. The file this entry points to, will be read in ``simulation.setup()``, and transfered to an xml file to eventually set the simulation's input data accordingly.
 
