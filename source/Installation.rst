@@ -9,7 +9,7 @@ Click here to get the full installation archive: :download:`q-scope install <./q
 
 The installation folder contains important files for your Q-Scope installation:
 
-* GAMA_1.9.2 is the required version for the ABM to work (as of 2025-01-07).
+* ~~GAMA_1.9.2 is the required version for the ABM to work (as of 2025-01-07).~~
 * The TUIO_Simulator is a helpful tool for the development of TUIO-borne applications.
 * The install.sh script
 
