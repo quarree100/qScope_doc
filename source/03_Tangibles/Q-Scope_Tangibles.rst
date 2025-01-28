@@ -10,6 +10,9 @@ Q-Scope Tangibles
 
 The third iteration of the Q-Scope makes use of the Tangible Objects that can be used on the Interactive Scape Touch Table. For communication between touch table and computer, the `TUIO protocol <https://tuio.org>`_ (1.0) is used.
 
+The frontend code for the application using tangible objects is provided in the branch ``main_tangibles`` of the `project repository <https://github.com/quarree100/qScope_frontend>`_.
+
+
 Installation
 ************
 

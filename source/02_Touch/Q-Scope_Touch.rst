@@ -2,6 +2,7 @@ Q-Scope Touch
 #############
 
 The second iteration of the Q-Scope uses a TouchTable by Interactive Scape.
+The frontend code for the touch table application is provided in the branch ``main_touch`` of the `project repository <https://github.com/quarree100/qScope_frontend>`_.
 
 Specifications
 **************

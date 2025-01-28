@@ -30,6 +30,7 @@ The third iteration of the Q-Scope makes use of the Tangible Objects that can be
 * :doc:`TUIO Setup and Usage <03_Tangibles/Q-Scope_Tangibles>`
 * :doc:`03_Tangibles/TUIO_Python`
 * :doc:`Tangibles Frontend <03_Tangibles/Tangible_Frontend>`
+* :doc:`Development <03_Tangibles/Development>`
 
 .. toctree::
    :maxdepth: 1
@@ -39,6 +40,7 @@ The third iteration of the Q-Scope makes use of the Tangible Objects that can be
    TUIO Setup and Usage <03_Tangibles/Q-Scope_Tangibles>
    03_Tangibles/TUIO_Python
    Tangibles Frontend <03_Tangibles/Tangible_Frontend>
+   Development <03_Tangibles/Development>
 
 Version 2: Q-Scope Touch
 ****************************
